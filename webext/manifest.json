@@ -1,0 +1,28 @@
+{
+  "manifest_version": 2,
+  "name": "WebextensionBot",
+  "description": "Webextension Mastodon Bot",
+  "version": "1.0.0",
+  "homepage_url": "https://github.com/choco-la/WebextensionBot",
+  "icons": {
+    "48": "icons/icon48.png",
+    "96": "icons/icon96.png",
+    "128": "icons/icon128.png"
+  },
+  "applications": {
+    "gecko": {
+      "id": "webextension_bot@example.com",
+      "update_url": "https://choco-la.github.io/WebextensionBot/update.json"
+    }
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "https://friends.nico/web/*"
+      ],
+      "js": [
+        "botstreaming.js"
+      ]
+    }
+  ]
+}
