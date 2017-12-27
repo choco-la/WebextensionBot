@@ -1,0 +1,2 @@
+# WebextensionBot
+Mastodon bot
