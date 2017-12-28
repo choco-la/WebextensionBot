@@ -31,8 +31,9 @@ const reply = (toot: ITootJSON): void => {
   setTimeout(() => API.toot(`@${userName}@${host} ${randomContent.reply()}`, toot.id), 3000)
 }
 const close = (toot: ITootJSON): void => {
-  if (!/^(?:12|friends_nico|mei23)/.test(toot.account.username)) return
-  stream.close()
+  if (!/^(?:12|friends_nico|mei23)$/.test(toot.account.username)) return
+  ltl.close()
+  notification.close()
 }
 
 const target = '12@friends.nico'
@@ -44,9 +45,14 @@ listener.addUpdateListener(/^わかる$/, wakaru)
 listener.addMentionListener(/./, reply)
 listener.addMentionListener(/[終お](?:わり|しまい)|シャットダウン|しゃっとだうん|close|shutdown/i, close)
 
-const stream = new Stream(hostName, bearerToken)
-stream.notification()
-stream.local()
-stream.addEventListener('open', () => console.log('opened'))
-stream.addEventListener('close', () => console.log('closed'))
-stream.listener = listener
+const ltl = new Stream(hostName, bearerToken)
+ltl.local()
+ltl.addEventListener('open', () => console.log('opened ltl'))
+ltl.addEventListener('close', () => console.log('closed ltl'))
+ltl.listener = listener
+
+const notification = new Stream(hostName, bearerToken)
+notification.notification()
+notification.addEventListener('open', () => console.log('opened notification'))
+notification.addEventListener('close', () => console.log('closed notification'))
+notification.listener = listener
