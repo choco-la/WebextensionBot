@@ -56,7 +56,6 @@ export class MastodonAPI {
       status: content,
       visibility: this._visibility
     }
-    console.log(data)
     this.sendToot(data)
     .then((resp) => console.log(resp.status))
     .catch((resp) => console.error(`${resp.status}: ${resp.statusText}`))

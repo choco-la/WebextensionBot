@@ -18,10 +18,10 @@ const funny = (toot: ITootJSON): void => {
   setTimeout(() => API.toot(`@12@friends.nico ${randomContent.funny()}`, toot.id), 1000)
 }
 const cute = (): void => {
-  setTimeout(API.toot(randomContent.cute()), 1000)
+  setTimeout(API.toot(randomContent.cute()), 3000)
 }
 const wakaru = (): void => {
-  setTimeout(() => API.toot(randomContent.understand()), 1000)
+  setTimeout(() => API.toot(randomContent.understand()), 3000)
 }
 const reply = (toot: ITootJSON): void => {
   const url: URL = new URL(toot.account.url)
@@ -31,7 +31,7 @@ const reply = (toot: ITootJSON): void => {
   setTimeout(() => API.toot(`@${userName}@${host} ${randomContent.reply()}`, toot.id), 3000)
 }
 const close = (toot: ITootJSON): void => {
-  if (!/12|friends_nico|mei23/.test(toot.account.username)) return
+  if (!/^(?:12|friends_nico|mei23)/.test(toot.account.username)) return
   stream.close()
 }
 
