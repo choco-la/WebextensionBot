@@ -45,7 +45,7 @@ listener.addMentionListener(/./, reply)
 listener.addMentionListener(/[終お](?:わり|しまい)|シャットダウン|しゃっとだうん|close|shutdown/i, close)
 
 const stream = new Stream(hostName, bearerToken)
-stream.home()
+stream.notification()
 stream.local()
 stream.addEventListener('open', () => console.log('opened'))
 stream.addEventListener('close', () => console.log('closed'))

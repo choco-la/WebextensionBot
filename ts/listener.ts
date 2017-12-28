@@ -1,4 +1,4 @@
-import { IAccount, INotifiation, IRecvData, IRecvPayload, ITootJSON } from './deftypes'
+import { IAccount, INotifiation, ITootJSON } from './deftypes'
 import guards from './typeguards'
 
 export class Listener {
@@ -11,24 +11,6 @@ export class Listener {
 
   public addMentionListener (regex: RegExp, func: (toot: ITootJSON) => void, account?: string) {
     this.mentionListener.push({ regex, func, account })
-  }
-
-  public onMessage (recv: IRecvData): void {
-    const recvJSON: IRecvPayload = JSON.parse(recv.data)
-    const payload = JSON.parse(recvJSON.payload)
-    switch (recvJSON.event) {
-      case 'update':
-        this.onUpdate(payload)
-        break
-      case 'notification':
-        this.onNotification(payload)
-        break
-      case 'delete':
-        this.onDelete(payload)
-        break
-      default:
-        break
-    }
   }
 
   public onNotification (recv: INotifiation): void {
@@ -49,11 +31,11 @@ export class Listener {
     return console.log(recv)
   }
 
-  private onDelete (recv: string): void {
+  public onDelete (recv: string): void {
     console.log(`deleted: ${recv}`)
   }
 
-  private onUpdate (payload: ITootJSON): void {
+  public onUpdate (payload: ITootJSON): void {
     const screenName: string = getScreenName(payload.account)
     const content: string = getTootContent(payload.content)
     const application: string = payload.application ? payload.application.name : ''

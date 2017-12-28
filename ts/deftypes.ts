@@ -58,5 +58,7 @@ export interface ITootJSON {
 }
 
 export interface IStreamListener {
-  onMessage: (recv: IRecvData) => void
+  onDelete: (recv: string) => void
+  onNotification: (recv: INotifiation) => void
+  onUpdate: (recv: ITootJSON) => void
 }
