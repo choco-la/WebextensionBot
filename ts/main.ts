@@ -23,15 +23,17 @@ const cute = (): void => {
 const wakaru = (): void => {
   setTimeout(() => API.toot(randomContent.understand()), 3000)
 }
-const reply = (toot: ITootJSON): void => {
+const reply = (toot: ITootJSON, text?: string): void => {
   const url: URL = new URL(toot.account.url)
   const host: string = url.hostname
   const userName: string = toot.account.username
+  const msg: string = text ? text : randomContent.reply()
   setTimeout(() => API.favourite(toot.id), 2000)
-  setTimeout(() => API.toot(`@${userName}@${host} ${randomContent.reply()}`, toot.id), 3000)
+  setTimeout(() => API.toot(`@${userName}@${host} ${msg}`, toot.id), 3000)
 }
 const close = (toot: ITootJSON): void => {
   if (!/^(?:12|friends_nico|mei23)$/.test(toot.account.username)) return
+  reply(toot, '終わります(๑•᎑•๑)♬*')
   ltl.close()
   notification.close()
 }
