@@ -26,8 +26,9 @@ const emojis: {[key: string]: string} = {
 
 // "Class" means not the type but strings-class.
 // Used for creating RegExp using new RegExp().
-export const strClass: { [key: string]: string } = {
-  friendlySuffix: String.raw`[${concatObjValue(misc)}${concatObjValue(symbols)}${concatObjValue(emojis)}]`
+export const rawPattern: { [key: string]: string } = {
+  friendlySuffix: String.raw`[${concatObjValue(misc)}${concatObjValue(symbols)}${concatObjValue(emojis)}]`,
+  replyPrefix: String.raw`^(?:@[a-zA-Z0-9_]+[\s]*)`
 }
 
 const closePat: string[] = [
@@ -35,11 +36,9 @@ const closePat: string[] = [
   String.raw`シャットダウン|しゃっとだうん|shutdown`,
   String.raw`close`
 ]
-const replyPrefix = String.raw`^(?:@[a-zA-Z0-9_]+[\s]*)`
 
 // Used for matching.
 export const rePattern: { [key: string]: RegExp } = {
   close: new RegExp(closePat.join('|'), 'i'),
-  kiss: new RegExp(`${replyPrefix}?ちゅ${strClass.friendlySuffix}*$`)
-  // kiss: new RegExp(`ちゅ${strClass.friendlySuffix}*$`)
+  kiss: new RegExp(`${rawPattern.replyPrefix}?ちゅ${rawPattern.friendlySuffix}*$`)
 }
