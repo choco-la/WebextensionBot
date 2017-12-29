@@ -13,6 +13,7 @@ const bearerToken: string = Auth.bearerToken.trim()
 
 const API = new MastodonAPI(hostName, bearerToken)
 API.setRateLimit()
+API.setCoolTime(3000)
 API.visibility = 'public'
 
 const funny = (toot: ITootJSON): void => {

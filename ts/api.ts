@@ -22,8 +22,12 @@ interface IFullfilledXHR extends XMLHttpRequest {
 export class MastodonAPI {
   private bearerToken: string
   private hostName: string
+  // Ratelimit per 30s.
   private _rateLimitDefault: number = 3
   private rateLimit: number
+  // Wait ${_coolTime} seconds per toot.
+  private _coolTime: number
+  private isCoolTime: boolean
   private hasRateLimit: boolean = false
   private _visibility: 'public' | 'unlisted' | 'private' | 'direct' = 'direct'
 
@@ -40,6 +44,12 @@ export class MastodonAPI {
     console.log(`rateLimit: ${this.rateLimit}`)
   }
 
+  public setCoolTime (value: number): void {
+    this._coolTime = value
+    setInterval(() => this.isCoolTime = false, this._coolTime)
+    console.log(`coolTime: ${this._coolTime}`)
+  }
+
   public set visibility (value: string) {
     if (!isVisibility(value)) return
     this._visibility = value
@@ -47,6 +57,7 @@ export class MastodonAPI {
 
   public toot (content: string, reply?: string): void {
     if (this.hasRateLimit && this.rateLimit <= 0) return console.log(`rateLimit: ${this.rateLimit}`)
+    if (this.isCoolTime) return console.log(`coolTime: ${this._coolTime}`)
     const replyToId = reply || null
     const data = {
       in_reply_to_id: replyToId,
@@ -63,6 +74,7 @@ export class MastodonAPI {
       this.rateLimit--
       console.log(`rateLimit: ${this.rateLimit}`)
     }
+    if (this._coolTime !== undefined) this.isCoolTime = true
   }
 
   public favourite (id: string): Promise<IFullfilledXHR> {
