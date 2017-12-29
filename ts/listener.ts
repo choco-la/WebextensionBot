@@ -1,16 +1,43 @@
-import { IAccount, INotifiation, ITootJSON } from './deftypes'
-import guards from './typeguards'
+import { INotifiation, ITootJSON, NotifyEvent } from './deftypes'
+import { tootParser } from './tootparser'
 
 export class Listener {
-  private updateListener: Array<{ regex: RegExp, func: (toot: ITootJSON) => void, account?: string }> = []
-  private mentionListener: Array<{ regex: RegExp, func: (toot: ITootJSON) => void, account?: string }> = []
+  private deleteListeners: Array<(toot: string) => void> = []
+  private favouriteListeners: Array<(toot: INotifiation) => void> = []
+  private followListeners: Array<(toot: INotifiation) => void> = []
+  private mentionListeners: Array<(toot: INotifiation) => void> = []
+  private reblogListeners: Array<(toot: INotifiation) => void> = []
+  private updateListeners: Array<(toot: ITootJSON) => void> = []
 
-  public addUpdateListener (regex: RegExp, func: (toot: ITootJSON) => void, account?: string) {
-    this.updateListener.push({ regex, func, account })
+  public addDeleteListener (func: (recv: string) => void): void {
+    this.deleteListeners.push(func as (toot: string) => void)
   }
 
-  public addMentionListener (regex: RegExp, func: (toot: ITootJSON) => void, account?: string) {
-    this.mentionListener.push({ regex, func, account })
+  public addNotificationListener (type: NotifyEvent, func: (recv: INotifiation) => void): void {
+    switch (type) {
+      case 'favourite':
+        this.favouriteListeners.push(func as (toot: INotifiation) => void)
+        break
+      case 'follow':
+        this.followListeners.push(func as (toot: INotifiation) => void)
+        break
+      case 'mention':
+        this.mentionListeners.push(func as (toot: INotifiation) => void)
+        break
+      case 'reblog':
+        this.reblogListeners.push(func as (toot: INotifiation) => void)
+        break
+    }
+  }
+
+  public addUpdateFilter (func: (recv: ITootJSON) => void): void {
+    this.updateListeners.push(func as (toot: ITootJSON) => void)
+  }
+
+  public onDelete (recv: string): void {
+    for (const listener of this.deleteListeners) {
+      listener(recv)
+    }
   }
 
   public onNotification (recv: INotifiation): void {
@@ -28,87 +55,54 @@ export class Listener {
         this.onReblog(recv)
         break
     }
-    return console.log(recv)
-  }
-
-  public onDelete (recv: string): void {
-    console.log(`deleted: ${recv}`)
   }
 
   public onUpdate (payload: ITootJSON): void {
-    const screenName: string = getScreenName(payload.account)
-    const content: string = getTootContent(payload.content)
+    const screenName: string = tootParser.screenName(payload.account)
+    const content: string = tootParser.tootContent(payload.content)
     const application: string = payload.application ? payload.application.name : ''
 
     if (muteFilter.screenname(screenName)) return console.log(`muted: ${screenName}`)
     if (muteFilter.content(content)) return console.log(`muted: ${content}`)
     if (muteFilter.application(application)) return console.log(`muted: ${application}`)
 
-    for (const listener of this.updateListener) {
-      const { regex, func, account } = listener
-      if (regex.test(content)) {
-        if (account === undefined) func(payload)
-        else if (screenName === account) func(payload)
-      }
+    for (const listener of this.updateListeners) {
+      listener(payload)
     }
   }
 
   private onFavourite (notification: INotifiation): void {
-    const account = notification.account
-    const from = getScreenName(account)
-    console.log(`favourite: ${from}`)
+    for (const listener of this.favouriteListeners) {
+      listener(notification)
+    }
   }
 
   private onFollow (notification: INotifiation): void {
-    const account = notification.account
-    const from = getScreenName(account)
-    console.log(`follow: ${from}`)
+    for (const listener of this.followListeners) {
+      listener(notification)
+    }
   }
 
   private onMention (notification: INotifiation): void {
     const payload = notification.status
-    const screenName: string = getScreenName(payload.account)
-    const content: string = getTootContent(payload.content)
+    const screenName: string = tootParser.screenName(payload.account)
+    const content: string = tootParser.tootContent(payload.content)
     const application: string = payload.application ? payload.application.name : ''
 
     if (muteFilter.screenname(screenName)) return console.log(`muted: ${screenName}`)
     if (muteFilter.content(content)) return console.log(`muted: ${content}`)
     if (muteFilter.application(application)) return console.log(`muted: ${application}`)
 
-    for (const listener of this.mentionListener) {
-      const { regex, func, account } = listener
-      if (regex.test(content)) {
-        if (account === undefined) func(payload)
-        else if (screenName === account) func(payload)
-      }
+    for (const listener of this.mentionListeners) {
+      listener(notification)
     }
   }
 
   private onReblog (notification: INotifiation): void {
-    const account = notification.account
-    const from = getScreenName(account)
-    console.log(`reblog: ${from}`)
+    for (const listener of this.reblogListeners) {
+      listener(notification)
+    }
   }
-}
-
-const getTootContent = (dom: string): string => {
-  const parser: DOMParser = new DOMParser()
-  const parsedDOM: HTMLDocument = parser.parseFromString(dom, 'text/html')
-  if (!guards.isHTMLElem(parsedDOM.activeElement)) return ''
-  const element: HTMLElement = parsedDOM.activeElement
-  // Not nullable.
-  return element.innerText
-}
-
-const getHostName = (url: string): string => {
-  const parsedURL: URL = new URL(url)
-  return parsedURL.hostname
-}
-
-const getScreenName = (account: IAccount): string => {
-  const userName: string = account.username
-  const hostName: string = getHostName(account.url)
-  return `${userName}@${hostName}`
 }
 
 const muteFilter: { [key: string]: (arg: string) => boolean } = {

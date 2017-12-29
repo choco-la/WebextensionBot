@@ -62,3 +62,5 @@ export interface IStreamListener {
   onNotification: (recv: INotifiation) => void
   onUpdate: (recv: ITootJSON) => void
 }
+
+export type NotifyEvent = 'favourite' | 'follow' | 'mention' | 'reblog'

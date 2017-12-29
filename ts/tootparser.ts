@@ -1,0 +1,28 @@
+import { IAccount } from './deftypes'
+import guards from './typeguards'
+
+const getTootContent = (dom: string): string => {
+  const parser: DOMParser = new DOMParser()
+  const parsedDOM: HTMLDocument = parser.parseFromString(dom, 'text/html')
+  if (!guards.isHTMLElem(parsedDOM.activeElement)) return ''
+  const element: HTMLElement = parsedDOM.activeElement
+  // Not nullable.
+  return element.innerText
+}
+
+const getHostName = (url: string): string => {
+  const parsedURL: URL = new URL(url)
+  return parsedURL.hostname
+}
+
+const getScreenName = (account: IAccount): string => {
+  const userName: string = account.username
+  const hostName: string = getHostName(account.url)
+  return `${userName}@${hostName}`
+}
+
+export const tootParser = {
+  hostName: getHostName,
+  screenName: getScreenName,
+  tootContent: getTootContent
+}

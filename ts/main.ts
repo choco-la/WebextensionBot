@@ -1,31 +1,48 @@
 import { MastodonAPI } from './api'
 import { randomContent } from './botcontents'
 import { Auth } from './conf'
-import { ITootJSON } from './deftypes'
+import { INotifiation, ITootJSON } from './deftypes'
 import { Listener } from './listener'
 import { rePattern } from './repattern'
 import { Stream } from './stream'
+import { tootParser } from './tootparser'
 
 // const hostName: string = 'friends.nico'
 const hostName: string = Auth.hostName
 // const bearerToken: string = 'ACCESS_TOKEN'
 const bearerToken: string = Auth.bearerToken.trim()
 
+const target = '12@friends.nico'
+
 const API = new MastodonAPI(hostName, bearerToken)
 API.setRateLimit()
 API.setCoolTime(3000)
 API.visibility = 'public'
 
-const funny = (toot: ITootJSON): void => {
-  setTimeout(() => API.toot(`@12@friends.nico ${randomContent.funny()}`, toot.id), 1000)
-}
-const cute = (): void => {
+const cute = (toot: ITootJSON): void => {
+  const screenName = tootParser.screenName(toot.account)
+  const content = tootParser.tootContent(toot.content)
+  if (screenName !== target) return
+  if (!/ぉんなのこ/.test(content)) return
   setTimeout(API.toot(randomContent.cute()), 3000)
 }
-const wakaru = (): void => {
+
+const funny = (toot: ITootJSON): void => {
+  const screenName = tootParser.screenName(toot.account)
+  const content = tootParser.tootContent(toot.content)
+  if (screenName !== target) return
+  if (!/[wWｗＷ]$/.test(content)) return
+  setTimeout(() => API.toot(`@12@friends.nico ${randomContent.funny()}`, toot.id), 1000)
+}
+
+const wakaru = (toot: ITootJSON): void => {
+  const content = tootParser.tootContent(toot.content)
+  if (!/^わかる$/.test(content)) return
   setTimeout(() => API.toot(randomContent.understand()), 3000)
 }
-const reply = (toot: ITootJSON, text?: string): void => {
+
+const reply = (recv: INotifiation, text?: string): void => {
+  const toot = recv.status
   const url: URL = new URL(toot.account.url)
   const host: string = url.hostname
   const userName: string = toot.account.username
@@ -33,22 +50,31 @@ const reply = (toot: ITootJSON, text?: string): void => {
   setTimeout(() => API.favourite(toot.id), 2000)
   setTimeout(() => API.toot(`@${userName}@${host} ${msg}`, toot.id), 3000)
 }
-const close = (toot: ITootJSON): void => {
+
+const close = (recv: INotifiation): void => {
+  const toot = recv.status
+  const content = tootParser.tootContent(toot.content)
+  if (!rePattern.close.test(content)) return
   if (!/^(?:12|friends_nico|mei23)$/.test(toot.account.username)) return
-  reply(toot, '終わります(๑•᎑•๑)♬*')
+  reply(recv, '終わります(๑•᎑•๑)♬*')
   ltl.close()
   notification.close()
 }
 
-const target = '12@friends.nico'
+const kiss = (recv: INotifiation): void => {
+  const toot = recv.status
+  const content = tootParser.tootContent(toot.content)
+  if (!rePattern.kiss.test(content)) return
+  reply(recv, randomContent.kiss())
+}
 
 const listener = new Listener()
-listener.addUpdateListener(/[wWｗＷ]$/, funny, target)
-listener.addUpdateListener(/ぉんなのこ/, cute, target)
-listener.addUpdateListener(/^わかる$/, wakaru)
-listener.addMentionListener(rePattern.kiss, (toot) => reply(toot, randomContent.kiss()))
-listener.addMentionListener(/./, reply)
-listener.addMentionListener(rePattern.close, close)
+listener.addUpdateFilter(funny)
+listener.addUpdateFilter(cute)
+listener.addUpdateFilter(wakaru)
+listener.addNotificationListener('mention', kiss)
+listener.addNotificationListener('mention', reply)
+listener.addNotificationListener('mention', close)
 
 const ltl = new Stream(hostName, bearerToken)
 ltl.local()

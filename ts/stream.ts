@@ -39,6 +39,8 @@ export class Stream {
     const webSocketURL: string = `wss://${this.streamURL}${streamQuery}`
     this.ws = new WebSocket(webSocketURL)
     this.ws.addEventListener('message', this.onUpdate)
+    if (!isEventListener(this.onDelete)) return
+    this.ws.addEventListener('delete', this.onDelete)
   }
 
   public home (): void {
@@ -55,11 +57,11 @@ export class Stream {
     this.ws.addEventListener('message', this.onNotification)
   }
 
-  private onUpdate = (msg: IRecvData): void => {
+  private onDelete = (msg: IRecvData): void => {
     const recvJSON: IRecvPayload = JSON.parse(msg.data)
     const payload = JSON.parse(recvJSON.payload)
-    if (!isToot(payload)) return
-    this._listener.onUpdate(payload)
+    if (!isDelete(payload)) return
+    this._listener.onDelete(payload)
   }
 
   private onNotification = (msg: IRecvData): void => {
@@ -68,6 +70,21 @@ export class Stream {
     if (!isNofification(payload)) return
     this._listener.onNotification(payload)
   }
+
+  private onUpdate = (msg: IRecvData): void => {
+    const recvJSON: IRecvPayload = JSON.parse(msg.data)
+    const payload = JSON.parse(recvJSON.payload)
+    if (!isToot(payload)) return
+    this._listener.onUpdate(payload)
+  }
+}
+
+const isEventListener = (recv: any): recv is EventListener => {
+  return 'detail' in recv
+}
+
+const isDelete = (recv: any): recv is string => {
+  return recv !== null && recv !== undefined && typeof(recv) === 'string'
 }
 
 const isNofification = (recv: any): recv is INotifiation => {
