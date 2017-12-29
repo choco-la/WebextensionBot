@@ -18,8 +18,16 @@ const girl: string[] = [
   'ひょろわ〜ちゃん女の子だよ!!( ๑>ω•́ )۶'
 ]
 
-const replyDefault: string[] = [
+const kiss: string[] = [
   'ちゅ♡',
+  '٩(๛ ˘ ³˘)۶♥',
+  'んーまっ♡',
+  'ぶっちゅ〜💕',
+  'ちゅっちゅお！♡'
+]
+
+const replyDefault: string[] = [
+  'はーい(๑•᎑•๑)♬*',
   'なぁに？(◍•ᴗ•◍)',
   'どしたの？(*´﹃｀*)',
   '悪口はこちらまで => @12@friends.nico'
@@ -40,6 +48,7 @@ export const randomContent: { [key: string]: () => string } = {
   cute: () => randomArray(cute),
   funny: () => randomArray(funny),
   girl: () => randomArray(girl),
+  kiss: () => randomArray(kiss),
   reply: () => randomArray(replyDefault),
   understand: () => randomArray(understand)
 }

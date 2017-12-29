@@ -3,6 +3,7 @@ import { randomContent } from './botcontents'
 import { Auth } from './conf'
 import { ITootJSON } from './deftypes'
 import { Listener } from './listener'
+import { rePattern } from './repattern'
 import { Stream } from './stream'
 
 // const hostName: string = 'friends.nico'
@@ -44,8 +45,9 @@ const listener = new Listener()
 listener.addUpdateListener(/[wWｗＷ]$/, funny, target)
 listener.addUpdateListener(/ぉんなのこ/, cute, target)
 listener.addUpdateListener(/^わかる$/, wakaru)
+listener.addMentionListener(rePattern.kiss, (toot) => reply(toot, randomContent.kiss()))
 listener.addMentionListener(/./, reply)
-listener.addMentionListener(/[終お](?:わり|しまい)|シャットダウン|しゃっとだうん|close|shutdown/i, close)
+listener.addMentionListener(rePattern.close, close)
 
 const ltl = new Stream(hostName, bearerToken)
 ltl.local()
