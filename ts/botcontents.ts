@@ -41,6 +41,12 @@ const replyDefault: string[] = [
   '悪口はこちらまで => @12@friends.nico'
 ]
 
+const sm9: string[] = [
+  'どーまんせーまん( •ᴗ•)*♪',
+  '悪霊退散(∩｡•ｏ•｡)っ.ﾟ☆｡･',
+  '助けてもらお〜おんみょうじ〜 レッツゴー!!( ๑>ω•́ )۶'
+]
+
 const understand: string[] = [
   'わかる〜(ㅅ´ ˘ `)♡',
   'わかるよその気持ち(๑>◡<๑)',
@@ -59,5 +65,6 @@ export const randomContent: { [key: string]: () => string } = {
   girl: () => randomArray(girl),
   kiss: () => randomArray(kiss),
   reply: () => randomArray(replyDefault),
+  sm9: () => randomArray(sm9),
   understand: () => randomArray(understand)
 }

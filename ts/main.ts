@@ -57,6 +57,12 @@ const reply = (recv: INotifiation, text?: string): void => {
   setTimeout(() => API.toot(`@${userName}@${host} ${msg}`, toot.id, toot.visibility), 3000)
 }
 
+const sm9 = (toot: IStatus): void => {
+  const content = tootParser.tootContent(toot.content)
+  if (!/sm9/.test(content)) return
+  setTimeout(() => API.toot(randomContent.sm9()), 3000)
+}
+
 const favUyu = (toot: IStatus): void => {
   const content = tootParser.tootContent(toot.content)
   if (!/[ぅう][ゅゆ]/.test(content)) return
@@ -91,6 +97,7 @@ listener.addUpdateFilter(cheerUp)
 listener.addUpdateFilter(cute)
 listener.addUpdateFilter(favUyu)
 listener.addUpdateFilter(funny)
+listener.addUpdateFilter(sm9)
 listener.addUpdateFilter(wakaru)
 listener.addUpdateFilter(wipeTL)
 listener.addNotificationListener('mention', close)
