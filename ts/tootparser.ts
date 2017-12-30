@@ -1,10 +1,10 @@
 import { IAccount } from './deftypes'
-import guards from './typeguards'
+import { isHTMLElem } from './typeguards'
 
 const getTootContent = (dom: string): string => {
   const parser: DOMParser = new DOMParser()
   const parsedDOM: HTMLDocument = parser.parseFromString(dom, 'text/html')
-  if (!guards.isHTMLElem(parsedDOM.activeElement)) return ''
+  if (!isHTMLElem(parsedDOM.activeElement)) return ''
   const element: HTMLElement = parsedDOM.activeElement
   // Not nullable.
   return element.innerText

@@ -1,4 +1,5 @@
-import { INotifiation, IRecvData, IRecvEvent, IStatus, IStreamListener } from './deftypes'
+import { IRecvData, IRecvEvent, IStreamListener } from './deftypes'
+import { isDelete, isEventListener, isNofification, isStatus } from './typeguards'
 
 export class Stream {
   private streamURL: string
@@ -74,24 +75,7 @@ export class Stream {
   private onUpdate = (msg: IRecvEvent): void => {
     const recvJSON: IRecvData = JSON.parse(msg.data)
     const payload = JSON.parse(recvJSON.payload)
-    if (!isToot(payload)) return
+    if (!isStatus(payload)) return
     this._listener.onUpdate(payload)
   }
-}
-
-const isEventListener = (recv: any): recv is EventListener => {
-  return 'detail' in recv
-}
-
-const isDelete = (recv: any): recv is string => {
-  return recv !== null && recv !== undefined && typeof(recv) === 'string'
-}
-
-const isNofification = (recv: any): recv is INotifiation => {
-  const types = /^(?:mention|reblog|favourite|follow)$/
-  return recv !== null && recv !== undefined && types.test(recv.type)
-}
-
-const isToot = (recv: any): recv is IStatus => {
-  return recv !== null && recv !== undefined && recv.content !== undefined
 }
