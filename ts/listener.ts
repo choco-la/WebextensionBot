@@ -1,4 +1,4 @@
-import { INotifiation, ITootJSON, NotifyEvent } from './deftypes'
+import { INotifiation, IStatus, NotifyEvent } from './deftypes'
 import { tootParser } from './tootparser'
 
 export class Listener {
@@ -7,7 +7,7 @@ export class Listener {
   private followListeners: Array<(toot: INotifiation) => void> = []
   private mentionListeners: Array<(toot: INotifiation) => void> = []
   private reblogListeners: Array<(toot: INotifiation) => void> = []
-  private updateListeners: Array<(toot: ITootJSON) => void> = []
+  private updateListeners: Array<(toot: IStatus) => void> = []
 
   public addDeleteListener (func: (recv: string) => void): void {
     this.deleteListeners.push(func as (toot: string) => void)
@@ -30,8 +30,8 @@ export class Listener {
     }
   }
 
-  public addUpdateFilter (func: (recv: ITootJSON) => void): void {
-    this.updateListeners.push(func as (toot: ITootJSON) => void)
+  public addUpdateFilter (func: (recv: IStatus) => void): void {
+    this.updateListeners.push(func as (toot: IStatus) => void)
   }
 
   public onDelete (recv: string): void {
@@ -57,7 +57,7 @@ export class Listener {
     }
   }
 
-  public onUpdate (payload: ITootJSON): void {
+  public onUpdate (payload: IStatus): void {
     const screenName: string = tootParser.screenName(payload.account)
     const content: string = tootParser.tootContent(payload.content)
     const application: string = payload.application ? payload.application.name : ''

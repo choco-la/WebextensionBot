@@ -1,4 +1,4 @@
-import { INotifiation, IRecvData, IRecvPayload, IStreamListener, ITootJSON } from './deftypes'
+import { INotifiation, IRecvData, IRecvEvent, IStatus, IStreamListener } from './deftypes'
 
 export class Stream {
   private streamURL: string
@@ -57,22 +57,22 @@ export class Stream {
     this.ws.addEventListener('message', this.onNotification)
   }
 
-  private onDelete = (msg: IRecvData): void => {
-    const recvJSON: IRecvPayload = JSON.parse(msg.data)
+  private onDelete = (msg: IRecvEvent): void => {
+    const recvJSON: IRecvData = JSON.parse(msg.data)
     const payload = JSON.parse(recvJSON.payload)
     if (!isDelete(payload)) return
     this._listener.onDelete(payload)
   }
 
-  private onNotification = (msg: IRecvData): void => {
-    const recvJSON: IRecvPayload = JSON.parse(msg.data)
+  private onNotification = (msg: IRecvEvent): void => {
+    const recvJSON: IRecvData = JSON.parse(msg.data)
     const payload = JSON.parse(recvJSON.payload)
     if (!isNofification(payload)) return
     this._listener.onNotification(payload)
   }
 
-  private onUpdate = (msg: IRecvData): void => {
-    const recvJSON: IRecvPayload = JSON.parse(msg.data)
+  private onUpdate = (msg: IRecvEvent): void => {
+    const recvJSON: IRecvData = JSON.parse(msg.data)
     const payload = JSON.parse(recvJSON.payload)
     if (!isToot(payload)) return
     this._listener.onUpdate(payload)
@@ -92,6 +92,6 @@ const isNofification = (recv: any): recv is INotifiation => {
   return recv !== null && recv !== undefined && types.test(recv.type)
 }
 
-const isToot = (recv: any): recv is ITootJSON => {
+const isToot = (recv: any): recv is IStatus => {
   return recv !== null && recv !== undefined && recv.content !== undefined
 }

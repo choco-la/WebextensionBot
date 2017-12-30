@@ -1,7 +1,7 @@
 import { MastodonAPI } from './api'
 import { randomContent } from './botcontents'
 import { Auth } from './conf'
-import { INotifiation, ITootJSON } from './deftypes'
+import { INotifiation, IStatus } from './deftypes'
 import { Listener } from './listener'
 import { rePattern } from './repattern'
 import { Stream } from './stream'
@@ -19,7 +19,7 @@ API.setRateLimit()
 API.setCoolTime(3000)
 API.visibility = 'public'
 
-const cute = (toot: ITootJSON): void => {
+const cute = (toot: IStatus): void => {
   const screenName = tootParser.screenName(toot.account)
   const content = tootParser.tootContent(toot.content)
   if (screenName !== target) return
@@ -27,7 +27,7 @@ const cute = (toot: ITootJSON): void => {
   setTimeout(API.toot(randomContent.cute()), 3000)
 }
 
-const funny = (toot: ITootJSON): void => {
+const funny = (toot: IStatus): void => {
   const screenName = tootParser.screenName(toot.account)
   const content = tootParser.tootContent(toot.content)
   if (screenName !== target) return
@@ -35,7 +35,7 @@ const funny = (toot: ITootJSON): void => {
   setTimeout(() => API.toot(`@12@friends.nico ${randomContent.funny()}`, toot.id), 1000)
 }
 
-const wakaru = (toot: ITootJSON): void => {
+const wakaru = (toot: IStatus): void => {
   const content = tootParser.tootContent(toot.content)
   if (!/^わかる$/.test(content)) return
   setTimeout(() => API.toot(randomContent.understand()), 3000)
@@ -51,7 +51,7 @@ const reply = (recv: INotifiation, text?: string): void => {
   setTimeout(() => API.toot(`@${userName}@${host} ${msg}`, toot.id, toot.visibility), 3000)
 }
 
-const favUyu = (toot: ITootJSON): void => {
+const favUyu = (toot: IStatus): void => {
   const content = tootParser.tootContent(toot.content)
   if (!/[ぅう][ゅゆ]/.test(content)) return
   setTimeout(() => API.favourite(toot.id), 2000)

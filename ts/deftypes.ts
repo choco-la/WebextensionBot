@@ -13,11 +13,11 @@ export interface IJSONDict {
   [key: string]: string | number | boolean | this
 }
 
-export interface IRecvData extends Event {
+export interface IRecvEvent extends Event {
   data: string
 }
 
-export interface IRecvPayload {
+export interface IRecvData {
   [key: string]: any,
   event: string,
   payload: string
@@ -35,11 +35,11 @@ export interface INotifiation {
   account: IAccount
   created_at: string
   id: string
-  status: ITootJSON
+  status: IStatus
   type: 'mention' | 'reblog' | 'favourite' | 'follow'
 }
 
-export interface ITootJSON {
+export interface IStatus {
   account: IAccount
   application: { name: string , website: string | null }
   content: string
@@ -60,7 +60,7 @@ export interface ITootJSON {
 export interface IStreamListener {
   onDelete: (recv: string) => void
   onNotification: (recv: INotifiation) => void
-  onUpdate: (recv: ITootJSON) => void
+  onUpdate: (recv: IStatus) => void
 }
 
 export type NotifyEvent = 'favourite' | 'follow' | 'mention' | 'reblog'
