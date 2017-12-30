@@ -19,12 +19,18 @@ API.setRateLimit()
 API.setCoolTime(3000)
 API.visibility = 'public'
 
+const cheerUp = (toot: IStatus): void => {
+  const content = tootParser.tootContent(toot.content)
+  if (!/辛い|つらい|/.test(content)) return
+  setTimeout(() => API.toot(randomContent.cheerUp()), 3000)
+}
+
 const cute = (toot: IStatus): void => {
   const screenName = tootParser.screenName(toot.account)
   const content = tootParser.tootContent(toot.content)
   if (screenName !== target) return
   if (!/ぉんなのこ/.test(content)) return
-  setTimeout(API.toot(randomContent.cute()), 3000)
+  setTimeout(() => API.toot(randomContent.cute()), 3000)
 }
 
 const funny = (toot: IStatus): void => {
@@ -57,6 +63,12 @@ const favUyu = (toot: IStatus): void => {
   setTimeout(() => API.favourite(toot.id), 2000)
 }
 
+const wipeTL = (toot: IStatus): void => {
+  const content = tootParser.tootContent(toot.content)
+  if (!/ﾌﾞﾘ/.test(content)) return
+  setTimeout(() => API.toot('ふきふき'), 3000)
+}
+
 const close = (recv: INotifiation): void => {
   const toot = recv.status
   const content = tootParser.tootContent(toot.content)
@@ -75,10 +87,12 @@ const kiss = (recv: INotifiation): void => {
 }
 
 const listener = new Listener()
+listener.addUpdateFilter(cheerUp)
 listener.addUpdateFilter(cute)
 listener.addUpdateFilter(favUyu)
 listener.addUpdateFilter(funny)
 listener.addUpdateFilter(wakaru)
+listener.addUpdateFilter(wipeTL)
 listener.addNotificationListener('mention', close)
 listener.addNotificationListener('mention', kiss)
 listener.addNotificationListener('mention', reply)
