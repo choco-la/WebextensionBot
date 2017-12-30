@@ -51,6 +51,12 @@ const reply = (recv: INotifiation, text?: string): void => {
   setTimeout(() => API.toot(`@${userName}@${host} ${msg}`, toot.id, toot.visibility), 3000)
 }
 
+const favUyu = (toot: ITootJSON): void => {
+  const content = tootParser.tootContent(toot.content)
+  if (!/[ぅう][ゅゆ]/.test(content)) return
+  setTimeout(() => API.favourite(toot.id), 2000)
+}
+
 const close = (recv: INotifiation): void => {
   const toot = recv.status
   const content = tootParser.tootContent(toot.content)
@@ -69,12 +75,13 @@ const kiss = (recv: INotifiation): void => {
 }
 
 const listener = new Listener()
-listener.addUpdateFilter(funny)
 listener.addUpdateFilter(cute)
+listener.addUpdateFilter(favUyu)
+listener.addUpdateFilter(funny)
 listener.addUpdateFilter(wakaru)
+listener.addNotificationListener('mention', close)
 listener.addNotificationListener('mention', kiss)
 listener.addNotificationListener('mention', reply)
-listener.addNotificationListener('mention', close)
 
 const ltl = new Stream(hostName, bearerToken)
 ltl.local()

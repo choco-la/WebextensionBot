@@ -9,6 +9,7 @@ const concatObjValue = (strobj: { [key: string]: string }): string => {
 }
 
 const misc: {[key: string]: string} = {
+  cheerful: 'っ',
   period: String.raw`。\.`,
   prolong: String.raw`ー〜～\-`,
   // String.raw => [tslint] ter-no-irregular-whitespace
@@ -40,5 +41,5 @@ const closePat: string[] = [
 // Used for matching.
 export const rePattern: { [key: string]: RegExp } = {
   close: new RegExp(closePat.join('|'), 'i'),
-  kiss: new RegExp(`${rawPattern.replyPrefix}?ちゅ${rawPattern.friendlySuffix}*$`)
+  kiss: new RegExp(`ちゅ${rawPattern.friendlySuffix}*$`)
 }
