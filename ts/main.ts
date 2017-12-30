@@ -21,7 +21,7 @@ API.visibility = 'public'
 
 const cheerUp = (toot: IStatus): void => {
   const content = tootParser.tootContent(toot.content)
-  if (!/辛い|つらい|/.test(content)) return
+  if (!/辛い|つらい/.test(content)) return
   setTimeout(() => API.toot(randomContent.cheerUp()), 3000)
 }
 
