@@ -49,6 +49,8 @@ export class Stream {
     const webSocketURL: string = `wss://${this.streamURL}${streamQuery}`
     this.ws = new WebSocket(webSocketURL)
     this.ws.addEventListener('message', this.onUpdate)
+    if (!isEventListener(this.onDelete)) return
+    this.ws.addEventListener('delete', this.onDelete)
   }
 
   public notification (): void {
