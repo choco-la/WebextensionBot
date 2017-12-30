@@ -53,6 +53,7 @@ const randomArray = (contents: string[]): string => {
 }
 
 export const randomContent: { [key: string]: () => string } = {
+  cheerUp: () => randomArray(cheerUp),
   cute: () => randomArray(cute),
   funny: () => randomArray(funny),
   girl: () => randomArray(girl),
