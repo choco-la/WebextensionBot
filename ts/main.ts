@@ -48,7 +48,7 @@ const reply = (recv: INotifiation, text?: string): void => {
   const userName: string = toot.account.username
   const msg: string = text ? text : randomContent.reply()
   setTimeout(() => API.favourite(toot.id), 2000)
-  setTimeout(() => API.toot(`@${userName}@${host} ${msg}`, toot.id), 3000)
+  setTimeout(() => API.toot(`@${userName}@${host} ${msg}`, toot.id, toot.visibility), 3000)
 }
 
 const close = (recv: INotifiation): void => {

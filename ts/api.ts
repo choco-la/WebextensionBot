@@ -1,3 +1,4 @@
+import { Visibility } from './deftypes'
 import { isVisibility } from './guards'
 
 interface ISendToot {
@@ -6,7 +7,7 @@ interface ISendToot {
   sensitive: boolean,
   spoiler_text: string,
   status: string
-  visibility: 'public' | 'unlisted' | 'private' | 'direct'
+  visibility: Visibility
 }
 
 interface IXHRResponce {
@@ -29,7 +30,7 @@ export class MastodonAPI {
   private _coolTime: number
   private isCoolTime: boolean
   private hasRateLimit: boolean = false
-  private _visibility: 'public' | 'unlisted' | 'private' | 'direct' = 'direct'
+  private _visibility: Visibility = 'direct'
 
   constructor (host: string, token: string) {
     this.bearerToken = token
@@ -55,17 +56,16 @@ export class MastodonAPI {
     this._visibility = value
   }
 
-  public toot (content: string, reply?: string): void {
+  public toot (content: string, replyToID?: string, visibility?: Visibility): void {
     if (this.hasRateLimit && this.rateLimit <= 0) return console.log(`rateLimit: ${this.rateLimit}`)
     if (this.isCoolTime) return console.log(`coolTime: ${this._coolTime}`)
-    const replyToId = reply || null
     const data = {
-      in_reply_to_id: replyToId,
+      in_reply_to_id: replyToID ? replyToID : null,
       media_ids: [],
       sensitive: false,
       spoiler_text: '',
       status: content,
-      visibility: this._visibility
+      visibility: visibility ? visibility : this._visibility
     }
     this.sendToot(data)
     .then((resp) => console.log(resp.status))

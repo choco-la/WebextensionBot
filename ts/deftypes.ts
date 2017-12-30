@@ -54,7 +54,7 @@ export interface ITootJSON {
   tags: Array<{name: string, url: string}>
   uri: string
   url: string
-  visibility: 'public' | 'unlisted' | 'private' | 'direct'
+  visibility: Visibility
 }
 
 export interface IStreamListener {
@@ -64,3 +64,4 @@ export interface IStreamListener {
 }
 
 export type NotifyEvent = 'favourite' | 'follow' | 'mention' | 'reblog'
+export type Visibility = 'public' | 'unlisted' | 'private' | 'direct'
