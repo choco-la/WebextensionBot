@@ -70,6 +70,8 @@ export class MastodonAPI {
     this.sendToot(data)
     .then((resp) => console.log(resp.status))
     .catch((resp) => console.error(`${resp.status}: ${resp.statusText}`))
+    // Limit API when it is not reply.
+    if (replyToID) return
     if (this.hasRateLimit) {
       this.rateLimit--
       console.log(`rateLimit: ${this.rateLimit}`)

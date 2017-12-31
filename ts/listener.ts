@@ -1,4 +1,5 @@
 import { INotifiation, IStatus, NotifyEvent } from './deftypes'
+import { secretFilter } from './secret'
 import { tootParser } from './tootparser'
 
 export class Listener {
@@ -65,6 +66,7 @@ export class Listener {
     if (muteFilter.screenname(screenName)) return console.log(`muted: ${screenName}`)
     if (muteFilter.content(content)) return console.log(`muted: ${content}`)
     if (muteFilter.application(application)) return console.log(`muted: ${application}`)
+    if (secretFilter.test(content)) return console.log(`muted: ${content}`)
 
     for (const listener of this.updateListeners) {
       listener(payload)
@@ -92,6 +94,7 @@ export class Listener {
     if (muteFilter.screenname(screenName)) return console.log(`muted: ${screenName}`)
     if (muteFilter.content(content)) return console.log(`muted: ${content}`)
     if (muteFilter.application(application)) return console.log(`muted: ${application}`)
+    if (secretFilter.test(content)) return console.log(`muted: ${content}`)
 
     for (const listener of this.mentionListeners) {
       listener(notification)
