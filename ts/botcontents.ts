@@ -13,15 +13,23 @@ const cheerUp: string[] = [
   '元気出るびーむっ(∩｡•ｏ•｡)っ.ﾟ☆｡･'
 ]
 
-const fortune: string[] = [
-  '大吉',
-  '中吉',
-  '小吉',
-  '吉',
-  '末吉',
-  '凶',
-  '大凶'
-]
+const drawFortune = (): string => {
+  const num = Math.round(Math.random() * 100)
+  // 10%
+  if (num > 90) return '大吉'
+  // 15%
+  else if (num > 75) return '中吉'
+  // 20%
+  else if (num > 55) return '小吉'
+  // 20%
+  else if (num > 35) return '吉'
+  // 20%
+  else if (num > 15) return '末吉'
+  // 10%
+  else if (num > 5) return '凶'
+  // 5%
+  else return'大凶'
+}
 
 const funny: string[] = [
   'ひょろわ〜ちゃん面白い(๑•᎑•๑)♬*',
@@ -85,7 +93,7 @@ const randomArray = (contents: string[]): string => {
 export const randomContent: { [key: string]: () => string } = {
   cheerUp: () => randomArray(cheerUp),
   cute: () => randomArray(cute),
-  fortune: () => randomArray(fortune),
+  fortune: () => drawFortune(),
   funny: () => randomArray(funny),
   girl: () => randomArray(girl),
   kiss: () => randomArray(kiss),
