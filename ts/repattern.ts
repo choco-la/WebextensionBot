@@ -38,7 +38,7 @@ const closePat: string[] = [
   String.raw`close`
 ]
 
-const afterWhat = String.raw`(人生|残業|学校|幼稚園|保育園|バイト|塾|部活|仕事|しご|試験|勉強|テスト|課題|作業|授業|講義|放送|配信|枠|枠取り)`
+const afterWhat = String.raw`(人生|残業|[お大]掃除|[お大]そうじ|学校|幼稚園|保育園|バイト|塾|部活|仕事|しご|試験|勉強|テスト|課題|作業|授業|講義|放送|配信|枠|枠取り)`
 const afterRe = String.raw`${afterWhat}(?:から|やっと|もう|いま|今)*(?:[終お]わ|しゅうりょう|終了|帰|かえ)`
 const foodRe = String.raw`([🍕🍺🍵☕])(?:どうぞ|[い淹入][れっ]た)`
 const fortuneRe = String.raw`[!！](?:omikuji|[ｏＯ][ｍＭ][ｉＩ][ｋＫ][ｕＵ][ｊＪ][ｉＩ]|おみくじ|[御お]籤|オミクジ)`

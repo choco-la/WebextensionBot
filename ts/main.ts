@@ -3,7 +3,7 @@ import { randomContent } from './botcontents'
 import { Auth } from './conf'
 import { INotifiation, IStatus } from './deftypes'
 import { Listener } from './listener'
-import { rePattern } from './repattern'
+import { rawPattern, rePattern } from './repattern'
 import { Stream } from './stream'
 import { tootParser } from './tootparser'
 
@@ -67,6 +67,19 @@ const wakaru = (toot: IStatus): void => {
   setTimeout(() => API.toot(randomContent.understand()), 3000)
 }
 
+const mom = (toot: IStatus) => {
+  const content = tootParser.tootContent(toot.content)
+  const re1 = new RegExp(String.raw`(?:ﾏﾏ|ママ|まま)${rawPattern.friendlySuffix}+`)
+  const re2 = new RegExp(String.raw`(?:おぎゃ|だぁ|ばぶ)${rawPattern.friendlySuffix}+`)
+  if (re1.test(content)) {
+    setTimeout(() => API.toot(randomContent.mom()), 3000)
+    return
+  } else if (re2.test(content)) {
+    setTimeout(() => API.toot(randomContent.mom()), 3000)
+    return
+  }
+}
+
 const otoshidama = (toot: IStatus, ismention?: boolean): void => {
   const content = tootParser.tootContent(toot.content)
   if (!ismention) {
@@ -116,6 +129,20 @@ const close = (toot: IStatus): void => {
   notification.close()
 }
 
+const onFollow = (recv: INotifiation): void => {
+  const account = recv.account.id
+  API.relationships([account])
+  .then((relationships) => {
+    const isFollowing: boolean = relationships[0].following
+    const id = relationships[0].id
+    if (isFollowing) return
+    API.follow(id)
+    .then(() => console.log(`follow: ${id}`))
+    .catch((err) => console.error(err))
+  })
+  .catch((err) => console.error(err))
+}
+
 const onMention = (recv: INotifiation): void => {
   const toot = recv.status
   const content = tootParser.tootContent(toot.content)
@@ -134,11 +161,13 @@ listener.addUpdateFilter(cute)
 listener.addUpdateFilter(favUyu)
 listener.addUpdateFilter(fortune)
 listener.addUpdateFilter(funny)
+listener.addUpdateFilter(mom)
 listener.addUpdateFilter(otoshidama)
 listener.addUpdateFilter(sm9)
 listener.addUpdateFilter(wakaru)
 listener.addUpdateFilter(wipeTL)
 listener.addNotificationListener('mention', onMention)
+listener.addNotificationListener('follow', onFollow)
 
 const ltl = new Stream(hostName, bearerToken)
 ltl.local()

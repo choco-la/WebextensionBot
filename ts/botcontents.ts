@@ -52,6 +52,12 @@ const kiss: string[] = [
   'ちゅっちゅお！♡'
 ]
 
+const mom: string[] = [
+  'は〜いままでちゅよ〜♡🍼',
+  'よしよしいい子いい子♡',
+  'どうしたの？よちよち💕'
+]
+
 const otoshidama: string[] = [
   `${Math.round(Math.random() * 10) * 100}ぅゅたんポイント`,
   `${Math.round(Math.random() * 1000) * 100}ぅゅたんポイント`,
@@ -63,7 +69,8 @@ const otoshidama: string[] = [
   `${Math.round(Math.random() * 10)}億円`,
   `${Math.round(Math.random() * 1000) * 100}ドル`,
   `${Math.round(Math.random() * 1000) * 100}元`,
-  `${Math.round(Math.random() * 1000) * 100}ユーロ`
+  `${Math.round(Math.random() * 1000) * 100}ユーロ`,
+  `${Math.round(Math.random() * 10)}BTC`
 ]
 
 const replyDefault: string[] = [
@@ -97,6 +104,7 @@ export const randomContent: { [key: string]: () => string } = {
   funny: () => randomArray(funny),
   girl: () => randomArray(girl),
   kiss: () => randomArray(kiss),
+  mom: () => randomArray(mom),
   otoshidama: () => randomArray(otoshidama),
   reply: () => randomArray(replyDefault),
   sm9: () => randomArray(sm9),
