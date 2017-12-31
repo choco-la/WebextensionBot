@@ -39,6 +39,17 @@ export interface INotifiation {
   type: 'mention' | 'reblog' | 'favourite' | 'follow'
 }
 
+export interface IRelationship {
+  blocking: boolean
+  domain_blocking: boolean
+  followed_by: boolean
+  following: boolean
+  id: string
+  muting_notifications: boolean
+  muting: boolean
+  requested: boolean
+}
+
 export interface IStatus {
   account: IAccount
   application: { name: string , website: string | null }

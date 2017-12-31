@@ -1,4 +1,4 @@
-import { Visibility } from './deftypes'
+import { IRelationship, Visibility } from './deftypes'
 import { isVisibility } from './typeguards'
 
 interface ISendToot {
@@ -35,6 +35,32 @@ export class MastodonAPI {
   constructor (host: string, token: string) {
     this.bearerToken = token
     this.hostName = host
+  }
+
+  public relationships (idarray: string[]): Promise<IRelationship[]> {
+    return new Promise((resolve: (resp: IRelationship[]) => void,
+                        reject: (err: IFullfilledXHR) => void) => {
+      const query: string = `id[]=${idarray.join('&id[]=')}`
+      const xhr = new XMLHttpRequest()
+      xhr.open('GET', `https://${this.hostName}/api/v1/accounts/relationships?${query}`)
+      xhr.setRequestHeader('Authorization', `Bearer ${this.bearerToken}`)
+      xhr.timeout = 3000
+      xhr.responseType = 'json'
+      xhr.withCredentials = true
+
+      xhr.onloadend = () => {
+        if (xhr.status >= 200 && xhr.status < 300) {
+          resolve(xhr.response)
+        } else {
+          reject(xhr)
+        }
+      }
+      xhr.onerror = () => {
+        reject(xhr)
+      }
+
+      xhr.send()
+    })
   }
 
   public setRateLimit (value?: number): void {
@@ -84,6 +110,31 @@ export class MastodonAPI {
                         reject: (err: IFullfilledXHR) => void) => {
       const xhr = new XMLHttpRequest()
       xhr.open('POST', `https://${this.hostName}/api/v1/statuses/${id}/favourite`)
+      xhr.setRequestHeader('Authorization', `Bearer ${this.bearerToken}`)
+      xhr.timeout = 3000
+      xhr.responseType = 'json'
+      xhr.withCredentials = true
+
+      xhr.onloadend = () => {
+        if (xhr.status >= 200 && xhr.status < 300) {
+          resolve(xhr)
+        } else {
+          reject(xhr)
+        }
+      }
+      xhr.onerror = () => {
+        reject(xhr)
+      }
+
+      xhr.send()
+    })
+  }
+
+  public follow (id: string): Promise<IFullfilledXHR> {
+    return new Promise((resolve: (resp: IFullfilledXHR) => void,
+                        reject: (err: IFullfilledXHR) => void) => {
+      const xhr = new XMLHttpRequest()
+      xhr.open('POST', `https://${this.hostName}/api/v1/accounts/${id}/follow`)
       xhr.setRequestHeader('Authorization', `Bearer ${this.bearerToken}`)
       xhr.timeout = 3000
       xhr.responseType = 'json'
