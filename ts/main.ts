@@ -3,7 +3,7 @@ import { randomContent } from './botcontents'
 import { Auth } from './conf'
 import { INotifiation, IStatus } from './deftypes'
 import { Listener } from './listener'
-import { rawPattern, rePattern } from './repattern'
+import { rePattern } from './repattern'
 import { Stream } from './stream'
 import { tootParser } from './tootparser'
 
@@ -26,20 +26,6 @@ const after = (toot: IStatus): void => {
   setTimeout(() => API.toot(`${match[1]}おつ(๑>◡<๑)`, toot.visibility), 3000)
 }
 
-const cheerUp = (toot: IStatus): void => {
-  const content = tootParser.tootContent(toot.content)
-  if (!/辛い|つらい/.test(content)) return
-  setTimeout(() => API.toot(randomContent.cheerUp(), toot.visibility), 3000)
-}
-
-const cute = (toot: IStatus): void => {
-  const screenName = tootParser.screenName(toot.account)
-  const content = tootParser.tootContent(toot.content)
-  if (screenName !== target) return
-  if (!/ぉんなのこ/.test(content)) return
-  setTimeout(() => API.toot(randomContent.cute(), toot.visibility), 3000)
-}
-
 const fortune = (toot: IStatus, ismention?: boolean): void => {
   const content = tootParser.tootContent(toot.content)
   if (!ismention) {
@@ -59,25 +45,6 @@ const funny = (toot: IStatus): void => {
   if (screenName !== target) return
   if (!/[wWｗＷ]$/.test(content)) return
   setTimeout(() => API.toot(`@12@friends.nico ${randomContent.funny()}`, toot.visibility, toot.id), 1000)
-}
-
-const wakaru = (toot: IStatus): void => {
-  const content = tootParser.tootContent(toot.content)
-  if (!/^わかる$/.test(content)) return
-  setTimeout(() => API.toot(randomContent.understand(), toot.visibility), 3000)
-}
-
-const mom = (toot: IStatus) => {
-  const content = tootParser.tootContent(toot.content)
-  const re1 = new RegExp(String.raw`(?:ﾏﾏ|ママ|まま)${rawPattern.friendlySuffix}+`)
-  const re2 = new RegExp(String.raw`(?:おぎゃ|だぁ|ばぶ)${rawPattern.friendlySuffix}+`)
-  if (re1.test(content)) {
-    setTimeout(() => API.toot(randomContent.mom()), toot.visibility, 3000)
-    return
-  } else if (re2.test(content)) {
-    setTimeout(() => API.toot(randomContent.mom()), toot.visibility, 3000)
-    return
-  }
 }
 
 const otoshidama = (toot: IStatus, ismention?: boolean): void => {
@@ -156,15 +123,11 @@ const onMention = (recv: INotifiation): void => {
 
 const listener = new Listener()
 listener.addUpdateFilter(after)
-listener.addUpdateFilter(cheerUp)
-listener.addUpdateFilter(cute)
 listener.addUpdateFilter(favUyu)
 listener.addUpdateFilter(fortune)
 listener.addUpdateFilter(funny)
-listener.addUpdateFilter(mom)
 listener.addUpdateFilter(otoshidama)
 listener.addUpdateFilter(sm9)
-listener.addUpdateFilter(wakaru)
 listener.addUpdateFilter(wipeTL)
 listener.addNotificationListener('mention', onMention)
 listener.addNotificationListener('follow', onFollow)
