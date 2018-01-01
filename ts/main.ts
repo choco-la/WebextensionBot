@@ -16,20 +16,20 @@ const target = '12@friends.nico'
 
 const API = new MastodonAPI(hostName, bearerToken)
 API.setRateLimit()
-API.setCoolTime(3000)
+API.setCoolTime()
 API.visibility = 'public'
 
 const after = (toot: IStatus): void => {
   const content = tootParser.tootContent(toot.content)
   const match = rePattern.after.exec(content)
   if (!match) return
-  setTimeout(() => API.toot(`${match[1]}おつ(๑>◡<๑)`), 3000)
+  setTimeout(() => API.toot(`${match[1]}おつ(๑>◡<๑)`, toot.visibility), 3000)
 }
 
 const cheerUp = (toot: IStatus): void => {
   const content = tootParser.tootContent(toot.content)
   if (!/辛い|つらい/.test(content)) return
-  setTimeout(() => API.toot(randomContent.cheerUp()), 3000)
+  setTimeout(() => API.toot(randomContent.cheerUp(), toot.visibility), 3000)
 }
 
 const cute = (toot: IStatus): void => {
@@ -37,7 +37,7 @@ const cute = (toot: IStatus): void => {
   const content = tootParser.tootContent(toot.content)
   if (screenName !== target) return
   if (!/ぉんなのこ/.test(content)) return
-  setTimeout(() => API.toot(randomContent.cute()), 3000)
+  setTimeout(() => API.toot(randomContent.cute(), toot.visibility), 3000)
 }
 
 const fortune = (toot: IStatus, ismention?: boolean): void => {
@@ -50,7 +50,7 @@ const fortune = (toot: IStatus, ismention?: boolean): void => {
   const host: string = url.hostname
   const userName: string = toot.account.username
   const msg = `おみくじぽん♪\n${randomContent.fortune()}で〜す◝(⑅•ᴗ•⑅)◜..°♡`
-  setTimeout(() => API.toot(`@${userName}@${host} ${msg}`, toot.id, toot.visibility), 3000)
+  setTimeout(() => API.toot(`@${userName}@${host} ${msg}`, toot.visibility, toot.id), 3000)
 }
 
 const funny = (toot: IStatus): void => {
@@ -58,13 +58,13 @@ const funny = (toot: IStatus): void => {
   const content = tootParser.tootContent(toot.content)
   if (screenName !== target) return
   if (!/[wWｗＷ]$/.test(content)) return
-  setTimeout(() => API.toot(`@12@friends.nico ${randomContent.funny()}`, toot.id), 1000)
+  setTimeout(() => API.toot(`@12@friends.nico ${randomContent.funny()}`, toot.visibility, toot.id), 1000)
 }
 
 const wakaru = (toot: IStatus): void => {
   const content = tootParser.tootContent(toot.content)
   if (!/^わかる$/.test(content)) return
-  setTimeout(() => API.toot(randomContent.understand()), 3000)
+  setTimeout(() => API.toot(randomContent.understand(), toot.visibility), 3000)
 }
 
 const mom = (toot: IStatus) => {
@@ -72,10 +72,10 @@ const mom = (toot: IStatus) => {
   const re1 = new RegExp(String.raw`(?:ﾏﾏ|ママ|まま)${rawPattern.friendlySuffix}+`)
   const re2 = new RegExp(String.raw`(?:おぎゃ|だぁ|ばぶ)${rawPattern.friendlySuffix}+`)
   if (re1.test(content)) {
-    setTimeout(() => API.toot(randomContent.mom()), 3000)
+    setTimeout(() => API.toot(randomContent.mom()), toot.visibility, 3000)
     return
   } else if (re2.test(content)) {
-    setTimeout(() => API.toot(randomContent.mom()), 3000)
+    setTimeout(() => API.toot(randomContent.mom()), toot.visibility, 3000)
     return
   }
 }
@@ -90,7 +90,7 @@ const otoshidama = (toot: IStatus, ismention?: boolean): void => {
   const host: string = url.hostname
   const userName: string = toot.account.username
   const msg = `お年玉どうぞっ(๑•̀ㅁ•́๑)✧\nっ[${randomContent.otoshidama()}]`
-  setTimeout(() => API.toot(`@${userName}@${host} ${msg}`, toot.id, toot.visibility), 3000)
+  setTimeout(() => API.toot(`@${userName}@${host} ${msg}`, toot.visibility, toot.id), 3000)
 }
 
 const reply = (toot: IStatus, text?: string): void => {
@@ -99,13 +99,13 @@ const reply = (toot: IStatus, text?: string): void => {
   const userName: string = toot.account.username
   const msg: string = text ? text : randomContent.reply()
   setTimeout(() => API.favourite(toot.id), 2000)
-  setTimeout(() => API.toot(`@${userName}@${host} ${msg}`, toot.id, toot.visibility), 3000)
+  setTimeout(() => API.toot(`@${userName}@${host} ${msg}`, toot.visibility, toot.id), 3000)
 }
 
 const sm9 = (toot: IStatus): void => {
   const content = tootParser.tootContent(toot.content)
   if (!/sm9/.test(content)) return
-  setTimeout(() => API.toot(randomContent.sm9()), 3000)
+  setTimeout(() => API.toot(randomContent.sm9(), toot.visibility), 3000)
 }
 
 const favUyu = (toot: IStatus): void => {
@@ -116,8 +116,8 @@ const favUyu = (toot: IStatus): void => {
 
 const wipeTL = (toot: IStatus): void => {
   const content = tootParser.tootContent(toot.content)
-  if (!/(?:[ｱ-ﾝ]ﾞ?[ｱ-ﾝ]ﾞ?){3,}.*[!！]|ﾌﾞﾘ/.test(content)) return
-  setTimeout(() => API.toot('ふきふき'), 3000)
+  if (!/(?:[ｱ-ﾝｧ-ｮ]ﾞ?[ｱ-ﾝｧ-ｮ]ﾞ?){3,}.*[!！]|ﾌﾞﾘ/.test(content)) return
+  setTimeout(() => API.toot('ふきふき', toot.visibility), 3000)
 }
 
 const close = (toot: IStatus): void => {

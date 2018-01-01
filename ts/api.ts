@@ -137,7 +137,7 @@ export class MastodonAPI {
     console.log(`coolTime: ${this.limit.coolTime}`)
   }
 
-  public toot (content: string, replyToID?: string, visibility?: Visibility): void {
+  public toot (content: string, visibility?: Visibility, replyToID?: string): void {
     if (replyToID) {
       if (this.limit && this.rateLimitReply <= 0) return console.log(`rateLimitReply: ${this.limit.remainingReply}`)
     } else {
