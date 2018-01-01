@@ -20,21 +20,61 @@ interface IFullfilledXHR extends XMLHttpRequest {
   statusText: string
 }
 
+const APIRateLimit = {
+  // Wait ${coolTime} seconds per toot.
+  coolTime: 20000,
+  isCoolTime: false,
+  // Ratelimit per 1min.
+  rateLimitPublic: 2,
+  rateLimitReply: 30,
+  remainingPublic: 0,
+  remainingReply: 0
+
+}
+
 export class MastodonAPI {
   private bearerToken: string
   private hostName: string
-  // Ratelimit per 30s.
-  private _rateLimitDefault: number = 3
-  private rateLimit: number
-  // Wait ${_coolTime} seconds per toot.
-  private _coolTime: number
-  private isCoolTime: boolean
-  private hasRateLimit: boolean = false
+  private limit = APIRateLimit
   private _visibility: Visibility = 'direct'
+  // Number of setInterval() that resets ratelimit.
+  private resetPublicRateLimitID: number
+  private resetReplyRateLimitID: number
+  // Number of setInterval() that resets cooltime.
+  private resetCoolTimeID: number
 
   constructor (host: string, token: string) {
     this.bearerToken = token
     this.hostName = host
+  }
+
+  public set rateLimitPublic (value: number) {
+    if (!this.limit) return
+    if (value <= 0) return
+    this.limit.rateLimitPublic = value
+  }
+
+  public get rateLimitPublic (): number {
+    return this.limit.rateLimitPublic
+  }
+
+  public set rateLimitReply (value: number) {
+    if (!this.limit) return
+    if (value <= 0) return
+    this.limit.rateLimitReply = value
+  }
+
+  public get rateLimitReply (): number {
+    return this.limit.rateLimitReply
+  }
+
+  public set visibility (value: Visibility) {
+    if (!isVisibility(value)) return
+    this._visibility = value
+  }
+
+  public get visibility (): Visibility {
+    return this._visibility
   }
 
   public relationships (idarray: string[]): Promise<IRelationship[]> {
@@ -63,46 +103,69 @@ export class MastodonAPI {
     })
   }
 
-  public setRateLimit (value?: number): void {
-    if (value) this._rateLimitDefault = value
-    this.hasRateLimit = true
-    this.rateLimit = this._rateLimitDefault
-    setInterval(() => this.rateLimit = this._rateLimitDefault, 30000)
-    console.log(`rateLimit: ${this.rateLimit}`)
+  public setRateLimit (pubvalue?: number, repvalue?: number): void {
+    if (!this.limit) this.limit = APIRateLimit
+
+    if (pubvalue) this.rateLimitPublic = pubvalue
+    this.limit.remainingPublic = this.rateLimitPublic
+
+    if (repvalue) this.rateLimitReply = repvalue
+    this.limit.remainingReply = this.rateLimitReply
+
+    // Reset remaining values to default value per 1min.
+    if (!this.resetPublicRateLimitID) {
+      this.resetPublicRateLimitID = setInterval(() => this.limit.remainingPublic = this.rateLimitPublic, 60000)
+    }
+    if (!this.resetReplyRateLimitID) {
+      this.resetReplyRateLimitID = setInterval(() => this.limit.remainingReply = this.rateLimitReply, 60000)
+    }
+    console.log(`rateLimitPublic: ${this.rateLimitPublic}`)
+    console.log(`rateLimitReply: ${this.rateLimitReply}`)
   }
 
-  public setCoolTime (value: number): void {
-    this._coolTime = value
-    setInterval(() => this.isCoolTime = false, this._coolTime)
-    console.log(`coolTime: ${this._coolTime}`)
+  public setCoolTime (value?: number): void {
+    if (!this.limit) this.setRateLimit()
+    if (value) this.coolTime = value
   }
 
-  public set visibility (value: string) {
-    if (!isVisibility(value)) return
-    this._visibility = value
+  private set coolTime (value: number) {
+    if (value <= 0) return
+    this.limit.coolTime = value
+    if (!this.resetCoolTimeID) {
+      this.resetCoolTimeID = setInterval(() => this.limit.isCoolTime = false, this.limit.coolTime)
+    }
+    console.log(`coolTime: ${this.limit.coolTime}`)
   }
 
   public toot (content: string, replyToID?: string, visibility?: Visibility): void {
-    if (this.hasRateLimit && this.rateLimit <= 0) return console.log(`rateLimit: ${this.rateLimit}`)
-    if (this.isCoolTime) return console.log(`coolTime: ${this._coolTime}`)
+    if (replyToID) {
+      if (this.limit && this.rateLimitReply <= 0) return console.log(`rateLimitReply: ${this.limit.remainingReply}`)
+    } else {
+      if (this.limit && this.rateLimitPublic <= 0) return console.log(`rateLimitPublic: ${this.limit.remainingPublic}`)
+      if (this.limit.isCoolTime) return console.log(`coolTime: ${this.limit.coolTime}`)
+    }
+
     const data = {
       in_reply_to_id: replyToID ? replyToID : null,
       media_ids: [],
       sensitive: false,
       spoiler_text: '',
       status: content,
-      visibility: visibility ? visibility : this._visibility
+      visibility: visibility ? visibility : this.visibility
     }
     this.sendToot(data)
     .then((resp) => console.log(resp.status))
     .catch((resp) => console.error(`${resp.status}: ${resp.statusText}`))
-    // Limit API when it is not reply.
-    if (replyToID) return
-    if (this.hasRateLimit) {
-      this.rateLimit--
-      console.log(`rateLimit: ${this.rateLimit}`)
+
+    if (!this.limit) return
+    if (replyToID) {
+      this.rateLimitReply--
+      console.log(`rateLimitReply: ${this.rateLimitReply}`)
+    } else {
+      this.rateLimitPublic--
+      console.log(`rateLimitPublic: ${this.rateLimitPublic}`)
+      this.limit.isCoolTime = true
     }
-    if (this._coolTime !== undefined) this.isCoolTime = true
   }
 
   public favourite (id: string): Promise<IFullfilledXHR> {
@@ -180,5 +243,4 @@ export class MastodonAPI {
       xhr.send(JSON.stringify(data))
     })
   }
-
 }
