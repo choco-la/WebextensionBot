@@ -126,15 +126,16 @@ export class MastodonAPI {
   public setCoolTime (value?: number): void {
     if (!this.limit) this.setRateLimit()
     if (value) this.coolTime = value
+
+    if (!this.resetCoolTimeID) {
+      this.resetCoolTimeID = setInterval(() => this.limit.isCoolTime = false, this.limit.coolTime)
+    }
+    console.log(`coolTime: ${this.limit.coolTime}`)
   }
 
   private set coolTime (value: number) {
     if (value <= 0) return
     this.limit.coolTime = value
-    if (!this.resetCoolTimeID) {
-      this.resetCoolTimeID = setInterval(() => this.limit.isCoolTime = false, this.limit.coolTime)
-    }
-    console.log(`coolTime: ${this.limit.coolTime}`)
   }
 
   public toot (content: string, visibility?: Visibility, replyToID?: string): void {
