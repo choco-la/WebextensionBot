@@ -2,6 +2,7 @@ import { MastodonAPI } from './api'
 import { randomContent } from './botcontents'
 import { Auth } from './conf'
 import { INotifiation, IStatus } from './deftypes'
+import { evalCalc } from './evalcalc'
 import { Listener } from './listener'
 import { rePattern } from './repattern'
 import { Stream } from './stream'
@@ -26,6 +27,28 @@ const after = (toot: IStatus): void => {
   setTimeout(() => API.toot(`${match[1]}おつ(๑>◡<๑)`, toot.visibility), 3000)
 }
 
+const calc = (toot: IStatus): void => {
+  const content = tootParser.tootContent(toot.content)
+  const onInvalid = 'わかんないよぉ〜(｡>﹏<｡)'
+  const over = '大きすぎる(∩´﹏`∩)💦'
+  const input = /(?:calc|計算|けいさん)[:：](?:\n)*(.+)/i.exec(content)
+  if (!input) return
+
+  const url: URL = new URL(toot.account.url)
+  const host: string = url.hostname
+  const userName: string = toot.account.username
+
+  const expression = input[1].trim()
+  const result = evalCalc(expression)
+  if (isNaN(result)) {
+    setTimeout(() => API.toot(`@${userName}@${host} ${onInvalid}`, toot.visibility, toot.id), 3000)
+  } else if (result.toString().length > 300) {
+    setTimeout(() => API.toot(`@${userName}@${host} ${over}`, toot.visibility, toot.id), 3000)
+  } else {
+    setTimeout(() => API.toot(`@${userName}@${host} ん〜。。。\n${result}かな〜？(๑>◡<๑)`, toot.visibility, toot.id), 3000)
+  }
+}
+
 const fortune = (toot: IStatus, ismention?: boolean): void => {
   const content = tootParser.tootContent(toot.content)
   if (!ismention) {
@@ -35,8 +58,18 @@ const fortune = (toot: IStatus, ismention?: boolean): void => {
   const url: URL = new URL(toot.account.url)
   const host: string = url.hostname
   const userName: string = toot.account.username
-  const msg = `おみくじぽん♪\n${randomContent.fortune()}で〜す◝(⑅•ᴗ•⑅)◜..°♡`
-  setTimeout(() => API.toot(`@${userName}@${host} ${msg}`, toot.visibility, toot.id), 3000)
+  if (/(?:10|１０|十)(?:回|枚|個|連|かい|まい|こ|れん)/.test(content)) {
+    // Draw 10 times.
+    let msg = `おみくじぽん♪`
+    for (let i = 0; i < 10; i++) {
+      if (i % 4 === 0) msg += `\n${randomContent.fortune()}`
+      else msg += ` ${randomContent.fortune()}`
+    }
+    setTimeout(() => API.toot(`@${userName}@${host} ${msg}`, toot.visibility, toot.id), 3000)
+  } else {
+    const msg = `おみくじぽん♪\n${randomContent.fortune()}で〜す◝(⑅•ᴗ•⑅)◜..°♡`
+    setTimeout(() => API.toot(`@${userName}@${host} ${msg}`, toot.visibility, toot.id), 3000)
+  }
 }
 
 const funny = (toot: IStatus): void => {
@@ -118,6 +151,7 @@ const onMention = (recv: INotifiation): void => {
   if (rePattern.kiss.test(content)) return reply(toot, randomContent.kiss())
   else if (rePattern.otoshidama.test(content)) return otoshidama(toot, true)
   else if (rePattern.fortune.test(content)) return fortune(toot, true)
+  else if (/(?:calc|計算|けいさん)[:：](.+)/i.test(content)) return calc(toot)
   else return reply(toot)
 }
 
