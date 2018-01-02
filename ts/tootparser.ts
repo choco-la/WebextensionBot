@@ -1,8 +1,9 @@
 import { IAccount } from './deftypes'
 import { isHTMLElem } from './typeguards'
 
-const getTootContent = (dom: string): string => {
+const getTootContent = (rawdom: string): string => {
   const parser: DOMParser = new DOMParser()
+  const dom = rawdom.replace(/<br(?: \/)?>/g, '\n')
   const parsedDOM: HTMLDocument = parser.parseFromString(dom, 'text/html')
   if (!isHTMLElem(parsedDOM.activeElement)) return ''
   const element: HTMLElement = parsedDOM.activeElement
