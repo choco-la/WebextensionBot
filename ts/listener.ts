@@ -63,10 +63,10 @@ export class Listener {
     const content: string = tootParser.tootContent(payload.content)
     const application: string = payload.application ? payload.application.name : ''
 
-    if (muteFilter.screenname(screenName)) return console.log(`muted: ${screenName}`)
-    if (muteFilter.content(content)) return console.log(`muted: ${content}`)
-    if (muteFilter.application(application)) return console.log(`muted: ${application}`)
-    if (secretFilter.test(content)) return console.log(`muted: ${content}`)
+    if (muteFilter.screenname(screenName)) return console.debug(`muted: ${screenName}`)
+    if (muteFilter.content(content)) return console.debug(`muted: ${content}`)
+    if (muteFilter.application(application)) return console.debug(`muted: ${application}`)
+    if (secretFilter.test(content)) return console.debug(`muted: ${content}`)
 
     for (const listener of this.updateListeners) {
       listener(payload)
@@ -91,10 +91,10 @@ export class Listener {
     const content: string = tootParser.tootContent(payload.content)
     const application: string = payload.application ? payload.application.name : ''
 
-    if (muteFilter.screenname(screenName)) return console.log(`muted: ${screenName}`)
-    if (muteFilter.content(content)) return console.log(`muted: ${content}`)
-    if (muteFilter.application(application)) return console.log(`muted: ${application}`)
-    if (secretFilter.test(content)) return console.log(`muted: ${content}`)
+    if (muteFilter.screenname(screenName)) return console.debug(`muted: ${screenName}`)
+    if (muteFilter.content(content)) return console.debug(`muted: ${content}`)
+    if (muteFilter.application(application)) return console.debug(`muted: ${application}`)
+    if (secretFilter.test(content)) return console.debug(`muted: ${content}`)
 
     for (const listener of this.mentionListeners) {
       listener(notification)
