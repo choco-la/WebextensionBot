@@ -107,7 +107,7 @@ const reply = (toot: IStatus, text?: string): void => {
 
 const sm9 = (toot: IStatus): void => {
   const content = tootParser.tootContent(toot.content)
-  if (!/sm9/.test(content)) return
+  if (!/sm9(?:[^0-9]|$)/.test(content)) return
   setTimeout(() => API.toot(randomContent.sm9(), toot.visibility), 3000)
 }
 
