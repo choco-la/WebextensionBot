@@ -140,9 +140,11 @@ export class MastodonAPI {
 
   public toot (content: string, visibility?: Visibility, replyToID?: string): void {
     if (replyToID) {
-      if (this.limit && this.rateLimitReply <= 0) return console.log(`rateLimitReply: ${this.limit.remainingReply}`)
+      const msg = `rateLimitReply: ${this.limit.remainingReply}`
+      if (this.limit && this.limit.remainingReply <= 0) return console.log(msg)
     } else {
-      if (this.limit && this.rateLimitPublic <= 0) return console.log(`rateLimitPublic: ${this.limit.remainingPublic}`)
+      const msg = `rateLimitPublic: ${this.limit.remainingPublic}`
+      if (this.limit && this.limit.remainingPublic <= 0) return console.log(msg)
       if (this.limit.isCoolTime) return console.log(`coolTime: ${this.limit.coolTime}`)
     }
 
@@ -160,11 +162,11 @@ export class MastodonAPI {
 
     if (!this.limit) return
     if (replyToID) {
-      this.rateLimitReply--
-      console.log(`rateLimitReply: ${this.rateLimitReply}`)
+      this.limit.remainingReply--
+      console.log(`remainingReply: ${this.limit.remainingReply}`)
     } else {
-      this.rateLimitPublic--
-      console.log(`rateLimitPublic: ${this.rateLimitPublic}`)
+      this.limit.remainingPublic--
+      console.log(`remainingPublic: ${this.limit.remainingPublic}`)
       this.limit.isCoolTime = true
     }
   }
