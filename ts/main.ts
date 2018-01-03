@@ -30,6 +30,7 @@ const after = (toot: IStatus): void => {
 const calc = (toot: IStatus): void => {
   const content = tootParser.tootContent(toot.content)
   const onInvalid = 'わかんないよぉ〜(｡>﹏<｡)'
+  const infinite = 'すっごく大きい数字'
   const over = '大きすぎる(∩´﹏`∩)💦'
   const input = /(?:calc|計算|けいさん)[:：](?:\n)*(.+)/i.exec(content)
   if (!input) return
@@ -42,6 +43,8 @@ const calc = (toot: IStatus): void => {
   const result = evalCalc(expression)
   if (isNaN(result)) {
     setTimeout(() => API.toot(`@${userName}@${host} ${onInvalid}`, toot.visibility, toot.id), 3000)
+  } else if (!isFinite(result)) {
+    setTimeout(() => API.toot(`@${userName}@${host} ん〜。。。\n${infinite}かな〜？(๑>◡<๑)`, toot.visibility, toot.id), 3000)
   } else if (result.toString().length > 300) {
     setTimeout(() => API.toot(`@${userName}@${host} ${over}`, toot.visibility, toot.id), 3000)
   } else {
