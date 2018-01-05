@@ -6,6 +6,8 @@
 
 ```bash
 npm install
+# ミュートしたい正規表現リスト
+mv ts/secret-sample.ts ts/secret.ts
 npm run build
 # トークンを書き込む
 sed -i 's/ACCESS_TOKEN/XXXXXXXX/' ./webext/botstreaming.js
