@@ -58,19 +58,19 @@ const mom: string[] = [
   'どうしたの？よちよち💕'
 ]
 
-const otoshidama: string[] = [
-  `${Math.round(Math.random() * 10) * 100}ぅゅたんポイント`,
-  `${Math.round(Math.random() * 1000) * 100}ぅゅたんポイント`,
-  `${Math.round(Math.random() * 10) * 100}ニコニコポイント`,
-  `${Math.round(Math.random() * 1000) * 100}ニコニコポイント`,
-  `${Math.round(Math.random() * 10) * 100}円`,
-  `${Math.round(Math.random() * 1000) * 100}円`,
-  `${Math.round(Math.random() * 10000) * 1000}円`,
-  `${Math.round(Math.random() * 10)}億円`,
-  `${Math.round(Math.random() * 1000) * 100}ドル`,
-  `${Math.round(Math.random() * 1000) * 100}元`,
-  `${Math.round(Math.random() * 1000) * 100}ユーロ`,
-  `${Math.round(Math.random() * 10)}BTC`
+const otoshidama: Array<() => string> = [
+  () => `${Math.round(Math.random() * 10) * 100}ぅゅたんポイント`,
+  () => `${Math.round(Math.random() * 1000) * 100}ぅゅたんポイント`,
+  () => `${Math.round(Math.random() * 10) * 100}ニコニコポイント`,
+  () => `${Math.round(Math.random() * 1000) * 100}ニコニコポイント`,
+  () => `${Math.round(Math.random() * 10) * 100}円`,
+  () => `${Math.round(Math.random() * 1000) * 100}円`,
+  () => `${Math.round(Math.random() * 10000) * 1000}円`,
+  () => `${Math.round(Math.random() * 10)}億円`,
+  () => `${Math.round(Math.random() * 1000) * 100}ドル`,
+  () => `${Math.round(Math.random() * 1000) * 100}元`,
+  () => `${Math.round(Math.random() * 1000) * 100}ユーロ`,
+  () => `${Math.round(Math.random() * 10)}BTC`
 ]
 
 const replyDefault: string[] = [
@@ -92,7 +92,7 @@ const understand: string[] = [
   'うんうん！( •ᴗ•)*♪'
 ]
 
-const randomArray = (contents: string[]): string => {
+const randomArray = <T>(contents: T[]): T => {
   const index = Math.floor(Math.random() * contents.length)
   return contents[index]
 }
@@ -105,7 +105,7 @@ export const randomContent: { [key: string]: () => string } = {
   girl: () => randomArray(girl),
   kiss: () => randomArray(kiss),
   mom: () => randomArray(mom),
-  otoshidama: () => randomArray(otoshidama),
+  otoshidama: () => `${randomArray(otoshidama)()}`,
   reply: () => randomArray(replyDefault),
   sm9: () => randomArray(sm9),
   understand: () => randomArray(understand)
