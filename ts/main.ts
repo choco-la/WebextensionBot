@@ -16,8 +16,8 @@ const bearerToken: string = Auth.bearerToken.trim()
 const target = '12@friends.nico'
 
 const API = new MastodonAPI(hostName, bearerToken)
-API.setRateLimit()
-API.setCoolTime()
+API.setRateLimit(1)
+API.setCoolTime(90000)
 API.visibility = 'public'
 
 const after = (toot: IStatus): void => {
@@ -116,7 +116,7 @@ const favUyu = (toot: IStatus): void => {
 
 const wipeTL = (toot: IStatus): void => {
   const content = tootParser.tootContent(toot.content)
-  if (!/(?:[ｱ-ﾝｧ-ｮ]ﾞ?[ｱ-ﾝｧ-ｮ]ﾞ?){3,}.*[!！]|ﾌﾞﾘ/.test(content)) return
+  if (!/([ｱ-ﾝｧ-ｮ]ﾞ?[ｱ-ﾝｧ-ｮ]ﾞ?)\1{2,}.*[!！]|ﾌﾞﾘ/.test(content)) return
   setTimeout(() => API.toot('ふきふき', toot.visibility), 3000)
 }
 
