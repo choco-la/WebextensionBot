@@ -26,7 +26,7 @@ export const evalCalc = (rawinput: string): number => {
     return NaN
   }
 
-  if (result > Number.MAX_SAFE_INTEGER) return Infinity
+  if (!Number.isSafeInteger(result)) return NaN
   const decFraction: string | undefined = result.toString().split('.')[1]
   // Rounded to 3 digits after the decimal point.
   if (decFraction && decFraction.length > 3) return Number(result.toFixed(3))
