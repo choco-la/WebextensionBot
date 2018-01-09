@@ -29,7 +29,6 @@ const APIRateLimit = {
   rateLimitReply: 30,
   remainingPublic: 0,
   remainingReply: 0
-
 }
 
 export class MastodonAPI {

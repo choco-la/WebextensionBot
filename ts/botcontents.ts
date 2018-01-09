@@ -129,7 +129,7 @@ export const randomContent: { [key: string]: () => string } = {
   girl: () => randomArray(girl),
   kiss: () => randomArray(kiss),
   mom: () => randomArray(mom),
-  otoshidama: () => `${randomArray(otoshidama)()}`,
+  otoshidama: () => randomArray(otoshidama)(),
   popteamepic: () => characterSlot('ポプテピピック'),
   reply: () => randomArray(replyDefault),
   sm9: () => randomArray(sm9),

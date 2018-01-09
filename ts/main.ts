@@ -24,7 +24,7 @@ const after = (toot: IStatus): void => {
   const content = tootParser.tootContent(toot.content)
   const match = rePattern.after.exec(content)
   if (!match) return
-  setTimeout(() => API.toot(`${match[1]}おつ(๑>◡<๑)`, toot.visibility), 3000)
+  setTimeout(() => API.toot(`${match[1]}おつ(๑>◡<๑)`, toot.visibility), 6000)
 }
 
 const calc = (toot: IStatus): void => {
@@ -77,7 +77,7 @@ const funny = (toot: IStatus): void => {
   const content = tootParser.tootContent(toot.content)
   if (screenName !== target) return
   if (!/[wWｗＷ]$/.test(content)) return
-  setTimeout(() => API.toot(`@12@friends.nico ${randomContent.funny()}`, toot.visibility, toot.id), 1000)
+  setTimeout(() => API.toot(`@12@friends.nico ${randomContent.funny()}`, toot.visibility, toot.id), 3000)
 }
 
 const otoshidama = (toot: IStatus, ismention?: boolean): void => {
@@ -105,7 +105,7 @@ const reply = (toot: IStatus, text?: string): void => {
 const sm9 = (toot: IStatus): void => {
   const content = tootParser.tootContent(toot.content)
   if (!/sm9(?:[^0-9]|$)/.test(content)) return
-  setTimeout(() => API.toot(randomContent.sm9(), toot.visibility), 3000)
+  setTimeout(() => API.toot(randomContent.sm9(), toot.visibility), 6000)
 }
 
 const favUyu = (toot: IStatus): void => {
@@ -116,14 +116,11 @@ const favUyu = (toot: IStatus): void => {
 
 const wipeTL = (toot: IStatus): void => {
   const content = tootParser.tootContent(toot.content)
-  if (!/([ｱ-ﾝｧ-ｮ]ﾞ?[ｱ-ﾝｧ-ｮ]ﾞ?)\1{2,}.*[!！]|ﾌﾞﾘ/.test(content)) return
-  setTimeout(() => API.toot('ふきふき', toot.visibility), 3000)
+  if (!/(?:([ｱ-ﾝｧ-ｮ]ﾞ?)(?!\1)ﾞ?){2,}.*[!！]|ﾌﾞﾘ/.test(content)) return
+  setTimeout(() => API.toot('ふきふき', toot.visibility), 6000)
 }
 
 const close = (toot: IStatus): void => {
-  const content = tootParser.tootContent(toot.content)
-  if (!rePattern.close.test(content)) return
-  if (!/^(?:12|friends_nico|mei23|sisyo)$/.test(toot.account.username)) return
   reply(toot, '終わります(๑•᎑•๑)♬*')
   ltl.close()
   notification.close()
@@ -146,12 +143,14 @@ const onFollow = (recv: INotifiation): void => {
 const onMention = (recv: INotifiation): void => {
   const toot = recv.status
   const content = tootParser.tootContent(toot.content)
-  if (/^(?:12|friends_nico|mei23|sisyo)$/.test(toot.account.username)) close(toot)
+  const admin = /^(?:12|friends_nico|mei23|sisyo)$/
+  if (admin.test(toot.account.username) && rePattern.close.test(content)) close(toot)
 
   if (rePattern.kiss.test(content)) return reply(toot, randomContent.kiss())
   else if (rePattern.otoshidama.test(content)) return otoshidama(toot, true)
   else if (rePattern.fortune.test(content)) return fortune(toot, true)
   else if (/(?:calc|計算|けいさん)[:：](.+)/i.test(content)) return calc(toot)
+  else if (/ポプテピ|ぽぷてぴ/.test(content)) return reply(toot, randomContent.popteamepic())
   else return reply(toot)
 }
 
