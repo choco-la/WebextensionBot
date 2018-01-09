@@ -97,6 +97,30 @@ const randomArray = <T>(contents: T[]): T => {
   return contents[index]
 }
 
+const characterSlot = (text: string): string => {
+  const chars = text.split('')
+  const charSet = new Set(chars)
+  const charArray = setToArray(charSet)
+  return slotValues(charArray, text.length)
+}
+
+const setToArray = <T>(set: Set<T>): T[] => {
+  const arr = []
+  for (const value of set.values()) {
+    arr.push(value)
+  }
+  return arr
+}
+
+const slotValues = (array: string[], length: number = array.length): string => {
+  let result = ''
+  for (let i = 0; i < length; i++) {
+    const index = Math.floor(Math.random() * array.length)
+    result += array[index]
+  }
+  return result
+}
+
 export const randomContent: { [key: string]: () => string } = {
   cheerUp: () => randomArray(cheerUp),
   cute: () => randomArray(cute),
@@ -106,6 +130,7 @@ export const randomContent: { [key: string]: () => string } = {
   kiss: () => randomArray(kiss),
   mom: () => randomArray(mom),
   otoshidama: () => `${randomArray(otoshidama)()}`,
+  popteamepic: () => characterSlot('ポプテピピック'),
   reply: () => randomArray(replyDefault),
   sm9: () => randomArray(sm9),
   understand: () => randomArray(understand)
