@@ -2,12 +2,18 @@
   "name": "webextension_bot",
   "version": "1.0.0",
   "devDependencies": {
+    "@types/chai": "^4.1.0",
+    "@types/mocha": "^2.2.46",
     "browserify": "^14.5.0",
+    "chai": "^4.1.2",
+    "mocha": "^4.1.0",
+    "ts-node": "^4.1.0",
     "tslint": "^5.8.0",
     "tslint-config-standard": "^7.0.0",
     "typescript": "^2.6.2"
   },
   "scripts": {
-    "build": "tsc && browserify js/main.js -o ./webext/botstreaming.js"
+    "build": "tsc; browserify js/main.js -o ./webext/botstreaming.js",
+    "test": "mocha --require ts-node/register ./test/*.ts"
   }
 }
