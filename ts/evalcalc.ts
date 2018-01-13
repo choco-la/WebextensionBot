@@ -21,8 +21,8 @@ const makeIntoExpression = (rawinput: string): string => {
   const expression = rawinput.replace(/　/g, ' ')
                              .replace(/＋/g, '+')
                              .replace(/−/g, '-')
-                             .replace(/xｘ×✕✖/gi, '*')
-                             .replace(/÷➗/g, '/')
+                             .replace(/[xｘ×✕✖]/gi, '*')
+                             .replace(/[÷➗]/g, '/')
                              .replace(/,/g, '')
 
   return expression
@@ -33,7 +33,7 @@ const getValidExpression = (input: string): string | null => {
   if (/[^0-9.+\-%^&*/><()\s]/.test(input)) return null
 
   // Separate Numeral or operator symbol.
-  const pattern = String.raw`(\-?[0-9.]+|[+\-%^&]|[*/]{1,2}|[><]{2}|[()]+)`
+  const pattern = String.raw`(\-?[0-9.]+|[+\-%^&/]|\*{1,2}|[><]{2}|[()]+)`
   const re = new RegExp(pattern, 'g')
   const matchs = input.match(re)
   // Return if it is corrupt expression.
