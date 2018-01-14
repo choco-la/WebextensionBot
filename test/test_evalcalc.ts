@@ -1,7 +1,7 @@
 import { assert } from 'chai'
 import { evalCalc } from '../ts/evalcalc'
 
-describe('Test evalCalc', () => {
+describe('evalCalc', () => {
   it('Simple calculate', () => {
     assert.strictEqual(evalCalc('2 + 2'), 4)
     assert.strictEqual(evalCalc('5 - 1'), 4)
@@ -20,13 +20,12 @@ describe('Test evalCalc', () => {
   })
 
   it('NaN calculate', () => {
-    // TODO: AssertionError: expected NaN to equal NaN
-    // assert.strictEqual(evalCalc('1 / 0'), NaN)
-    assert.strictEqual(Number.isNaN(evalCalc('strings')), true)
-    assert.strictEqual(Number.isNaN(evalCalc('2( ** 2')), true)
-    assert.strictEqual(Number.isNaN(evalCalc(`${Number.MAX_SAFE_INTEGER} + 1`)), true)
-    assert.strictEqual(Number.isNaN(evalCalc(`-${Number.MAX_SAFE_INTEGER} - 1`)), true)
-    assert.strictEqual(Number.isNaN(evalCalc('1 / 0')), true)
-    assert.strictEqual(Number.isNaN(evalCalc('/^(0).*/ && %20()')), true)
+    assert.deepEqual(evalCalc('strings'), NaN)
+    assert.deepEqual(evalCalc('2( ** 2'), NaN)
+    assert.deepEqual(evalCalc(`${Number.MAX_SAFE_INTEGER} + 1`), NaN)
+    assert.deepEqual(evalCalc(`-${Number.MAX_SAFE_INTEGER} - 1`), NaN)
+    assert.deepEqual(evalCalc('1 / 0'), NaN)
+    assert.deepEqual(evalCalc('1 / 0'), NaN)
+    assert.deepEqual(evalCalc('/^(0).*/ && %20()'), NaN)
   })
 })
