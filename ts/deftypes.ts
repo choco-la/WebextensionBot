@@ -1,10 +1,10 @@
 export interface IAccount {
   acct: string
   display_name: string
-  followers_count: string
-  following_count: string
+  followers_count: number
+  following_count: number
   id: string
-  statuses_count: string
+  statuses_count: number
   url: string
   username: string
 }
