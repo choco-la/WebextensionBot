@@ -36,11 +36,11 @@ export class MastodonAPI {
   private hostName: string
   private limit = APIRateLimit
   private _visibility: Visibility = 'direct'
-  // Number of setInterval() that resets ratelimit.
-  private resetPublicRateLimitID: number
-  private resetReplyRateLimitID: number
-  // Number of setInterval() that resets cooltime.
-  private resetCoolTimeID: number
+  // Timer of setInterval() that resets ratelimit.
+  private resetPublicRateLimitID: NodeJS.Timer
+  private resetReplyRateLimitID: NodeJS.Timer
+  // Timer of setInterval() that resets cooltime.
+  private resetCoolTimeID: NodeJS.Timer
 
   constructor (host: string, token: string) {
     this.bearerToken = token
