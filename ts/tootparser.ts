@@ -1,14 +1,15 @@
+import { URL } from 'url'
+import { DOMParser } from 'xmldom'
 import { IAccount } from './deftypes'
-import { isHTMLElem } from './typeguards'
 
 const getTootContent = (rawdom: string): string => {
-  const parser: DOMParser = new DOMParser()
   const dom = rawdom.replace(/<br(?: \/)?>/g, '\n')
+  // Return blank string or new line.
+  if (/^\n*$/.test(dom)) return dom
+  const parser: DOMParser = new DOMParser()
   const parsedDOM: HTMLDocument = parser.parseFromString(dom, 'text/html')
-  if (!isHTMLElem(parsedDOM.activeElement)) return ''
-  const element: HTMLElement = parsedDOM.activeElement
-  // Not nullable.
-  return element.innerText
+  const textContent = parsedDOM.documentElement.textContent
+  return textContent ? textContent : ''
 }
 
 const getHostName = (url: string): string => {
