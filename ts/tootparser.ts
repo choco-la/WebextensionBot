@@ -1,4 +1,4 @@
-import { URL } from 'url'
+import * as URL from 'url'
 import { DOMParser } from 'xmldom'
 import { IAccount } from './deftypes'
 
@@ -13,8 +13,8 @@ const getTootContent = (rawdom: string): string => {
 }
 
 const getHostName = (url: string): string => {
-  const parsedURL: URL = new URL(url)
-  return parsedURL.hostname
+  const parsedURL = URL.parse(url)
+  return parsedURL.hostname ? parsedURL.hostname : ''
 }
 
 const getScreenName = (account: IAccount): string => {
