@@ -27,5 +27,6 @@ describe('evalCalc', () => {
     assert.deepEqual(evalCalc('1 / 0'), NaN)
     assert.deepEqual(evalCalc('1 / 0'), NaN)
     assert.deepEqual(evalCalc('/^(0).*/ && %20()'), NaN)
+    assert.deepEqual(evalCalc('/3./ + /2/'), NaN)
   })
 })
