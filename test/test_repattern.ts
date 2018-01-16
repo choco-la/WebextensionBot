@@ -1,5 +1,5 @@
 import { assert } from 'chai'
-import { rePattern } from '../ts/repattern'
+import { rePattern, sholdWipeTL } from '../ts/repattern'
 
 describe('rePattern', () => {
   describe('Assert true', () => {
@@ -42,6 +42,22 @@ describe('rePattern', () => {
     })
     it('Otoshidama', () => {
       assert.isFalse(rePattern.otoshidama.test(''))
+    })
+  })
+})
+
+describe('sholdWipeTL', () => {
+  describe('Assert true', () => {
+    it('wipeTL', () => {
+      assert.isTrue(sholdWipeTL('ﾎﾋﾎﾋﾎﾋﾎﾋ!!'))
+      assert.isTrue(sholdWipeTL('あﾌﾞﾘ'))
+    })
+  })
+
+  describe('Assert false', () => {
+    it('wipeTL', () => {
+      assert.isFalse(sholdWipeTL('ｱｲｳｴｱｲｳｴ!!'))
+      assert.isFalse(sholdWipeTL('ｱｱｱｱｱｱｱｱ!!'))
     })
   })
 })

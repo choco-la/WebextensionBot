@@ -4,7 +4,7 @@ import { Auth } from './conf'
 import { INotifiation, IStatus } from './deftypes'
 import { evalCalc } from './evalcalc'
 import { Listener } from './listener'
-import { rePattern } from './repattern'
+import { rePattern, sholdWipeTL } from './repattern'
 import { Stream } from './stream'
 import { tootParser } from './tootparser'
 
@@ -116,7 +116,7 @@ const favUyu = (toot: IStatus): void => {
 
 const wipeTL = (toot: IStatus): void => {
   const content = tootParser.tootContent(toot.content)
-  if (!/(?:([ｱ-ﾝｧ-ｮ]ﾞ?)(?!\1)ﾞ?){2,}.*[!！]|ﾌﾞﾘ/.test(content)) return
+  if (!sholdWipeTL(content)) return
   setTimeout(() => API.toot('ふきふき', toot.visibility), 6000)
 }
 

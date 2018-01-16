@@ -53,3 +53,20 @@ export const rePattern: { [key: string]: RegExp } = {
   kiss: new RegExp(`ちゅ${rawPattern.friendlySuffix}*$`),
   otoshidama: new RegExp(`${otoshidamaRe}`, 'i')
 }
+
+export const sholdWipeTL = (text: string): boolean => {
+  if (text.indexOf('ﾌﾞﾘ') > 0) return true
+
+  const re = /([ｱ-ﾝｧ-ｮ]ﾞ?)([ｱ-ﾝｧ-ｮ]ﾞ?)(?:\1\2){2,}[^!！]*[!！]+$/g
+  // Array like ['ABABABAB!!', 'CDCDCDCD!!'] if maches.
+  const matches = text.match(re)
+  if (!matches) return false
+  for (const match of matches) {
+    const capture = re.exec(match)
+    if (capture === null) continue
+    // Pass if pattern is like 'AAAAAA!!'.
+    if (capture[1] === capture[2]) continue
+    return true
+  }
+  return false
+}
