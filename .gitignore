@@ -1,4 +1,6 @@
-node_modules/
 js/
-webext/botstreaming.js
+node_modules/
+ts/conf.ts
 ts/secret.ts
+webext/addon.xpi
+webext/botstreaming.js

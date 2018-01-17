@@ -16,6 +16,11 @@
   },
   "scripts": {
     "build": "tsc; browserify js/main.js -o ./webext/botstreaming.js",
-    "test": "mocha --require ts-node/register ./test/*.ts"
+    "test": "mocha --require ts-node/register ./test/*.ts",
+    "webext": "npm run build; npm run webext:package",
+    "webext:package": "cd webext/; zip -r addon.xpi icons/ botstreaming.js manifest.json"
+  },
+  "dependencies": {
+    "xmldom": "^0.1.27"
   }
 }
