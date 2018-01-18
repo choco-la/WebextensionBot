@@ -55,7 +55,7 @@ export const rePattern: { [key: string]: RegExp } = {
 }
 
 export const sholdWipeTL = (text: string): boolean => {
-  if (text.indexOf('ﾌﾞﾘ') > 0) return true
+  if (text.indexOf('ﾌﾞﾘ') >= 0) return true
 
   const re = /([ｱ-ﾝｧ-ｮ]ﾞ?)([ｱ-ﾝｧ-ｮ]ﾞ?)(?:\1\2){2,}[^!！]*[!！]+$/g
   // Array like ['ABABABAB!!', 'CDCDCDCD!!'] if maches.

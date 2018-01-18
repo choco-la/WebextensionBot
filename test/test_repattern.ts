@@ -51,6 +51,7 @@ describe('sholdWipeTL', () => {
     it('wipeTL', () => {
       assert.isTrue(sholdWipeTL('ﾎﾋﾎﾋﾎﾋﾎﾋ!!'))
       assert.isTrue(sholdWipeTL('あﾌﾞﾘ'))
+      assert.isTrue(sholdWipeTL('ﾌﾞﾘｯｺ'))
     })
   })
 
