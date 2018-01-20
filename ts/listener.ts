@@ -1,6 +1,8 @@
+import * as path from 'path'
 import { INotifiation, IStatus, NotifyEvent } from './deftypes'
-import { secretFilter } from './secret'
+import { RegexFilter } from './regexfilter'
 import { tootParser } from './tootparser'
+import { WordFilter } from './wordfilter'
 
 export class Listener {
   private deleteListeners: Array<(toot: string) => void> = []
@@ -63,10 +65,9 @@ export class Listener {
     const content: string = tootParser.tootContent(payload.content)
     const application: string = payload.application ? payload.application.name : ''
 
-    if (muteFilter.screenname(screenName)) return console.debug(`muted: ${screenName}`)
-    if (muteFilter.content(content)) return console.debug(`muted: ${content}`)
-    if (muteFilter.application(application)) return console.debug(`muted: ${application}`)
-    if (secretFilter.test(content)) return console.debug(`muted: ${content}`)
+    if (applicationFilter.test(application)) return console.debug(`muted: ${application}`)
+    if (accountFilter.test(screenName)) return console.debug(`muted: ${screenName}`)
+    if (contentFilter.test(content)) return console.debug(`muted: ${content}`)
 
     for (const listener of this.updateListeners) {
       listener(payload)
@@ -91,10 +92,9 @@ export class Listener {
     const content: string = tootParser.tootContent(payload.content)
     const application: string = payload.application ? payload.application.name : ''
 
-    if (muteFilter.screenname(screenName)) return console.debug(`muted: ${screenName}`)
-    if (muteFilter.content(content)) return console.debug(`muted: ${content}`)
-    if (muteFilter.application(application)) return console.debug(`muted: ${application}`)
-    if (secretFilter.test(content)) return console.debug(`muted: ${content}`)
+    if (applicationFilter.test(application)) return console.debug(`muted: ${application}`)
+    if (accountFilter.test(screenName)) return console.debug(`muted: ${screenName}`)
+    if (contentFilter.test(content)) return console.debug(`muted: ${content}`)
 
     for (const listener of this.mentionListeners) {
       listener(notification)
@@ -108,21 +108,6 @@ export class Listener {
   }
 }
 
-const muteFilter: { [key: string]: (arg: string) => boolean } = {
-  application: (application: string): boolean => {
-    const mutes: Set<string> = new Set()
-    mutes.add('mastbot')
-    if (mutes.has(application)) return true
-    return false
-  },
-  content: (content: string): boolean => {
-    if (/[死殺]/.test(content)) return true
-    return false
-  },
-  screenname: (screenname: string): boolean => {
-    const mutes: Set<string> = new Set()
-    mutes.add('12222222@friends.nico')
-    if (mutes.has(screenname)) return true
-    return false
-  }
-}
+const applicationFilter = new WordFilter(path.join(__dirname, '../filter', 'muteclient.txt'))
+const accountFilter = new WordFilter(path.join(__dirname, '../filter', 'muteaccount.txt'))
+const contentFilter = new RegexFilter(path.join(__dirname, '../filter', 'muteclient.txt'))
