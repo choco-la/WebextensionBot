@@ -1,0 +1,4 @@
+# comment
+#this_hashtag_should_be_muted
+.*
+\
