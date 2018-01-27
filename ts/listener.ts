@@ -31,7 +31,7 @@ export class Listener {
     }
   }
 
-  public addUpdateFilter (func: (recv: IStatus) => void): void {
+  public addUpdateListener (func: (recv: IStatus) => void): void {
     this.updateListeners.push(func as (toot: IStatus) => void)
   }
 

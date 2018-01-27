@@ -155,13 +155,13 @@ const onMention = (recv: INotifiation): void => {
 }
 
 const listener = new Listener()
-listener.addUpdateFilter(after)
-listener.addUpdateFilter(favUyu)
-listener.addUpdateFilter(fortune)
-listener.addUpdateFilter(funny)
-listener.addUpdateFilter(otoshidama)
-listener.addUpdateFilter(sm9)
-listener.addUpdateFilter(wipeTL)
+listener.addUpdateListener(after)
+listener.addUpdateListener(favUyu)
+listener.addUpdateListener(fortune)
+listener.addUpdateListener(funny)
+listener.addUpdateListener(otoshidama)
+listener.addUpdateListener(sm9)
+listener.addUpdateListener(wipeTL)
 listener.addNotificationListener('mention', onMention)
 listener.addNotificationListener('follow', onFollow)
 
