@@ -1,11 +1,10 @@
 import { BasicListener } from './basiclistener'
 import { RegexFilter } from './regexfilter'
-import { secretFilter } from './secret'
 import { tootParser } from './tootparser'
 import { INotifiation, IStatus } from './types/deftype'
 import { WordFilter } from './wordfilter'
 
-type FliterType = 'application' | 'screenname'
+type FliterType = 'application' | 'screenname' | 'content'
 
 export class Listener extends BasicListener {
   private applicationFilter: WordFilter
@@ -14,9 +13,9 @@ export class Listener extends BasicListener {
 
   constructor () {
     super()
-    this.applicationFilter = new WordFilter(muteApplications)
-    this.screenNameFilter = new WordFilter(muteScreenNames)
-    this.contentFilter = new RegexFilter(muteContents)
+    this.applicationFilter = new WordFilter()
+    this.screenNameFilter = new WordFilter()
+    this.contentFilter = new RegexFilter()
   }
 
   public mute (type: FliterType, word: string): void {
@@ -27,10 +26,13 @@ export class Listener extends BasicListener {
       case 'screenname':
         this.screenNameFilter.add(word)
         break
+      case 'content':
+        this.contentFilter.add(word)
+        break
     }
   }
 
-  protected onUpdate (payload: IStatus): void {
+  public onUpdate (payload: IStatus): void {
     const screenName: string = tootParser.screenName(payload.account)
     const content: string = tootParser.tootContent(payload.content)
     const application: string = payload.application ? payload.application.name : ''
@@ -38,7 +40,6 @@ export class Listener extends BasicListener {
     if (this.applicationFilter.test(application)) return console.debug(`muted: ${application}`)
     if (this.screenNameFilter.test(screenName)) return console.debug(`muted: ${screenName}`)
     if (this.contentFilter.test(content)) return console.debug(`muted: ${content}`)
-    if (secretFilter.test(content)) return console.debug(`muted: ${content}`)
 
     for (const listener of this.updateListeners) {
       listener(payload)
@@ -54,20 +55,9 @@ export class Listener extends BasicListener {
     if (this.applicationFilter.test(application)) return console.debug(`muted: ${application}`)
     if (this.screenNameFilter.test(screenName)) return console.debug(`muted: ${screenName}`)
     if (this.contentFilter.test(content)) return console.debug(`muted: ${content}`)
-    if (secretFilter.test(content)) return console.debug(`muted: ${content}`)
 
     for (const listener of this.mentionListeners) {
       listener(notification)
     }
   }
 }
-
-const muteApplications = [
-  'mastbot'
-]
-const muteScreenNames = [
-  ''
-]
-const muteContents = [
-  String.raw`[死殺]`
-]
