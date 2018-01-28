@@ -4,6 +4,7 @@ import { evalCalc } from './evalcalc'
 import { MastodonAPI } from './limitapi'
 import { Listener } from './listener'
 import { rePattern, sholdWipeTL } from './repattern'
+import { filterWords } from './secret'
 import { Stream } from './stream'
 import { tootParser } from './tootparser'
 import { INotifiation, IStatus } from './types//deftype'
@@ -176,3 +177,16 @@ notification.notification()
 notification.addEventListener('open', () => console.log('opened notification'))
 notification.addEventListener('close', () => console.log('closed notification'))
 notification.listener = listener
+
+// Ignore self.
+API.read.verifyCredentials()
+.then((account) => {
+  const me = tootParser.screenName(account)
+  listener.mute('screenname', me)
+})
+
+listener.mute('application', 'mastbot')
+listener.mute('content', String.raw`(?:死|ﾀﾋ)ね|殺す`)
+for (const filterWord of filterWords) {
+  listener.mute('content', filterWord)
+}
