@@ -1,4 +1,4 @@
-import { Visibility } from '../deftypes'
+import { Visibility } from './deftype'
 
 export interface ISendToot {
   in_reply_to_id: string | null,

@@ -1,5 +1,5 @@
-import { IRecvData, IRecvEvent, IStreamListener } from './deftypes'
 import { isDelete, isEventListener, isNofification, isStatus } from './typeguards'
+import { IRecvData, IRecvEvent, IStreamListener } from './types//deftype'
 
 export class Stream {
   private streamURL: string

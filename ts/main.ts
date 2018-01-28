@@ -1,12 +1,12 @@
 import { randomContent } from './botcontents'
 import { Auth } from './conf'
-import { INotifiation, IStatus } from './deftypes'
 import { evalCalc } from './evalcalc'
 import { MastodonAPI } from './limitapi'
 import { Listener } from './listener'
 import { rePattern, sholdWipeTL } from './repattern'
 import { Stream } from './stream'
 import { tootParser } from './tootparser'
+import { INotifiation, IStatus } from './types//deftype'
 
 // const hostName: string = 'friends.nico'
 const hostName: string = Auth.hostName

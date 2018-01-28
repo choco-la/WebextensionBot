@@ -1,6 +1,6 @@
-import { INotifiation, IStatus, NotifyEvent } from './deftypes'
 import { secretFilter } from './secret'
 import { tootParser } from './tootparser'
+import { INotifiation, IStatus, NotifyEvent } from './types/deftype'
 
 export class Listener {
   private deleteListeners: Array<(toot: string) => void> = []

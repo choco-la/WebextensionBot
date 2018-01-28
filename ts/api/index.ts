@@ -1,6 +1,6 @@
-import { FollowAPI } from './api/follow'
-import { ReadAPI } from './api/read'
-import { WriteAPI } from './api/write'
+import { FollowAPI } from './follow'
+import { ReadAPI } from './read'
+import { WriteAPI } from './write'
 
 export class MastodonAPI {
   public follow: FollowAPI

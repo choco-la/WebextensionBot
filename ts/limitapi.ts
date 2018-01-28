@@ -1,6 +1,6 @@
 import { MastodonAPI as _MastodonAPI } from './api'
-import { Visibility } from './deftypes'
 import { isVisibility } from './typeguards'
+import { Visibility } from './types/deftype'
 
 const APIRateLimit = {
   // Wait ${coolTime} seconds per toot.

@@ -1,6 +1,6 @@
 import * as URL from 'url'
 import { DOMParser } from 'xmldom'
-import { IAccount } from './deftypes'
+import { IAccount } from './types/deftype'
 
 const getTootContent = (rawdom: string): string => {
   const dom = rawdom.replace(/<br(?: \/)?>/g, '\n')

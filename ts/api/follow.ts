@@ -1,4 +1,4 @@
-import { IFullfilledXHR } from './apitype'
+import { IFullfilledXHR } from '../types/apitype'
 
 export class FollowAPI {
   protected bearerToken: string

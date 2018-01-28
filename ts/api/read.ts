@@ -1,5 +1,5 @@
-import { IRelationship } from '../deftypes'
-import { IFullfilledXHR } from './apitype'
+import { IFullfilledXHR } from '../types/apitype'
+import { IRelationship } from '../types/deftype'
 
 export class ReadAPI {
   protected bearerToken: string

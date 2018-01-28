@@ -1,5 +1,5 @@
-import { Visibility } from '../deftypes'
 import { isVisibility } from '../typeguards'
+import { Visibility } from '../types/deftype'
 
 interface ISendToot {
   in_reply_to_id: string | null,
