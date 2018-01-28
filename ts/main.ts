@@ -176,3 +176,10 @@ notification.notification()
 notification.addEventListener('open', () => console.log('opened notification'))
 notification.addEventListener('close', () => console.log('closed notification'))
 notification.listener = listener
+
+// Ignore self.
+API.read.verifyCredentials()
+.then((account) => {
+  const me = tootParser.screenName(account)
+  listener.mute('screenname', me)
+})
