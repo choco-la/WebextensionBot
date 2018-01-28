@@ -1,8 +1,8 @@
-import { MastodonAPI } from './api'
 import { randomContent } from './botcontents'
 import { Auth } from './conf'
 import { INotifiation, IStatus } from './deftypes'
 import { evalCalc } from './evalcalc'
+import { MastodonAPI } from './limitapi'
 import { Listener } from './listener'
 import { rePattern, sholdWipeTL } from './repattern'
 import { Stream } from './stream'
@@ -98,7 +98,7 @@ const reply = (toot: IStatus, text?: string): void => {
   const host: string = url.hostname
   const userName: string = toot.account.username
   const msg: string = text ? text : randomContent.reply()
-  setTimeout(() => API.favourite(toot.id), 2000)
+  setTimeout(() => API.write.favourite(toot.id), 2000)
   setTimeout(() => API.toot(`@${userName}@${host} ${msg}`, toot.visibility, toot.id), 3000)
 }
 
@@ -111,7 +111,7 @@ const sm9 = (toot: IStatus): void => {
 const favUyu = (toot: IStatus): void => {
   const content = tootParser.tootContent(toot.content)
   if (!/[ぅう][ゅゆ]/.test(content)) return
-  setTimeout(() => API.favourite(toot.id), 2000)
+  setTimeout(() => API.write.favourite(toot.id), 2000)
 }
 
 const wipeTL = (toot: IStatus): void => {
@@ -128,12 +128,12 @@ const close = (toot: IStatus): void => {
 
 const onFollow = (recv: INotifiation): void => {
   const account = recv.account.id
-  API.relationships([account])
+  API.read.relationships([account])
   .then((relationships) => {
     const isFollowing: boolean = relationships[0].following
     const id = relationships[0].id
     if (isFollowing) return
-    API.follow(id)
+    API.follow.follow(id)
     .then(() => console.log(`follow: ${id}`))
     .catch((err) => console.error(err))
   })
