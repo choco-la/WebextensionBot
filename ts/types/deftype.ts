@@ -68,14 +68,10 @@ export interface IStatus {
   visibility: Visibility
 }
 
-type DeleteListener = (recv: string) => void
-type NotificationListener = (recv: INotifiation) => void
-type UpdateListener = (recv: IStatus) => void
-
 export interface IStreamListener {
-  addDeleteListener: (func: DeleteListener) => void
-  addNotificationListener: (type: NotifyEvent, func: NotificationListener) => void
-  addUpdateListener: (func: UpdateListener) => void
+  onDelete: (recv: string) => void
+  onNotification: (recv: INotifiation) => void
+  onUpdate: (recv: IStatus) => void
 }
 
 export type NotifyEvent = 'favourite' | 'follow' | 'mention' | 'reblog'

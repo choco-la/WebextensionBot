@@ -33,13 +33,13 @@ export class BasicListener {
     this.updateListeners.push(func as (toot: IStatus) => void)
   }
 
-  protected onDelete (recv: string): void {
+  public onDelete (recv: string): void {
     for (const listener of this.deleteListeners) {
       listener(recv)
     }
   }
 
-  protected onNotification (recv: INotifiation): void {
+  public onNotification (recv: INotifiation): void {
     switch (recv.type) {
       case 'favourite':
         this.onFavourite(recv)
@@ -56,7 +56,7 @@ export class BasicListener {
     }
   }
 
-  protected onUpdate (payload: IStatus): void {
+  public onUpdate (payload: IStatus): void {
     for (const listener of this.updateListeners) {
       listener(payload)
     }
