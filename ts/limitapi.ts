@@ -47,7 +47,7 @@ export class MastodonAPI extends _MastodonAPI {
 
   public set visibility (value: Visibility) {
     if (!isVisibility(value)) return
-    this._visibility = value
+    this.write.visibility = value
   }
 
   public setRateLimit (pubvalue?: number, repvalue?: number): void {
@@ -95,7 +95,7 @@ export class MastodonAPI extends _MastodonAPI {
       if (this.limit.isCoolTime) return console.log(`coolTime: ${this.limit.coolTime}`)
     }
 
-    super.toot(content, visibility, replyToID)
+    this.write.toot(content, visibility, replyToID)
 
     if (!this.limit) return
     if (replyToID) {
