@@ -22,6 +22,7 @@ const symbols: {[key: string]: string} = {
 
 const emojis: {[key: string]: string} = {
   heart: String.raw`♡❤💔♥💗💓💕💖💞💘💛💙💜💚💝`,
+  musicalNote: String.raw`♪🎵♫♬🎶`,
   star: String.raw`★☆`
 }
 
