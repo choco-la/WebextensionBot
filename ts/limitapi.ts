@@ -1,5 +1,4 @@
 import { MastodonAPI as _MastodonAPI } from './api'
-import { isVisibility } from './typeguards'
 import { Visibility } from './types/deftype'
 
 const APIRateLimit = {
@@ -23,6 +22,8 @@ export class MastodonAPI extends _MastodonAPI {
 
   constructor (host: string, token: string) {
     super(host, token)
+
+    this.write.toot = this.toot
   }
 
   public set rateLimitPublic (value: number) {
@@ -43,11 +44,6 @@ export class MastodonAPI extends _MastodonAPI {
 
   public get rateLimitReply (): number {
     return this.limit.rateLimitReply
-  }
-
-  public set visibility (value: Visibility) {
-    if (!isVisibility(value)) return
-    this.write.visibility = value
   }
 
   public setRateLimit (pubvalue?: number, repvalue?: number): void {
@@ -85,7 +81,7 @@ export class MastodonAPI extends _MastodonAPI {
     this.limit.coolTime = value
   }
 
-  public toot (content: string, visibility?: Visibility, replyToID?: string): void {
+  private toot (content: string, visibility?: Visibility, replyToID?: string): void {
     if (replyToID) {
       const msg = `rateLimitReply: ${this.limit.remainingReply}`
       if (this.limit && this.limit.remainingReply <= 0) return console.log(msg)
@@ -95,7 +91,7 @@ export class MastodonAPI extends _MastodonAPI {
       if (this.limit.isCoolTime) return console.log(`coolTime: ${this.limit.coolTime}`)
     }
 
-    this.write.toot(content, visibility, replyToID)
+    super.write.toot(content, visibility, replyToID)
 
     if (!this.limit) return
     if (replyToID) {
