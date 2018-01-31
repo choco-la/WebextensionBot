@@ -4,10 +4,6 @@ export const isDelete = (recv: any): recv is string => {
   return recv !== null && recv !== undefined && typeof(recv) === 'string'
 }
 
-export const isEventListener = (recv: any): recv is EventListener => {
-  return 'detail' in recv
-}
-
 export const isHTMLElem = (arg: any): arg is HTMLElement => {
   return arg !== null && arg !== undefined && arg.tagName.length > 0
 }

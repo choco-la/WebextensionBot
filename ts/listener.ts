@@ -46,7 +46,7 @@ export class Listener extends BasicListener {
     }
   }
 
-  protected onMention (notification: INotifiation): void {
+  public onMention (notification: INotifiation): void {
     const payload = notification.status
     const screenName: string = tootParser.screenName(payload.account)
     const content: string = tootParser.tootContent(payload.content)

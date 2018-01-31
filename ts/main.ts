@@ -156,26 +156,26 @@ const onMention = (recv: INotifiation): void => {
 }
 
 const listener = new Listener()
-listener.addUpdateListener(after)
-listener.addUpdateListener(favUyu)
-listener.addUpdateListener(fortune)
-listener.addUpdateListener(funny)
-listener.addUpdateListener(otoshidama)
-listener.addUpdateListener(sm9)
-listener.addUpdateListener(wipeTL)
-listener.addNotificationListener('mention', onMention)
-listener.addNotificationListener('follow', onFollow)
+listener.addEventListener('update', after)
+listener.addEventListener('update', favUyu)
+listener.addEventListener('update', fortune)
+listener.addEventListener('update', funny)
+listener.addEventListener('update', otoshidama)
+listener.addEventListener('update', sm9)
+listener.addEventListener('update', wipeTL)
+listener.addEventListener('mention', onMention)
+listener.addEventListener('follow', onFollow)
 
 const ltl = new Stream(hostName, bearerToken)
 ltl.local()
-ltl.addEventListener('open', () => console.log('opened ltl'))
-ltl.addEventListener('close', () => console.log('closed ltl'))
+ltl.addListener('open', () => console.log('opened ltl'))
+ltl.addListener('close', () => console.log('closed ltl'))
 ltl.listener = listener
 
 const notification = new Stream(hostName, bearerToken)
 notification.notification()
-notification.addEventListener('open', () => console.log('opened notification'))
-notification.addEventListener('close', () => console.log('closed notification'))
+notification.addListener('open', () => console.log('opened notification'))
+notification.addListener('close', () => console.log('closed notification'))
 notification.listener = listener
 
 // Ignore self.
