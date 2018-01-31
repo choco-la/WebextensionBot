@@ -13,10 +13,6 @@ export interface IJSONDict {
   [key: string]: string | number | boolean | this
 }
 
-export interface IRecvEvent extends Event {
-  data: string
-}
-
 export interface IRecvData {
   [key: string]: any,
   event: string,
@@ -70,7 +66,11 @@ export interface IStatus {
 
 export interface IStreamListener {
   onDelete: (recv: string) => void
+  onFavourite: (notification: INotifiation) => void
+  onFollow: (notification: INotifiation) => void
+  onMention: (notification: INotifiation) => void
   onNotification: (recv: INotifiation) => void
+  onReblog: (notification: INotifiation) => void
   onUpdate: (recv: IStatus) => void
 }
 
