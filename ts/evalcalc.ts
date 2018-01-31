@@ -33,8 +33,8 @@ const getValidExpression = (input: string): string | null => {
   if (/[^0-9.+\-%^&*/><()\s]/.test(input)) return null
 
   // Separate Numeral or operator symbol.
-  const pattern = String.raw`(\-?[0-9.]+|[+\-%^&/]|\*{1,2}|[><]{2}|[()]+)`
-  const re = new RegExp(pattern, 'g')
+  const pattern = String.raw`(-?[0-9.]+|[+\-%^&/]|\*{1,2}|[><]{2}|[()]+)`
+  const re = new RegExp(pattern, 'giu')
   const matchs = input.match(re)
   // Return if it is corrupt expression.
   if (!matchs) return null

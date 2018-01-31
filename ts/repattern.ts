@@ -26,7 +26,6 @@ const emojis: {[key: string]: string} = {
   star: String.raw`★☆`
 }
 
-// "Class" means not the type but strings-class.
 // Used for creating RegExp using new RegExp().
 export const rawPattern: { [key: string]: string } = {
   friendlySuffix: String.raw`[${concatObjValue(misc)}${concatObjValue(symbols)}${concatObjValue(emojis)}]`,
@@ -47,16 +46,16 @@ const otoshidamaRe = String.raw`[!！](?:otosh?idama|[ｏＯ][ｔＴ][ｏＯ][�
 
 // Used for matching.
 export const rePattern: { [key: string]: RegExp } = {
-  after: new RegExp(`${afterRe}`),
-  close: new RegExp(closePat.join('|'), 'i'),
-  food: new RegExp(`${foodRe}`),
-  fortune: new RegExp(`${fortuneRe}`, 'i'),
-  kiss: new RegExp(`ちゅ${rawPattern.friendlySuffix}*$`),
-  otoshidama: new RegExp(`${otoshidamaRe}`, 'i')
+  after: new RegExp(`${afterRe}`, 'iu'),
+  close: new RegExp(closePat.join('|'), 'iu'),
+  food: new RegExp(`${foodRe}`, 'iu'),
+  fortune: new RegExp(`${fortuneRe}`, 'iu'),
+  kiss: new RegExp(`ちゅ${rawPattern.friendlySuffix}*$`, 'iu'),
+  otoshidama: new RegExp(`${otoshidamaRe}`, 'iu')
 }
 
 export const sholdWipeTL = (text: string): boolean => {
-  if (text.indexOf('ﾌﾞﾘ') >= 0) return true
+  if (text.includes('ﾌﾞﾘ')) return true
 
   const re = /([ｱ-ﾝｧ-ｮ]ﾞ?)([ｱ-ﾝｧ-ｮ]ﾞ?)(?:\1\2){2,}[^!！]*[!！]+$/g
   // Array like ['ABABABAB!!', 'CDCDCDCD!!'] if maches.
