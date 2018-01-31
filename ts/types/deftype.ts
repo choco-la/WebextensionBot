@@ -74,5 +74,6 @@ export interface IStreamListener {
   onUpdate: (recv: IStatus) => void
 }
 
+export type WSEvent = 'update' | 'delete' | 'notification'
 export type NotifyEvent = 'favourite' | 'follow' | 'mention' | 'reblog'
 export type Visibility = 'public' | 'unlisted' | 'private' | 'direct'
