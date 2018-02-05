@@ -12,11 +12,6 @@ export class Stream extends EventEmitter {
     super()
     this.streamURL = `${host}/api/v1/streaming/`
     this.bearerToken = token
-
-    this.ws.addEventListener('open', (_: Event) => this.emit('open'))
-    this.ws.addEventListener('close', (_: Event) => this.emit('close'))
-    // Emit in onMessage().
-    this.ws.addEventListener('message', this.onMessage)
   }
 
   public set listener (listener: IStreamListener) {
@@ -59,28 +54,23 @@ export class Stream extends EventEmitter {
 
   private onMessage (event: MessageEvent) {
     const recvJSON: IRecvData = JSON.parse(event.data)
+    const payload = JSON.parse(recvJSON.payload)
     switch (recvJSON.event) {
-      case 'update': {
-        const payload = JSON.parse(recvJSON.payload)
+      case 'update':
         if (!isStatus(payload)) return
         this.emit('update', payload)
         break
-      }
-      case 'notification': {
-        const payload = JSON.parse(recvJSON.payload)
+      case 'notification':
         if (!isNofification(payload)) return
         // Emit both 'notification' and the each event.
         this.emit('notification', payload)
         // payload.type: mention|reblog|favourite|follow
         this.emit(payload.type, payload)
         break
-      }
-      case 'delete': {
-        const payload = JSON.parse(recvJSON.payload)
+      case 'delete':
         if (!isDelete(payload)) return
         this.emit('delete', payload)
         break
-      }
     }
   }
 
