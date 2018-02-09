@@ -10,7 +10,7 @@ export class ReadAPI {
     this.hostName = host
   }
 
-  public relationships (idarray: string[]): Promise<IRelationship[]> {
+  public relationships = (idarray: string[]): Promise<IRelationship[]> => {
     return new Promise((resolve: (resp: IRelationship[]) => void,
                         reject: (err: IFullfilledXHR) => void) => {
       const query: string = `id[]=${idarray.join('&id[]=')}`
@@ -36,7 +36,7 @@ export class ReadAPI {
     })
   }
 
-  public verifyCredentials (): Promise<IAccount> {
+  public verifyCredentials = (): Promise<IAccount> => {
     return new Promise((resolve: (resp: IAccount) => void,
                         reject: (err: IFullfilledXHR) => void) => {
       const xhr = new XMLHttpRequest()

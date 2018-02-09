@@ -15,7 +15,7 @@ export class BasicListener {
   protected mentionListeners: Array<(toot: INotifiation) => void> = []
   protected reblogListeners: Array<(toot: INotifiation) => void> = []
 
-  public addEventListener (type: WSEvent | NotifyEvent, func: mstdnEventListener): void {
+  public addEventListener = (type: WSEvent | NotifyEvent, func: mstdnEventListener): void => {
     switch (type) {
       case 'update':
         this.updateListeners.push(func as updateListener)
@@ -41,43 +41,43 @@ export class BasicListener {
     }
   }
 
-  public onDelete (recv: string): void {
+  public onDelete = (recv: string): void => {
     for (const listener of this.deleteListeners) {
       listener(recv)
     }
   }
 
-  public onNotification (notification: INotifiation): void {
+  public onNotification = (notification: INotifiation): void => {
     for (const listener of this.notificationListeners) {
       listener(notification)
     }
   }
 
-  public onUpdate (payload: IStatus): void {
+  public onUpdate = (payload: IStatus): void => {
     for (const listener of this.updateListeners) {
       listener(payload)
     }
   }
 
-  public onFavourite (notification: INotifiation): void {
+  public onFavourite = (notification: INotifiation): void => {
     for (const listener of this.favouriteListeners) {
       listener(notification)
     }
   }
 
-  public onFollow (notification: INotifiation): void {
+  public onFollow = (notification: INotifiation): void => {
     for (const listener of this.followListeners) {
       listener(notification)
     }
   }
 
-  public onMention (notification: INotifiation): void {
+  public onMention = (notification: INotifiation): void => {
     for (const listener of this.mentionListeners) {
       listener(notification)
     }
   }
 
-  public onReblog (notification: INotifiation): void {
+  public onReblog = (notification: INotifiation): void => {
     for (const listener of this.reblogListeners) {
       listener(notification)
     }

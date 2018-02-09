@@ -18,7 +18,7 @@ export class Listener extends BasicListener {
     this.contentFilter = new RegexFilter()
   }
 
-  public mute (type: FliterType, word: string): void {
+  public mute = (type: FliterType, word: string): void => {
     switch (type) {
       case 'application':
         this.applicationFilter.add(word)
@@ -32,7 +32,7 @@ export class Listener extends BasicListener {
     }
   }
 
-  public onUpdate (payload: IStatus): void {
+  public onUpdate = (payload: IStatus): void => {
     const screenName: string = tootParser.screenName(payload.account)
     const content: string = tootParser.tootContent(payload.content)
     const application: string = payload.application ? payload.application.name : ''
@@ -46,7 +46,7 @@ export class Listener extends BasicListener {
     }
   }
 
-  public onMention (notification: INotifiation): void {
+  public onMention = (notification: INotifiation): void => {
     const payload = notification.status
     const screenName: string = tootParser.screenName(payload.account)
     const content: string = tootParser.tootContent(payload.content)

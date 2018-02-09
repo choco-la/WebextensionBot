@@ -46,7 +46,7 @@ export class MastodonAPI extends _MastodonAPI {
     return this.limit.rateLimitReply
   }
 
-  public setRateLimit (pubvalue?: number, repvalue?: number): void {
+  public setRateLimit = (pubvalue?: number, repvalue?: number): void => {
     if (!this.limit) this.limit = APIRateLimit
 
     if (pubvalue) this.rateLimitPublic = pubvalue
@@ -66,7 +66,7 @@ export class MastodonAPI extends _MastodonAPI {
     console.log(`rateLimitReply: ${this.rateLimitReply}`)
   }
 
-  public setCoolTime (value?: number): void {
+  public setCoolTime = (value?: number): void => {
     if (!this.limit) this.setRateLimit()
     if (value) this.coolTime = value
 
@@ -81,7 +81,7 @@ export class MastodonAPI extends _MastodonAPI {
     this.limit.coolTime = value
   }
 
-  private toot (content: string, visibility?: Visibility, replyToID?: string): void {
+  private toot = (content: string, visibility?: Visibility, replyToID?: string): void => {
     if (replyToID) {
       const msg = `rateLimitReply: ${this.limit.remainingReply}`
       if (this.limit && this.limit.remainingReply <= 0) return console.log(msg)

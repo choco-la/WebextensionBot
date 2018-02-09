@@ -27,32 +27,32 @@ export class Stream extends EventEmitter {
     this.on('follow', this._listener.onFollow)
   }
 
-  public close (): void {
+  public close = (): void => {
     this.ws.close()
   }
 
-  public local (): void {
+  public local = (): void => {
     const streamQuery: string = `?access_token=${this.bearerToken}&stream=public:local`
     const webSocketURL: string = `wss://${this.streamURL}${streamQuery}`
     this.ws = new WebSocket(webSocketURL)
     this.setUpEventListeners()
   }
 
-  public home (): void {
+  public home = (): void => {
     const streamQuery: string = `?access_token=${this.bearerToken}&stream=user`
     const webSocketURL: string = `wss://${this.streamURL}${streamQuery}`
     this.ws = new WebSocket(webSocketURL)
     this.setUpEventListeners()
   }
 
-  public notification (): void {
+  public notification = (): void => {
     const streamQuery: string = `?access_token=${this.bearerToken}&stream=user`
     const webSocketURL: string = `wss://${this.streamURL}${streamQuery}`
     this.ws = new WebSocket(webSocketURL)
     this.setUpEventListeners()
   }
 
-  private onMessage (event: MessageEvent) {
+  private onMessage = (event: MessageEvent) => {
     const recvJSON: IRecvData = JSON.parse(event.data)
     const payload = JSON.parse(recvJSON.payload)
     switch (recvJSON.event) {
@@ -74,7 +74,7 @@ export class Stream extends EventEmitter {
     }
   }
 
-  private setUpEventListeners () {
+  private setUpEventListeners = () => {
     this.ws.addEventListener('open', (_: Event) => this.emit('open'))
     this.ws.addEventListener('close', (_: Event) => this.emit('close'))
     // Emit in onMessage().

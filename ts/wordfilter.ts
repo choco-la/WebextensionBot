@@ -8,11 +8,11 @@ export class WordFilter {
     }
   }
 
-  public add (word: string): void {
+  public add = (word: string): void => {
     this.wordSet.add(word)
   }
 
-  public test (text: string): boolean {
+  public test = (text: string): boolean => {
     if (this.wordSet.has(text)) return true
     return false
   }

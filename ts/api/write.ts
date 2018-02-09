@@ -39,7 +39,7 @@ export class WriteAPI {
     return this._visibility
   }
 
-  public toot (content: string, visibility?: Visibility, replyToID?: string): void {
+  public toot = (content: string, visibility?: Visibility, replyToID?: string): void => {
     const data = {
       in_reply_to_id: replyToID ? replyToID : null,
       media_ids: [],
@@ -53,7 +53,7 @@ export class WriteAPI {
     .catch((resp) => console.error(`${resp.status}: ${resp.statusText}`))
   }
 
-  public favourite (id: string): Promise<IFullfilledXHR> {
+  public favourite = (id: string): Promise<IFullfilledXHR> => {
     return new Promise((resolve: (resp: IFullfilledXHR) => void,
                         reject: (err: IFullfilledXHR) => void) => {
       const xhr = new XMLHttpRequest()
@@ -78,7 +78,7 @@ export class WriteAPI {
     })
   }
 
-  protected sendToot (data: ISendToot): Promise<IFullfilledXHR> {
+  protected sendToot = (data: ISendToot): Promise<IFullfilledXHR> => {
     return new Promise((resolve: (resp: IFullfilledXHR) => void,
                         reject: (err: IFullfilledXHR) => void) => {
       const xhr = new XMLHttpRequest()

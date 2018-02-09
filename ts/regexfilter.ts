@@ -9,12 +9,12 @@ export class RegexFilter {
     }
   }
 
-  public add (pattern: string): void {
+  public add = (pattern: string): void => {
     const regex = new RegExp(pattern, 'iu')
     this.regexSet.add(regex)
   }
 
-  public test (text: string): boolean {
+  public test = (text: string): boolean => {
     for (const re of this.regexSet) {
       if (re.test(text)) return true
     }

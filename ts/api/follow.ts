@@ -9,7 +9,7 @@ export class FollowAPI {
     this.hostName = host
   }
 
-  public follow (id: string): Promise<IFullfilledXHR> {
+  public follow = (id: string): Promise<IFullfilledXHR> => {
     return new Promise((resolve: (resp: IFullfilledXHR) => void,
                         reject: (err: IFullfilledXHR) => void) => {
       const xhr = new XMLHttpRequest()
