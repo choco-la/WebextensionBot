@@ -5,6 +5,9 @@ describe('rePattern', () => {
   describe('Assert true', () => {
     it('After', () => {
       assert.isTrue(rePattern.after.test('学校終わったっ'))
+      assert.isTrue(rePattern.after.test('学校終わり〜'))
+      assert.isTrue(rePattern.after.test('しごおわ'))
+      assert.isTrue(rePattern.after.test('バイトから帰った'))
     })
     it('Close', () => {
       assert.isTrue(rePattern.close.test('おわり〜'))
@@ -26,7 +29,10 @@ describe('rePattern', () => {
   describe('Assert false', () => {
     it('After', () => {
       assert.isFalse(rePattern.after.test('学校まだ終わってない'))
-      // assert.isFalse(rePattern.after.test('学校終わったら'))
+      assert.isFalse(rePattern.after.test('学校終わったら'))
+      assert.isFalse(rePattern.after.test('学校帰りに'))
+      assert.isFalse(rePattern.after.test('学校終わってない'))
+      assert.isFalse(rePattern.after.test('仕事終わらん'))
     })
     it('Close', () => {
       assert.isFalse(rePattern.close.test('終了のお知らせ'))
