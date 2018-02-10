@@ -1,4 +1,4 @@
-import { EventEmitter } from 'events'
+import { EventEmitter } from './eventemitter'
 import { isDelete, isNofification, isStatus } from './typeguards'
 import { IRecvData, IStreamListener } from './types//deftype'
 
@@ -17,14 +17,14 @@ export class Stream extends EventEmitter {
   public set listener (listener: IStreamListener) {
     this._listener = listener
 
-    this.on('update', this._listener.onUpdate)
-    this.on('notification', this._listener.onNotification)
-    this.on('delete', this._listener.onDelete)
+    this.addListener('update', this._listener.onUpdate)
+    this.addListener('notification', this._listener.onNotification)
+    this.addListener('delete', this._listener.onDelete)
 
-    this.on('mention', this._listener.onMention)
-    this.on('reblog', this._listener.onReblog)
-    this.on('favourite', this._listener.onFavourite)
-    this.on('follow', this._listener.onFollow)
+    this.addListener('mention', this._listener.onMention)
+    this.addListener('reblog', this._listener.onReblog)
+    this.addListener('favourite', this._listener.onFavourite)
+    this.addListener('follow', this._listener.onFollow)
   }
 
   public close = (): void => {
