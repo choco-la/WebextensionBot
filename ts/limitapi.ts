@@ -59,13 +59,12 @@ export class MastodonAPI extends _MastodonAPI {
     this.limit.remainingReply = this.rateLimitReply
 
     // Reset remaining values to default value per 1min.
-    if (!this.resetPublicRateLimitID) {
-      this.resetPublicRateLimitID = setInterval(() => this.limit.remainingPublic = this.rateLimitPublic, 60000)
-    }
-    if (!this.resetReplyRateLimitID) {
-      this.resetReplyRateLimitID = setInterval(() => this.limit.remainingReply = this.rateLimitReply, 60000)
-    }
+    if (this.resetPublicRateLimitID) clearInterval(this.resetPublicRateLimitID)
+    this.resetPublicRateLimitID = setInterval(() => this.limit.remainingPublic = this.rateLimitPublic, 60000)
     console.log(`rateLimitPublic: ${this.rateLimitPublic}`)
+
+    if (this.resetReplyRateLimitID) clearInterval(this.resetReplyRateLimitID)
+    this.resetReplyRateLimitID = setInterval(() => this.limit.remainingReply = this.rateLimitReply, 60000)
     console.log(`rateLimitReply: ${this.rateLimitReply}`)
   }
 
@@ -73,9 +72,8 @@ export class MastodonAPI extends _MastodonAPI {
     if (!this.limit) this.setRateLimit()
     if (value) this.coolTime = value
 
-    if (!this.resetCoolTimeID) {
-      this.resetCoolTimeID = setInterval(() => this.limit.isCoolTime = false, this.limit.coolTime)
-    }
+    if (this.resetCoolTimeID) clearInterval(this.resetCoolTimeID)
+    this.resetCoolTimeID = setInterval(() => this.limit.isCoolTime = false, this.limit.coolTime)
     console.log(`coolTime: ${this.limit.coolTime}`)
   }
 
