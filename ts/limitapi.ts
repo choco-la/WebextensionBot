@@ -20,9 +20,12 @@ export class MastodonAPI extends _MastodonAPI {
   // Timer of setInterval() that resets cooltime.
   private resetCoolTimeID: NodeJS.Timer
 
+  private superToot: (content: string, visibility?: Visibility, replyToID?: string) => void
+
   constructor (host: string, token: string) {
     super(host, token)
 
+    this.superToot = this.write.toot
     this.write.toot = this.toot
   }
 
@@ -91,7 +94,7 @@ export class MastodonAPI extends _MastodonAPI {
       if (this.limit.isCoolTime) return console.log(`coolTime: ${this.limit.coolTime}`)
     }
 
-    super.write.toot(content, visibility, replyToID)
+    this.superToot(content, visibility, replyToID)
 
     if (!this.limit) return
     if (replyToID) {
