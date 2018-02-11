@@ -1,6 +1,5 @@
 import { EventEmitter } from './eventemitter'
-import { isDelete, isNofification, isStatus } from './typeguards'
-import { IRecvData, IStreamListener } from './types//deftype'
+import { IRecvData, IStreamListener, IWSEvent, NotifyEvent } from './types//deftype'
 
 export class Stream extends EventEmitter {
   private streamURL: string
@@ -35,49 +34,46 @@ export class Stream extends EventEmitter {
     const streamQuery: string = `?access_token=${this.bearerToken}&stream=public:local`
     const webSocketURL: string = `wss://${this.streamURL}${streamQuery}`
     this.ws = new WebSocket(webSocketURL)
-    this.setUpEventListeners()
+    this.setUpEventListeners('update')
   }
 
   public home = (): void => {
     const streamQuery: string = `?access_token=${this.bearerToken}&stream=user`
     const webSocketURL: string = `wss://${this.streamURL}${streamQuery}`
     this.ws = new WebSocket(webSocketURL)
-    this.setUpEventListeners()
+    this.setUpEventListeners('update')
   }
 
   public notification = (): void => {
     const streamQuery: string = `?access_token=${this.bearerToken}&stream=user`
     const webSocketURL: string = `wss://${this.streamURL}${streamQuery}`
     this.ws = new WebSocket(webSocketURL)
-    this.setUpEventListeners()
+    this.setUpEventListeners('notification')
   }
 
-  private onMessage = (event: MessageEvent) => {
+  private onMessage = <K extends keyof IWSEvent>(type: K | NotifyEvent, event: MessageEvent) => {
     const recvJSON: IRecvData = JSON.parse(event.data)
     const payload = JSON.parse(recvJSON.payload)
-    switch (recvJSON.event) {
+    switch (type) {
       case 'update':
-        if (!isStatus(payload)) return
         this.emit('update', payload)
         break
       case 'notification':
-        if (!isNofification(payload)) return
         // Emit both 'notification' and the each event.
         this.emit('notification', payload)
         // payload.type: mention|reblog|favourite|follow
         this.emit(payload.type, payload)
         break
       case 'delete':
-        if (!isDelete(payload)) return
         this.emit('delete', payload)
         break
     }
   }
 
-  private setUpEventListeners = () => {
+  private setUpEventListeners = <K extends keyof IWSEvent>(type: K) => {
     this.ws.addEventListener('open', (_: Event) => this.emit('open'))
     this.ws.addEventListener('close', (_: Event) => this.emit('close'))
     // Emit in onMessage().
-    this.ws.addEventListener('message', this.onMessage)
+    this.ws.addEventListener('message', (msg: MessageEvent) => this.onMessage(type, msg))
   }
 }

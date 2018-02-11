@@ -32,7 +32,7 @@ export interface INotifiation {
   created_at: string
   id: string
   status: IStatus
-  type: 'mention' | 'reblog' | 'favourite' | 'follow'
+  type: NotifyEvent
 }
 
 export interface IRelationship {
@@ -83,4 +83,9 @@ export interface IWSEvent {
   update: IStatus
   delete: string
   notification: INotifiation
+
+  reblog: INotifiation
+  mention: INotifiation
+  favourite: INotifiation
+  follow: INotifiation
 }

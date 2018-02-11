@@ -1,7 +1,7 @@
 type Callback = (arg?: any) => void
 
 export class EventEmitter {
-  private listeners: {[key: string]: Callback[]}
+  protected listeners: {[key: string]: Callback[]}
   constructor () {
     this.listeners = {}
   }
