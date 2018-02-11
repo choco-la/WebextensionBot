@@ -1,9 +1,4 @@
-import { INotifiation, IStatus, NotifyEvent, WSEvent } from './types/deftype'
-
-type updateListener = (recv: IStatus) => void
-type deleteListener = (recv: string) => void
-type notificationListener = (recv: INotifiation) => void
-type mstdnEventListener = updateListener | deleteListener | notificationListener
+import { INotifiation, IStatus, IWSEvent, NotifyEvent } from './types/deftype'
 
 export class BasicListener {
   protected updateListeners: Array<(toot: IStatus) => void> = []
@@ -15,28 +10,28 @@ export class BasicListener {
   protected mentionListeners: Array<(toot: INotifiation) => void> = []
   protected reblogListeners: Array<(toot: INotifiation) => void> = []
 
-  public addEventListener = (type: WSEvent | NotifyEvent, func: mstdnEventListener): void => {
+  public addEventListener = <K extends keyof IWSEvent>(type: K | NotifyEvent, func: (e: IWSEvent[K]) => void): void => {
     switch (type) {
       case 'update':
-        this.updateListeners.push(func as updateListener)
+        this.updateListeners.push(func)
         break
       case 'delete':
-        this.deleteListeners.push(func as deleteListener)
+        this.deleteListeners.push(func)
         break
       case 'notification':
-        this.notificationListeners.push(func as notificationListener)
+        this.notificationListeners.push(func)
         break
       case 'favourite':
-        this.favouriteListeners.push(func as notificationListener)
+        this.favouriteListeners.push(func)
         break
       case 'follow':
-        this.followListeners.push(func as notificationListener)
+        this.followListeners.push(func)
         break
       case 'mention':
-        this.mentionListeners.push(func as notificationListener)
+        this.mentionListeners.push(func)
         break
       case 'reblog':
-        this.reblogListeners.push(func as notificationListener)
+        this.reblogListeners.push(func)
         break
     }
   }
