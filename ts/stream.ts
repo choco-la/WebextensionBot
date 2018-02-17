@@ -1,4 +1,5 @@
 import { EventEmitter } from './eventemitter'
+import { isDelete, isStatus } from './typeguards'
 import { IRecvData, IStreamListener, IWSEvent } from './types//deftype'
 
 export class Stream extends EventEmitter {
@@ -56,6 +57,7 @@ export class Stream extends EventEmitter {
     const payload = JSON.parse(recvJSON.payload)
     switch (type) {
       case 'update':
+        if (!isStatus(payload)) return
         this.emit('update', payload)
         break
       case 'notification':
@@ -65,6 +67,7 @@ export class Stream extends EventEmitter {
         this.emit(payload.type, payload)
         break
       case 'delete':
+        if (!isDelete(payload)) return
         this.emit('delete', payload)
         break
     }
