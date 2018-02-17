@@ -45,6 +45,8 @@ const foodRe = String.raw`([🍕🍺🍵☕])(?:どうぞ|[い淹入][れっ]た
 const fortuneRe = String.raw`[!！](?:omikuji|[ｏＯ][ｍＭ][ｉＩ][ｋＫ][ｕＵ][ｊＪ][ｉＩ]|おみくじ|[御お]籤|オミクジ)`
 const otoshidamaRe = String.raw`[!！](?:otosh?idama|[ｏＯ][ｔＴ][ｏＯ][ｓＳ][ｈＨ]?[ｉＩ][ｄＤ][ａＡ][ｍＭ][ａＡ]|おとしだま|[御お]年玉|オトシダマ)`
 
+const oxgame = String.raw`(?:[◯○oｏOＯ]|まる|マル)(?:[✕☓xｘXＸ]|ばつ|バツ)(?:ゲーム|げーむ|game)`
+
 // Used for matching.
 export const rePattern: { [key: string]: RegExp } = {
   after: new RegExp(`${afterRe}`, 'iu'),
@@ -52,7 +54,8 @@ export const rePattern: { [key: string]: RegExp } = {
   food: new RegExp(`${foodRe}`, 'iu'),
   fortune: new RegExp(`${fortuneRe}`, 'iu'),
   kiss: new RegExp(`ちゅ${rawPattern.friendlySuffix}*$`, 'iu'),
-  otoshidama: new RegExp(`${otoshidamaRe}`, 'iu')
+  otoshidama: new RegExp(`${otoshidamaRe}`, 'iu'),
+  oxgame: new RegExp(`${oxgame}`, 'iu')
 }
 
 export const sholdWipeTL = (text: string): boolean => {
