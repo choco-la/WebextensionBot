@@ -58,6 +58,25 @@ const mom: string[] = [
   'どうしたの？よちよち💕'
 ]
 
+const oxGameThinking: string[] = [
+  'ここかな〜(๑>◡<๑)',
+  'えいっ(๑•̀ㅁ•́๑)✧',
+  'よいしょ(*´˘`*)♡',
+  'むむむ(｡ŏ﹏ŏ)'
+]
+
+const oxGameYouWin: string[] = [
+  'おめでと〜◝(⑅•ᴗ•⑅)◜..°♡',
+  'ぅゅゅ。。。つよいね〜(∩´﹏`∩)',
+  'うー負けちゃった(｡>﹏<｡)💦'
+]
+
+const oxGameYouLose: string[] = [
+  'やったー！(๑>◡<๑)',
+  'えへへ☆٩(｡•ω<｡)﻿و',
+  '勝っちゃった〜!!( ๑>ω•́ )۶'
+]
+
 const otoshidama: Array<() => string> = [
   () => `${Math.round(Math.random() * 10) * 100}ぅゅたんポイント`,
   () => `${Math.round(Math.random() * 1000) * 100}ぅゅたんポイント`,
@@ -130,6 +149,9 @@ export const randomContent: { [key: string]: () => string } = {
   kiss: () => randomArray(kiss),
   mom: () => randomArray(mom),
   otoshidama: () => randomArray(otoshidama)(),
+  oxGameThinking: () => randomArray(oxGameThinking),
+  oxGameYouLose: () => randomArray(oxGameYouLose),
+  oxGameYouWin: () => randomArray(oxGameYouWin),
   popteamepic: () => characterSlot('ポプテピピック'),
   reply: () => randomArray(replyDefault),
   sm9: () => randomArray(sm9),

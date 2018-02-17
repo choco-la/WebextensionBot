@@ -3,11 +3,14 @@ import { Auth } from './conf'
 import { evalCalc } from './evalcalc'
 import { MastodonAPI } from './limitapi'
 import { Listener } from './listener'
+import { OXGame } from './oxgame/gamestate'
+import { findCoordinate } from './oxgame/input'
 import { rePattern, sholdWipeTL } from './repattern'
 import { filterWords } from './secret'
 import { Stream } from './stream'
 import { tootParser } from './tootparser'
 import { INotifiation, IStatus } from './types//deftype'
+import { Coordinate, Mark } from './types/oxgametype'
 
 // const hostName: string = 'friends.nico'
 const hostName: string = Auth.hostName
@@ -15,6 +18,9 @@ const hostName: string = Auth.hostName
 const bearerToken: string = Auth.bearerToken.trim()
 
 const target = '12@friends.nico'
+
+// OXGame states.
+const oxGameStates: {[key: string]: OXGame} = {}
 
 const API = new MastodonAPI(hostName, bearerToken)
 API.setRateLimit(1)
@@ -121,6 +127,59 @@ const wipeTL = (toot: IStatus): void => {
   setTimeout(() => API.write.toot('ふきふき', toot.visibility), 6000)
 }
 
+const playOXGame = (toot: IStatus, oxCoordinate: Coordinate | null, mark: Mark, ismention?: boolean): void => {
+  const url: URL = new URL(toot.account.url)
+  const host: string = url.hostname
+  const userName: string = toot.account.username
+  const nameKey = `${userName}@${host}`
+
+  // Setup
+  if (!oxGameStates[nameKey]) {
+    const newGame = new OXGame(mark)
+    oxGameStates[nameKey] = newGame
+  }
+
+  const state = oxGameStates[nameKey]
+  let result = null
+  if (oxCoordinate) result = state.move(oxCoordinate)
+  else result = state.initMove()
+  const nowState = state.stateView()
+  if (result) delete oxGameStates[nameKey]
+  if (result === 'invalid') {
+    const invalid = 'そこゎ置けないょ(∩´﹏`∩)💦'
+    if (ismention) setTimeout(() => API.write.toot(`@${userName}@${host} ${invalid}`, toot.visibility, toot.id), 3000)
+    else setTimeout(() => API.write.toot(`@${userName}@${host} ${invalid}`, toot.visibility), 3000)
+    return
+  }
+
+  const playerMark = state.player
+  const botMark = state.bot
+
+  let prefixMsg = ''
+  switch (result) {
+    // Player wins.
+    case playerMark:
+      prefixMsg = randomContent.oxGameYouWin()
+      break
+    case botMark:
+      prefixMsg = randomContent.oxGameYouLose()
+      break
+    case null:
+      prefixMsg = randomContent.oxGameThinking()
+      break
+    case 'draw':
+      prefixMsg = '引き分けだね〜(๑>◡<๑)'
+      break
+  }
+
+  const msg = `${prefixMsg}\n${nowState}`
+  if (ismention) {
+    setTimeout(() => API.write.toot(`@${userName}@${host} ${msg}`, toot.visibility, toot.id), 3000)
+  } else {
+    setTimeout(() => API.write.toot(`@${userName}@${host} ${msg}`, toot.visibility), 3000)
+  }
+}
+
 const close = (toot: IStatus): void => {
   reply(toot, '終わります(๑•᎑•๑)♬*')
   ltl.close()
@@ -147,11 +206,15 @@ const onMention = (recv: INotifiation): void => {
   const admin = /^(?:12|friends_nico|mei23|sisyo)$/
   if (admin.test(toot.account.username) && rePattern.close.test(content)) close(toot)
 
+  const oxCoordinate = findCoordinate(content)
+
   if (rePattern.kiss.test(content)) return reply(toot, randomContent.kiss())
   else if (rePattern.otoshidama.test(content)) return otoshidama(toot, true)
   else if (rePattern.fortune.test(content)) return fortune(toot, true)
   else if (/(?:calc|計算|けいさん)[:：](.+)/i.test(content)) return calc(toot)
   else if (/ポプテピ|ぽぷてぴ/.test(content)) return reply(toot, randomContent.popteamepic())
+  else if (rePattern.oxgame.test(content)) playOXGame(toot, null, '✕', true)
+  else if (oxCoordinate) return playOXGame(toot, oxCoordinate, '◯', true)
   else return reply(toot)
 }
 
