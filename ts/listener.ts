@@ -39,7 +39,7 @@ export class Listener extends BasicListener {
 
     if (this.applicationFilter.test(application)) return console.debug(`muted: ${application}`)
     if (this.screenNameFilter.test(screenName)) return console.debug(`muted: ${screenName}`)
-    if (this.contentFilter.test(content)) return console.debug(`muted: ${content}`)
+    if (this.contentFilter.test(removeAvoidFilterChar(content))) return console.debug(`muted: ${content}`)
 
     for (const listener of this.updateListeners) {
       listener(payload)
@@ -54,10 +54,14 @@ export class Listener extends BasicListener {
 
     if (this.applicationFilter.test(application)) return console.debug(`muted: ${application}`)
     if (this.screenNameFilter.test(screenName)) return console.debug(`muted: ${screenName}`)
-    if (this.contentFilter.test(content)) return console.debug(`muted: ${content}`)
+    if (this.contentFilter.test(removeAvoidFilterChar(content))) return console.debug(`muted: ${content}`)
 
     for (const listener of this.mentionListeners) {
       listener(notification)
     }
   }
+}
+
+const removeAvoidFilterChar = (text: string): string => {
+  return text.replace('​', '')
 }
