@@ -63,5 +63,5 @@ export class Listener extends BasicListener {
 }
 
 const removeAvoidFilterChar = (text: string): string => {
-  return text.replace('​', '')
+  return text.replace(/[\u180e\u200b\ufefe]/g, '')
 }
