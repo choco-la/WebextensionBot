@@ -1,5 +1,5 @@
 import { EventEmitter } from './eventemitter'
-import { IRecvData, IStreamListener, IWSEvent, NotifyEvent } from './types//deftype'
+import { IRecvData, IStreamListener, IWSEvent } from './types//deftype'
 
 export class Stream extends EventEmitter {
   private streamURL: string
@@ -51,7 +51,7 @@ export class Stream extends EventEmitter {
     this.setUpEventListeners('notification')
   }
 
-  private onMessage = <K extends keyof IWSEvent>(type: K | NotifyEvent, event: MessageEvent) => {
+  private onMessage = <K extends keyof IWSEvent>(type: K, event: MessageEvent) => {
     const recvJSON: IRecvData = JSON.parse(event.data)
     const payload = JSON.parse(recvJSON.payload)
     switch (type) {
