@@ -146,8 +146,9 @@ const playOXGame = (toot: IStatus, oxCoordinate: Coordinate | null, mark: Mark, 
   const nowState = state.stateView()
   if (result) delete oxGameStates[nameKey]
   if (result === 'invalid') {
-    if (ismention) setTimeout(() => API.write.toot(`@${userName}@${host} ${msg}`, toot.visibility, toot.id), 3000)
-    else setTimeout(() => API.write.toot(`@${userName}@${host} ${msg}`, toot.visibility), 3000)
+    const invalid = 'そこゎ置けないょ(∩´﹏`∩)💦'
+    if (ismention) setTimeout(() => API.write.toot(`@${userName}@${host} ${invalid}`, toot.visibility, toot.id), 3000)
+    else setTimeout(() => API.write.toot(`@${userName}@${host} ${invalid}`, toot.visibility), 3000)
     return
   }
 
