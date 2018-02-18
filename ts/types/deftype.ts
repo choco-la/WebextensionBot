@@ -9,16 +9,6 @@ export interface IAccount {
   username: string
 }
 
-export interface IJSONDict {
-  [key: string]: string | number | boolean | this
-}
-
-export interface IRecvData {
-  [key: string]: any,
-  event: string,
-  payload: string
-}
-
 export interface IMedia {
   id: string
   type: 'image' | 'video' | 'gifv' | 'unknown'

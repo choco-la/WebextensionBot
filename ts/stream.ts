@@ -1,6 +1,6 @@
 import { EventEmitter } from './eventemitter'
 import { isDelete, isStatus } from './typeguards'
-import { IRecvData, IStreamListener, IWSEvent } from './types//deftype'
+import { IStreamListener, IWSEvent } from './types//deftype'
 
 export class Stream extends EventEmitter {
   private streamURL: string
@@ -53,7 +53,7 @@ export class Stream extends EventEmitter {
   }
 
   private onMessage = <K extends keyof IWSEvent>(type: K, event: MessageEvent) => {
-    const recvJSON: IRecvData = JSON.parse(event.data)
+    const recvJSON = JSON.parse(event.data)
     const payload = JSON.parse(recvJSON.payload)
     switch (type) {
       case 'update':
