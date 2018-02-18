@@ -86,6 +86,16 @@ const searchReachCoordinate = (counts: Counts, state: State): Coordinate | null 
       }
     }
   }
+
+  // Diagonal lines.
+  for (let index = 0; counts[2].length > index; index++) {
+    if (counts[2][index] === 2) {
+      const reachCoordinate = getReachCoordinate(2, index, state)
+      // Filled by my mark.
+      if (reachCoordinate === null) continue
+      return reachCoordinate
+    }
+  }
   return null
 }
 
