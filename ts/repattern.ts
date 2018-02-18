@@ -46,6 +46,7 @@ const fortuneRe = String.raw`[!！](?:omikuji|[ｏＯ][ｍＭ][ｉＩ][ｋＫ][�
 const otoshidamaRe = String.raw`[!！](?:otosh?idama|[ｏＯ][ｔＴ][ｏＯ][ｓＳ][ｈＨ]?[ｉＩ][ｄＤ][ａＡ][ｍＭ][ａＡ]|おとしだま|[御お]年玉|オトシダマ)`
 
 const oxgame = String.raw`(?:[◯○oｏOＯ]|まる|マル)(?:[✕☓xｘXＸ]|ばつ|バツ)(?:ゲーム|げーむ|game)`
+const resetGame = String.raw`(?:ゲーム|げーむ)(?:リセット|りせっと)|(?:最初|さいしょ)から|やり(?:直|なお)し|もう(?:一回|いっかい)`
 
 // Used for matching.
 export const rePattern: { [key: string]: RegExp } = {
@@ -55,7 +56,8 @@ export const rePattern: { [key: string]: RegExp } = {
   fortune: new RegExp(`${fortuneRe}`, 'iu'),
   kiss: new RegExp(`ちゅ${rawPattern.friendlySuffix}*$`, 'iu'),
   otoshidama: new RegExp(`${otoshidamaRe}`, 'iu'),
-  oxgame: new RegExp(`${oxgame}`, 'iu')
+  oxgame: new RegExp(`${oxgame}`, 'iu'),
+  resetgame: new RegExp(resetGame, 'iu')
 }
 
 export const sholdWipeTL = (text: string): boolean => {

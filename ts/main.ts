@@ -227,6 +227,18 @@ const playOXGame = (toot: IStatus, oxCoordinate: Coordinate | null, mark: Mark, 
   setTimeout(() => API.write.toot(sendData), 3000)
 }
 
+const resetOXGame = (toot: IStatus, oxCoordinate: Coordinate | null, mark: Mark, ismention?: boolean): void => {
+  const url: URL = new URL(toot.account.url)
+  const host: string = url.hostname
+  const userName: string = toot.account.username
+  const nameKey = `${userName}@${host}`
+
+  const newGame = new OXGame(mark)
+  oxGameStates[nameKey] = newGame
+
+  playOXGame(toot, oxCoordinate, mark, ismention)
+}
+
 const close = (toot: IStatus): void => {
   reply(toot, '終わります(๑•᎑•๑)♬*')
   ltl.close()
@@ -262,6 +274,7 @@ const onMention = (recv: INotifiation): void => {
   else if (/ポプテピ|ぽぷてぴ/.test(content)) return reply(toot, randomContent.popteamepic())
   else if (rePattern.oxgame.test(content)) playOXGame(toot, null, '✕', true)
   else if (oxCoordinate) return playOXGame(toot, oxCoordinate, '◯', true)
+  else if (rePattern.resetgame.test(content)) resetOXGame(toot, null, '✕', true)
   else return reply(toot)
 }
 

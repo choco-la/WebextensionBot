@@ -24,6 +24,9 @@ describe('rePattern', () => {
     it('Otoshidama', () => {
       assert.isTrue(rePattern.otoshidama.test('!お年玉'))
     })
+    it('GameReset', () => {
+      assert.isTrue(rePattern.resetgame.test('げーむやりなおし'))
+    })
   })
 
   describe('Assert false', () => {
@@ -48,6 +51,9 @@ describe('rePattern', () => {
     })
     it('Otoshidama', () => {
       assert.isFalse(rePattern.otoshidama.test(''))
+    })
+    it('GameReset', () => {
+      assert.isFalse(rePattern.resetgame.test(''))
     })
   })
 })
