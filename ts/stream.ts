@@ -1,6 +1,6 @@
 import { EventEmitter } from './eventemitter'
-import { isDelete, isStatus } from './typeguards'
-import { IStreamListener, IWSEvent } from './types//deftype'
+import { isNofification } from './typeguards'
+import { IStreamListener } from './types//deftype'
 
 export class Stream extends EventEmitter {
   private streamURL: string
@@ -32,51 +32,51 @@ export class Stream extends EventEmitter {
   }
 
   public local = (): void => {
-    const streamQuery: string = `?access_token=${this.bearerToken}&stream=public:local`
-    const webSocketURL: string = `wss://${this.streamURL}${streamQuery}`
-    this.ws = new WebSocket(webSocketURL)
-    this.setUpEventListeners('update')
+    const streamQuery = `?access_token=${this.bearerToken}&stream=public:local`
+    const webSocketURL = `wss://${this.streamURL}${streamQuery}`
+    this.setUpWebSocket(webSocketURL)
+
+    this.ws.addEventListener('message', this.emitUpdate)
   }
 
   public home = (): void => {
-    const streamQuery: string = `?access_token=${this.bearerToken}&stream=user`
-    const webSocketURL: string = `wss://${this.streamURL}${streamQuery}`
-    this.ws = new WebSocket(webSocketURL)
-    this.setUpEventListeners('update')
+    const streamQuery = `?access_token=${this.bearerToken}&stream=user`
+    const webSocketURL = `wss://${this.streamURL}${streamQuery}`
+    this.setUpWebSocket(webSocketURL)
+
+    this.ws.addEventListener('message', this.emitUpdate)
   }
 
   public notification = (): void => {
-    const streamQuery: string = `?access_token=${this.bearerToken}&stream=user`
-    const webSocketURL: string = `wss://${this.streamURL}${streamQuery}`
-    this.ws = new WebSocket(webSocketURL)
-    this.setUpEventListeners('notification')
+    const streamQuery = `?access_token=${this.bearerToken}&stream=user`
+    const webSocketURL = `wss://${this.streamURL}${streamQuery}`
+    this.setUpWebSocket(webSocketURL)
+
+    this.ws.addEventListener('message', this.emitNotification)
   }
 
-  private onMessage = <K extends keyof IWSEvent>(type: K, event: MessageEvent) => {
-    const recvJSON = JSON.parse(event.data)
-    const payload = JSON.parse(recvJSON.payload)
-    switch (type) {
-      case 'update':
-        if (!isStatus(payload)) return
-        this.emit('update', payload)
-        break
-      case 'notification':
-        // Emit both 'notification' and the each event.
-        this.emit('notification', payload)
-        // payload.type: mention|reblog|favourite|follow
-        this.emit(payload.type, payload)
-        break
-      case 'delete':
-        if (!isDelete(payload)) return
-        this.emit('delete', payload)
-        break
-    }
-  }
-
-  private setUpEventListeners = <K extends keyof IWSEvent>(type: K) => {
+  private setUpWebSocket = (url: string): void => {
+    this.ws = new WebSocket(url)
     this.ws.addEventListener('open', (_: Event) => this.emit('open'))
     this.ws.addEventListener('close', (_: Event) => this.emit('close'))
-    // Emit in onMessage().
-    this.ws.addEventListener('message', (msg: MessageEvent) => this.onMessage(type, msg))
+  }
+
+  private emitNotification = (msg: MessageEvent): void => {
+    const recvJSON = JSON.parse(msg.data)
+    const type = recvJSON.event
+    const payload = JSON.parse(recvJSON.payload)
+    if (!isNofification(payload)) return
+    // Emit both 'notification' and the each event.
+    this.emit(type, payload)
+    // payload.type: mention|reblog|favourite|follow
+    this.emit(payload.type, payload)
+  }
+
+  private emitUpdate = (msg: MessageEvent): void => {
+    const recvJSON = JSON.parse(msg.data)
+    const type = recvJSON.event
+    const payload = JSON.parse(recvJSON.payload)
+    if (isNofification(payload)) return
+    this.emit(type, payload)
   }
 }
