@@ -50,13 +50,13 @@ const resetGame = String.raw`(?:ゲーム|げーむ)(?:リセット|りせっと
 
 // Used for matching.
 export const rePattern: { [key: string]: RegExp } = {
-  after: new RegExp(`${afterRe}`, 'iu'),
+  after: new RegExp(afterRe, 'iu'),
   close: new RegExp(closePat.join('|'), 'iu'),
-  food: new RegExp(`${foodRe}`, 'iu'),
-  fortune: new RegExp(`${fortuneRe}`, 'iu'),
+  food: new RegExp(foodRe, 'iu'),
+  fortune: new RegExp(fortuneRe, 'iu'),
   kiss: new RegExp(`ちゅ${rawPattern.friendlySuffix}*$`, 'iu'),
-  otoshidama: new RegExp(`${otoshidamaRe}`, 'iu'),
-  oxgame: new RegExp(`${oxgame}`, 'iu'),
+  otoshidama: new RegExp(otoshidamaRe, 'iu'),
+  oxgame: new RegExp(oxgame, 'iu'),
   resetgame: new RegExp(resetGame, 'iu')
 }
 
