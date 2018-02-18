@@ -1,9 +1,9 @@
-import { INotifiation, IStatus, IWSEvent, NotifyEvent } from './types/deftype'
+import { Delete, INotifiation, IStatus, IWSEvent, NotifyEvent } from './types/deftype'
 
 export class BasicListener {
   protected updateListeners: Array<(toot: IStatus) => void> = []
   protected notificationListeners: Array<(toot: INotifiation) => void> = []
-  protected deleteListeners: Array<(toot: string) => void> = []
+  protected deleteListeners: Array<(toot: Delete) => void> = []
 
   protected favouriteListeners: Array<(toot: INotifiation) => void> = []
   protected followListeners: Array<(toot: INotifiation) => void> = []
@@ -36,7 +36,7 @@ export class BasicListener {
     }
   }
 
-  public onDelete = (recv: string): void => {
+  public onDelete = (recv: Delete): void => {
     for (const listener of this.deleteListeners) {
       listener(recv)
     }

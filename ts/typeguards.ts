@@ -1,7 +1,7 @@
-import { INotifiation, IStatus, Visibility } from './types/deftype'
+import { Delete, INotifiation, IStatus, Visibility } from './types/deftype'
 
-export const isDelete = (recv: any): recv is string => {
-  return recv !== null && recv !== undefined && typeof(recv) === 'string'
+export const isDelete = (recv: any): recv is Delete => {
+  return recv !== null && recv !== undefined && typeof(recv) === 'number'
 }
 
 export const isHTMLElem = (arg: any): arg is HTMLElement => {

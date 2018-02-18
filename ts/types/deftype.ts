@@ -64,8 +64,10 @@ export interface IStatus {
   visibility: Visibility
 }
 
+export type Delete = number
+
 export interface IStreamListener {
-  onDelete: (recv: string) => void
+  onDelete: (recv: Delete) => void
   onFavourite: (notification: INotifiation) => void
   onFollow: (notification: INotifiation) => void
   onMention: (notification: INotifiation) => void
@@ -81,7 +83,7 @@ export interface IWSEvent {
   open: MessageEvent
   close: MessageEvent
   update: IStatus
-  delete: string
+  delete: Delete
   notification: INotifiation
 
   reblog: INotifiation
