@@ -9,7 +9,8 @@ import { rePattern, sholdWipeTL } from './repattern'
 import { filterWords } from './secret'
 import { Stream } from './stream'
 import { tootParser } from './tootparser'
-import { INotifiation, IStatus } from './types//deftype'
+import { IArgumentToot } from './types/apitype'
+import { INotifiation, IStatus } from './types/deftype'
 import { Coordinate, Mark } from './types/oxgametype'
 
 // const hostName: string = 'friends.nico'
@@ -31,7 +32,11 @@ const after = (toot: IStatus): void => {
   const content = tootParser.tootContent(toot.content)
   const match = rePattern.after.exec(content)
   if (!match) return
-  setTimeout(() => API.write.toot(`${match[1]}おつ(๑>◡<๑)`, toot.visibility), 6000)
+  const sendData: IArgumentToot = {
+    status: `${match[1]}おつ(๑>◡<๑)`,
+    visibility: toot.visibility
+  }
+  setTimeout(() => API.write.toot(sendData), 6000)
 }
 
 const calc = (toot: IStatus): void => {
@@ -47,13 +52,19 @@ const calc = (toot: IStatus): void => {
 
   const expression = input[1].trim()
   const result = evalCalc(expression)
-  if (isNaN(result)) {
-    setTimeout(() => API.write.toot(`@${userName}@${host} ${onInvalid}`, toot.visibility, toot.id), 3000)
-  } else if (result.toString().length > 300) {
-    setTimeout(() => API.write.toot(`@${userName}@${host} ${over}`, toot.visibility, toot.id), 3000)
-  } else {
-    setTimeout(() => API.write.toot(`@${userName}@${host} ん〜。。。\n${result}かな〜？(๑>◡<๑)`, toot.visibility, toot.id), 3000)
+  const sendData: IArgumentToot = {
+    in_reply_to_id: toot.id,
+    status: '',
+    visibility: toot.visibility
   }
+  if (isNaN(result)) {
+    sendData.status = `@${userName}@${host} ${onInvalid}`
+  } else if (result.toString().length > 300) {
+    sendData.status = `@${userName}@${host} ${over}`
+  } else {
+    sendData.status = `@${userName}@${host} ん〜。。。\n${result}かな〜？(๑>◡<๑)`
+  }
+  setTimeout(() => API.write.toot(sendData), 3000)
 }
 
 const fortune = (toot: IStatus, ismention?: boolean): void => {
@@ -65,6 +76,11 @@ const fortune = (toot: IStatus, ismention?: boolean): void => {
   const url: URL = new URL(toot.account.url)
   const host: string = url.hostname
   const userName: string = toot.account.username
+  const sendData: IArgumentToot = {
+    in_reply_to_id: toot.id,
+    status: '',
+    visibility: toot.visibility
+  }
   if (/(?:10|１０|十)(?:回|枚|個|連|かい|まい|こ|れん)/.test(content)) {
     // Draw 10 times.
     let msg = `おみくじぽん♪`
@@ -72,11 +88,12 @@ const fortune = (toot: IStatus, ismention?: boolean): void => {
       if (i % 4 === 0) msg += `\n${randomContent.fortune()}`
       else msg += ` ${randomContent.fortune()}`
     }
-    setTimeout(() => API.write.toot(`@${userName}@${host} ${msg}`, toot.visibility, toot.id), 3000)
+    sendData.status = `@${userName}@${host} ${msg}`
   } else {
     const msg = `おみくじぽん♪\n${randomContent.fortune()}で〜す◝(⑅•ᴗ•⑅)◜..°♡`
-    setTimeout(() => API.write.toot(`@${userName}@${host} ${msg}`, toot.visibility, toot.id), 3000)
+    sendData.status = `@${userName}@${host} ${msg}`
   }
+  setTimeout(() => API.write.toot(sendData), 3000)
 }
 
 const funny = (toot: IStatus): void => {
@@ -84,7 +101,12 @@ const funny = (toot: IStatus): void => {
   const content = tootParser.tootContent(toot.content)
   if (screenName !== target) return
   if (!/[wWｗＷ]$/.test(content)) return
-  setTimeout(() => API.write.toot(`@12@friends.nico ${randomContent.funny()}`, toot.visibility, toot.id), 3000)
+  const sendData: IArgumentToot = {
+    in_reply_to_id: toot.id,
+    status: `@12@friends.nico ${randomContent.funny()}`,
+    visibility: toot.visibility
+  }
+  setTimeout(() => API.write.toot(sendData), 3000)
 }
 
 const otoshidama = (toot: IStatus, ismention?: boolean): void => {
@@ -97,7 +119,12 @@ const otoshidama = (toot: IStatus, ismention?: boolean): void => {
   const host: string = url.hostname
   const userName: string = toot.account.username
   const msg = `お年玉どうぞっ(๑•̀ㅁ•́๑)✧\nっ[${randomContent.otoshidama()}]`
-  setTimeout(() => API.write.toot(`@${userName}@${host} ${msg}`, toot.visibility, toot.id), 3000)
+  const sendData: IArgumentToot = {
+    in_reply_to_id: toot.id,
+    status: `@${userName}@${host} ${msg}`,
+    visibility: toot.visibility
+  }
+  setTimeout(() => API.write.toot(sendData), 3000)
 }
 
 const reply = (toot: IStatus, text?: string): void => {
@@ -106,13 +133,22 @@ const reply = (toot: IStatus, text?: string): void => {
   const userName: string = toot.account.username
   const msg: string = text ? text : randomContent.reply()
   setTimeout(() => API.write.favourite(toot.id), 2000)
-  setTimeout(() => API.write.toot(`@${userName}@${host} ${msg}`, toot.visibility, toot.id), 3000)
+  const sendData: IArgumentToot = {
+    in_reply_to_id: toot.id,
+    status: `@${userName}@${host} ${msg}`,
+    visibility: toot.visibility
+  }
+  setTimeout(() => API.write.toot(sendData), 3000)
 }
 
 const sm9 = (toot: IStatus): void => {
   const content = tootParser.tootContent(toot.content)
   if (!/sm9(?:[^0-9]|$)/.test(content)) return
-  setTimeout(() => API.write.toot(randomContent.sm9(), toot.visibility), 6000)
+  const sendData: IArgumentToot = {
+    status: randomContent.sm9(),
+    visibility: toot.visibility
+  }
+  setTimeout(() => API.write.toot(sendData), 6000)
 }
 
 const favUyu = (toot: IStatus): void => {
@@ -124,7 +160,11 @@ const favUyu = (toot: IStatus): void => {
 const wipeTL = (toot: IStatus): void => {
   const content = tootParser.tootContent(toot.content)
   if (!sholdWipeTL(content)) return
-  setTimeout(() => API.write.toot('ふきふき', toot.visibility), 6000)
+  const sendData: IArgumentToot = {
+    status: 'ふきふき',
+    visibility: toot.visibility
+  }
+  setTimeout(() => API.write.toot(sendData), 6000)
 }
 
 const playOXGame = (toot: IStatus, oxCoordinate: Coordinate | null, mark: Mark, ismention?: boolean): void => {
@@ -148,8 +188,12 @@ const playOXGame = (toot: IStatus, oxCoordinate: Coordinate | null, mark: Mark, 
     delete oxGameStates[nameKey]
   } else if (result === 'invalid') {
     const invalid = 'そこゎ置けないょ(∩´﹏`∩)💦'
-    if (ismention) setTimeout(() => API.write.toot(`@${userName}@${host} ${invalid}`, toot.visibility, toot.id), 3000)
-    else setTimeout(() => API.write.toot(`@${userName}@${host} ${invalid}`, toot.visibility), 3000)
+    const sendDataOnInvalid: IArgumentToot = {
+      status: `@${userName}@${host} ${invalid}`,
+      visibility: toot.visibility
+    }
+    if (ismention) sendDataOnInvalid.in_reply_to_id = toot.id
+    setTimeout(() => API.write.toot(sendData), 3000)
     return
   }
 
@@ -175,11 +219,12 @@ const playOXGame = (toot: IStatus, oxCoordinate: Coordinate | null, mark: Mark, 
 
   const stateMsg = `あなた: ${playerMark} ぅゅ: ${botMark}`
   const msg = `${prefixMsg}\n${nowState}\n${stateMsg}`
-  if (ismention) {
-    setTimeout(() => API.write.toot(`@${userName}@${host} ${msg}`, toot.visibility, toot.id), 3000)
-  } else {
-    setTimeout(() => API.write.toot(`@${userName}@${host} ${msg}`, toot.visibility), 3000)
+  const sendData: IArgumentToot = {
+    status: `@${userName}@${host} ${msg}`,
+    visibility: toot.visibility
   }
+  if (ismention) sendData.in_reply_to_id = toot.id
+  setTimeout(() => API.write.toot(sendData), 3000)
 }
 
 const close = (toot: IStatus): void => {

@@ -1,5 +1,5 @@
 import { MastodonAPI as _MastodonAPI } from './api'
-import { Visibility } from './types/deftype'
+import { IArgumentToot } from './types/apitype'
 
 const APIRateLimit = {
   // Wait ${coolTime} seconds per toot.
@@ -20,7 +20,7 @@ export class MastodonAPI extends _MastodonAPI {
   // Timer of setInterval() that resets cooltime.
   private resetCoolTimeID: NodeJS.Timer
 
-  private superToot: (content: string, visibility?: Visibility, replyToID?: string) => void
+  private superToot: (toot: IArgumentToot) => void
 
   constructor (host: string, token: string) {
     super(host, token)
@@ -82,8 +82,8 @@ export class MastodonAPI extends _MastodonAPI {
     this.limit.coolTime = value
   }
 
-  private toot = (content: string, visibility?: Visibility, replyToID?: string): void => {
-    if (replyToID) {
+  private toot = (toot: IArgumentToot): void => {
+    if (toot.in_reply_to_id !== null) {
       const msg = `rateLimitReply: ${this.limit.remainingReply}`
       if (this.limit && this.limit.remainingReply <= 0) return console.log(msg)
     } else {
@@ -92,10 +92,10 @@ export class MastodonAPI extends _MastodonAPI {
       if (this.limit.isCoolTime) return console.log(`coolTime: ${this.limit.coolTime}`)
     }
 
-    this.superToot(content, visibility, replyToID)
+    this.superToot(toot)
 
     if (!this.limit) return
-    if (replyToID) {
+    if (toot.in_reply_to_id !== null) {
       this.limit.remainingReply--
       console.log(`remainingReply: ${this.limit.remainingReply}`)
     } else {
