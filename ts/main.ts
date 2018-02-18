@@ -217,9 +217,9 @@ const playOXGame = (toot: IStatus, oxCoordinate: Coordinate | null, mark: Mark, 
       break
   }
 
-  const stateMsg = `あなた: ${playerMark} ぅゅ: ${botMark}`
-  const msg = `${prefixMsg}\n${nowState}\n${stateMsg}`
+  const msg = `${prefixMsg}\n${nowState}`
   const sendData: IArgumentToot = {
+    spoiler_text: `あなた: ${playerMark} ぅゅ: ${botMark}`,
     status: `@${userName}@${host} ${msg}`,
     visibility: toot.visibility
   }
