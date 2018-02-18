@@ -218,38 +218,43 @@ const onMention = (recv: INotifiation): void => {
   else return reply(toot)
 }
 
-const listener = new Listener()
-listener.addEventListener('update', after)
-listener.addEventListener('update', favUyu)
-listener.addEventListener('update', fortune)
-listener.addEventListener('update', funny)
-listener.addEventListener('update', otoshidama)
-listener.addEventListener('update', sm9)
-listener.addEventListener('update', wipeTL)
-listener.addEventListener('mention', onMention)
-listener.addEventListener('follow', onFollow)
+const updateListener = new Listener()
+updateListener.addEventListener('update', after)
+updateListener.addEventListener('update', favUyu)
+updateListener.addEventListener('update', fortune)
+updateListener.addEventListener('update', funny)
+updateListener.addEventListener('update', otoshidama)
+updateListener.addEventListener('update', sm9)
+updateListener.addEventListener('update', wipeTL)
 
 const ltl = new Stream(hostName, bearerToken)
 ltl.local()
 ltl.addListener('open', () => console.log('opened ltl'))
 ltl.addListener('close', () => console.log('closed ltl'))
-ltl.listener = listener
+ltl.listener = updateListener
+
+const notifictionListener = new Listener()
+notifictionListener.addEventListener('mention', onMention)
+notifictionListener.addEventListener('follow', onFollow)
 
 const notification = new Stream(hostName, bearerToken)
 notification.notification()
 notification.addListener('open', () => console.log('opened notification'))
 notification.addListener('close', () => console.log('closed notification'))
-notification.listener = listener
+notification.listener = notifictionListener
 
 // Ignore self.
 API.read.verifyCredentials()
 .then((account) => {
   const me = tootParser.screenName(account)
-  listener.mute('screenname', me)
+  updateListener.mute('screenname', me)
+  notifictionListener.mute('screenname', me)
 })
 
-listener.mute('application', 'mastbot')
-listener.mute('content', String.raw`(?:死|ﾀﾋ)ね|殺す`)
+updateListener.mute('application', 'mastbot')
+notifictionListener.mute('application', 'mastbot')
+
 for (const filterWord of filterWords) {
-  listener.mute('content', filterWord)
+  updateListener.mute('content', filterWord)
+  notifictionListener.mute('content', filterWord)
 }
