@@ -1,4 +1,5 @@
 import { isVisibility } from '../typeguards'
+import { IArgumentToot } from '../types/apitype'
 import { Visibility } from '../types/deftype'
 
 interface ISendToot {
@@ -39,14 +40,23 @@ export class WriteAPI {
     return this._visibility
   }
 
-  public toot = (content: string, visibility?: Visibility, replyToID?: string): void => {
+  public toot = (toot: IArgumentToot): void => {
+    const {
+      in_reply_to_id = null,
+      media_ids = [],
+      sensitive = false,
+      spoiler_text = '',
+      status,
+      visibility = this.visibility
+    } = toot
+
     const data = {
-      in_reply_to_id: replyToID ? replyToID : null,
-      media_ids: [],
-      sensitive: false,
-      spoiler_text: '',
-      status: content,
-      visibility: visibility ? visibility : this.visibility
+      in_reply_to_id,
+      media_ids,
+      sensitive,
+      spoiler_text,
+      status,
+      visibility
     }
     this.sendToot(data)
     .then((resp) => console.log(resp.status))
