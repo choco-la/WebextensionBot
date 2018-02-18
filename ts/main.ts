@@ -173,7 +173,8 @@ const playOXGame = (toot: IStatus, oxCoordinate: Coordinate | null, mark: Mark, 
       break
   }
 
-  const msg = `${prefixMsg}\n${nowState}`
+  const stateMsg = `あなた: ${playerMark} ぅゅ: ${botMark}`
+  const msg = `${prefixMsg}\n${nowState}\n${stateMsg}`
   if (ismention) {
     setTimeout(() => API.write.toot(`@${userName}@${host} ${msg}`, toot.visibility, toot.id), 3000)
   } else {
