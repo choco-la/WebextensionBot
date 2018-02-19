@@ -175,3 +175,10 @@ const deepCopy = <T>(arg: T): T => {
   const stringified = JSON.stringify(arg)
   return JSON.parse(stringified)
 }
+
+export const TEST = {
+  checkDiagonalLine,
+  countUpState,
+  getReachCoordinate,
+  searchReachCoordinate
+}
