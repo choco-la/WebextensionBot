@@ -314,7 +314,6 @@ API.read.verifyCredentials()
 updateListener.mute('application', 'mastbot')
 notifictionListener.mute('application', 'mastbot')
 
-for (const filterWord of filterWords) {
-  updateListener.mute('content', filterWord)
-  notifictionListener.mute('content', filterWord)
-}
+const joinedFilterWords = filterWords.join('|')
+updateListener.mute('content', joinedFilterWords)
+notifictionListener.mute('content', joinedFilterWords)

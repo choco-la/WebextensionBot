@@ -1,11 +1,9 @@
 export class WordFilter {
   private wordSet: Set<string>
-  constructor (words?: Iterable<string>) {
+  constructor (word?: string) {
     this.wordSet = new Set()
-    if (!words) return
-    for (const word of words) {
-      this.wordSet.add(word)
-    }
+    if (!word) return
+    this.wordSet.add(word)
   }
 
   public add = (word: string): void => {

@@ -14,7 +14,7 @@ const muteContents = [
 ]
 
 describe('RegexFlter', () => {
-  const filter = new RegexFilter(muteContents)
+  const filter = new RegexFilter(muteContents.join('|'))
 
   it('Assert true', () => {
     assert.isTrue(filter.test('ﾀﾋね'))
@@ -29,7 +29,10 @@ describe('RegexFlter', () => {
 })
 
 describe('WordFilter', () => {
-  const filter = new WordFilter(muteApplications)
+  const filter = new WordFilter()
+  for (const muteApplication of muteApplications) {
+    filter.add(muteApplication)
+  }
 
   it('Assert true', () => {
     assert.isTrue(filter.test('mastbot'))

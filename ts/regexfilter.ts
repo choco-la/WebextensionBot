@@ -1,12 +1,10 @@
 export class RegexFilter {
   private regexSet: Set<RegExp>
-  constructor (patterns?: Iterable<string>) {
+  constructor (regex?: string) {
     this.regexSet = new Set()
-    if (!patterns) return
-    for (const pattern of patterns) {
-      const regex = new RegExp(pattern, 'iu')
-      this.regexSet.add(regex)
-    }
+    if (!regex) return
+    const re = new RegExp(regex, 'iu')
+    this.regexSet.add(re)
   }
 
   public add = (pattern: string): void => {
