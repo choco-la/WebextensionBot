@@ -193,7 +193,7 @@ const playOXGame = (toot: IStatus, oxCoordinate: Coordinate | null, mark: Mark, 
       visibility: toot.visibility
     }
     if (ismention) sendDataOnInvalid.in_reply_to_id = toot.id
-    setTimeout(() => API.write.toot(sendData), 3000)
+    setTimeout(() => API.write.toot(sendDataOnInvalid), 3000)
     return
   }
 
