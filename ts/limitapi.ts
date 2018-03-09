@@ -83,7 +83,7 @@ export class MastodonAPI extends _MastodonAPI {
   }
 
   private toot = (toot: IArgumentToot): void => {
-    if (toot.in_reply_to_id !== null) {
+    if (toot.in_reply_to_id) {
       const msg = `rateLimitReply: ${this.limit.remainingReply}`
       if (this.limit && this.limit.remainingReply <= 0) return console.log(msg)
     } else {
@@ -95,7 +95,7 @@ export class MastodonAPI extends _MastodonAPI {
     this.superToot(toot)
 
     if (!this.limit) return
-    if (toot.in_reply_to_id !== null) {
+    if (toot.in_reply_to_id) {
       this.limit.remainingReply--
       console.log(`remainingReply: ${this.limit.remainingReply}`)
     } else {
