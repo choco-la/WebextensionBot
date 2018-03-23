@@ -48,13 +48,22 @@ const otoshidamaRe = String.raw`[!！](?:otosh?idama|[ｏＯ][ｔＴ][ｏＯ][�
 const oxgame = String.raw`(?:[◯○oｏOＯ]|まる|マル)(?:[✕☓xｘXＸ]|ばつ|バツ)(?:ゲーム|げーむ|game)`
 const resetGame = String.raw`(?:ゲーム|げーむ)(?:リセット|りせっと)|(?:最初|さいしょ)っ?から|やり(?:直|なお)し|もう(?:一回|いっかい)`
 
+const greetingPatterns: {[key: string]: string} = {
+  evening: String.raw`こんに?ち[はわゎ]|コンニ?チ[ハワヮ]`,
+  morning: String.raw`お(?:はよ|あひょ)[うぅ${misc.prolong}]|オ(?:ハヨ|アヒョ)[ウゥ${misc.prolong}]`,
+  night: String.raw`こんばん[はわゎ]|コンバン[ハワヮ]`
+}
+
 // Used for matching.
 export const rePattern: { [key: string]: RegExp } = {
   after: new RegExp(afterRe, 'iu'),
   close: new RegExp(closePat.join('|'), 'iu'),
+  evening: new RegExp(greetingPatterns.evening, 'iu'),
   food: new RegExp(foodRe, 'iu'),
   fortune: new RegExp(fortuneRe, 'iu'),
   kiss: new RegExp(`ちゅ${rawPattern.friendlySuffix}*$`, 'iu'),
+  morning: new RegExp(greetingPatterns.morning, 'iu'),
+  night: new RegExp(greetingPatterns.night, 'iu'),
   otoshidama: new RegExp(otoshidamaRe, 'iu'),
   oxgame: new RegExp(oxgame, 'iu'),
   resetgame: new RegExp(resetGame, 'iu')

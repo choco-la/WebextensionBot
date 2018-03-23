@@ -27,6 +27,19 @@ describe('rePattern', () => {
     it('GameReset', () => {
       assert.isTrue(rePattern.resetgame.test('げーむやりなおし'))
     })
+    describe('Greeting', () => {
+      it('Morning', () => {
+        assert.isTrue(rePattern.morning.test('おはよ〜')),
+        assert.isTrue(rePattern.morning.test('おあひょう'))
+      })
+      it('Evening', () => {
+        assert.isTrue(rePattern.evening.test('こんにちは')),
+        assert.isTrue(rePattern.evening.test('こんちわ'))
+      })
+      it('Night', () => {
+        assert.isTrue(rePattern.night.test('こんばんわ'))
+      })
+    })
   })
 
   describe('Assert false', () => {
@@ -54,6 +67,17 @@ describe('rePattern', () => {
     })
     it('GameReset', () => {
       assert.isFalse(rePattern.resetgame.test(''))
+    })
+    describe('Greeting', () => {
+      it('Morning', () => {
+        assert.isFalse(rePattern.morning.test('おあっひょ'))
+      })
+      it('Evening', () => {
+        assert.isFalse(rePattern.evening.test('こんちゃっす'))
+      })
+      it('Night', () => {
+        assert.isFalse(rePattern.night.test('今晩は焼き肉'))
+      })
     })
   })
 })
