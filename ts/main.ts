@@ -24,7 +24,7 @@ const target = '12@friends.nico'
 const oxGameStates: {[key: string]: OXGame} = {}
 
 const API = new MastodonAPI(hostName, bearerToken)
-API.setRateLimit(1)
+API.setRateLimit(1, 12)
 API.setCoolTime(90000)
 API.write.visibility = 'public'
 
