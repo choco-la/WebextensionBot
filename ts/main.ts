@@ -275,6 +275,9 @@ const onMention = (recv: INotifiation): void => {
   else if (rePattern.oxgame.test(content)) playOXGame(toot, null, '✕', true)
   else if (oxCoordinate) return playOXGame(toot, oxCoordinate, '◯', true)
   else if (rePattern.resetgame.test(content)) resetOXGame(toot, null, '✕', true)
+  else if (rePattern.morning.test(content)) reply(toot, randomContent.morning())
+  else if (rePattern.evening.test(content)) reply(toot, randomContent.evening())
+  else if (rePattern.night.test(content)) reply(toot, randomContent.night())
   else return reply(toot)
 }
 

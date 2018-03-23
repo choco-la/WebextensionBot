@@ -111,6 +111,12 @@ const understand: string[] = [
   'うんうん！( •ᴗ•)*♪'
 ]
 
+const greeting: {[key: string]: string[]} = {
+  evening: ['こんにちは〜(๑>◡<๑)', 'こんにちわ(ㅅ´ ˘ `)♡'],
+  morning: ['おはよ〜( •ᴗ•)*♪', 'おはようございます(๑•̀ㅁ•́๑)✧'],
+  night: ['こんばんは(*ｐω-)｡O゜', 'こんばんは(๑•̀ㅂ•́)و✧']
+}
+
 const randomArray = <T>(contents: T[]): T => {
   const index = Math.floor(Math.random() * contents.length)
   return contents[index]
@@ -143,11 +149,14 @@ const slotValues = (array: string[], length: number = array.length): string => {
 export const randomContent: { [key: string]: () => string } = {
   cheerUp: () => randomArray(cheerUp),
   cute: () => randomArray(cute),
+  evening: () => randomArray(greeting.evening),
   fortune: () => drawFortune(),
   funny: () => randomArray(funny),
   girl: () => randomArray(girl),
   kiss: () => randomArray(kiss),
   mom: () => randomArray(mom),
+  morning: () => randomArray(greeting.morning),
+  night: () => randomArray(greeting.night),
   otoshidama: () => randomArray(otoshidama)(),
   oxGameThinking: () => randomArray(oxGameThinking),
   oxGameYouLose: () => randomArray(oxGameYouLose),
