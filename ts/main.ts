@@ -291,6 +291,21 @@ const updateEvents: Array<(toot: IStatus) => void> = [
   wipeTL
 ]
 
+const homeUpdateListener = new Listener()
+homeUpdateListener.addEventListener('update', (toot: IStatus): void => {
+  // Exclude local users.
+  if (tootParser.hostName(toot.url) === hostName) return
+  for (const updateEvent of updateEvents) {
+    updateEvent(toot)
+  }
+})
+
+const home = new Stream(hostName, bearerToken)
+home.home()
+home.addListener('open', () => console.log('opened home'))
+home.addListener('close', () => console.log('closed home'))
+home.listener = homeUpdateListener
+
 const localUpdateListener = new Listener()
 for (const updateEvent of updateEvents) {
   localUpdateListener.addEventListener('update', updateEvent)
@@ -316,13 +331,16 @@ notification.listener = notifictionListener
 API.read.verifyCredentials()
 .then((account) => {
   const me = tootParser.screenName(account)
+  homeUpdateListener.mute('screenname', me)
   localUpdateListener.mute('screenname', me)
   notifictionListener.mute('screenname', me)
 })
 
+homeUpdateListener.mute('application', 'mastbot')
 localUpdateListener.mute('application', 'mastbot')
 notifictionListener.mute('application', 'mastbot')
 
 const joinedFilterWords = filterWords.join('|')
+homeUpdateListener.mute('content', joinedFilterWords)
 localUpdateListener.mute('content', joinedFilterWords)
 notifictionListener.mute('content', joinedFilterWords)
