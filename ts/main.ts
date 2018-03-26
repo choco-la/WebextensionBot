@@ -281,20 +281,41 @@ const onMention = (recv: INotifiation): void => {
   else return reply(toot)
 }
 
-const updateListener = new Listener()
-updateListener.addEventListener('update', after)
-updateListener.addEventListener('update', favUyu)
-updateListener.addEventListener('update', fortune)
-updateListener.addEventListener('update', funny)
-updateListener.addEventListener('update', otoshidama)
-updateListener.addEventListener('update', sm9)
-updateListener.addEventListener('update', wipeTL)
+const updateEvents: Array<(toot: IStatus) => void> = [
+  after,
+  favUyu,
+  fortune,
+  funny,
+  otoshidama,
+  sm9,
+  wipeTL
+]
+
+const homeUpdateListener = new Listener()
+homeUpdateListener.addEventListener('update', (toot: IStatus): void => {
+  // Exclude local user's public toots.
+  if (tootParser.hostName(toot.url) === hostName && toot.visibility === 'public') return
+  for (const updateEvent of updateEvents) {
+    updateEvent(toot)
+  }
+})
+
+const home = new Stream(hostName, bearerToken)
+home.home()
+home.addListener('open', () => console.log('opened home'))
+home.addListener('close', () => console.log('closed home'))
+home.listener = homeUpdateListener
+
+const localUpdateListener = new Listener()
+for (const updateEvent of updateEvents) {
+  localUpdateListener.addEventListener('update', updateEvent)
+}
 
 const ltl = new Stream(hostName, bearerToken)
 ltl.local()
 ltl.addListener('open', () => console.log('opened ltl'))
 ltl.addListener('close', () => console.log('closed ltl'))
-ltl.listener = updateListener
+ltl.listener = localUpdateListener
 
 const notifictionListener = new Listener()
 notifictionListener.addEventListener('mention', onMention)
@@ -310,13 +331,16 @@ notification.listener = notifictionListener
 API.read.verifyCredentials()
 .then((account) => {
   const me = tootParser.screenName(account)
-  updateListener.mute('screenname', me)
+  homeUpdateListener.mute('screenname', me)
+  localUpdateListener.mute('screenname', me)
   notifictionListener.mute('screenname', me)
 })
 
-updateListener.mute('application', 'mastbot')
+homeUpdateListener.mute('application', 'mastbot')
+localUpdateListener.mute('application', 'mastbot')
 notifictionListener.mute('application', 'mastbot')
 
 const joinedFilterWords = filterWords.join('|')
-updateListener.mute('content', joinedFilterWords)
+homeUpdateListener.mute('content', joinedFilterWords)
+localUpdateListener.mute('content', joinedFilterWords)
 notifictionListener.mute('content', joinedFilterWords)
