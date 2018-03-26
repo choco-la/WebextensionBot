@@ -291,16 +291,16 @@ const updateEvents: Array<(toot: IStatus) => void> = [
   wipeTL
 ]
 
-const updateListener = new Listener()
+const localUpdateListener = new Listener()
 for (const updateEvent of updateEvents) {
-  updateListener.addEventListener('update', updateEvent)
+  localUpdateListener.addEventListener('update', updateEvent)
 }
 
 const ltl = new Stream(hostName, bearerToken)
 ltl.local()
 ltl.addListener('open', () => console.log('opened ltl'))
 ltl.addListener('close', () => console.log('closed ltl'))
-ltl.listener = updateListener
+ltl.listener = localUpdateListener
 
 const notifictionListener = new Listener()
 notifictionListener.addEventListener('mention', onMention)
@@ -316,13 +316,13 @@ notification.listener = notifictionListener
 API.read.verifyCredentials()
 .then((account) => {
   const me = tootParser.screenName(account)
-  updateListener.mute('screenname', me)
+  localUpdateListener.mute('screenname', me)
   notifictionListener.mute('screenname', me)
 })
 
-updateListener.mute('application', 'mastbot')
+localUpdateListener.mute('application', 'mastbot')
 notifictionListener.mute('application', 'mastbot')
 
 const joinedFilterWords = filterWords.join('|')
-updateListener.mute('content', joinedFilterWords)
+localUpdateListener.mute('content', joinedFilterWords)
 notifictionListener.mute('content', joinedFilterWords)
