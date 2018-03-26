@@ -293,8 +293,8 @@ const updateEvents: Array<(toot: IStatus) => void> = [
 
 const homeUpdateListener = new Listener()
 homeUpdateListener.addEventListener('update', (toot: IStatus): void => {
-  // Exclude local users.
-  if (tootParser.hostName(toot.url) === hostName) return
+  // Exclude local user's public toots.
+  if (tootParser.hostName(toot.url) === hostName && toot.visibility === 'public') return
   for (const updateEvent of updateEvents) {
     updateEvent(toot)
   }
