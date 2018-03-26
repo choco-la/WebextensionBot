@@ -281,14 +281,20 @@ const onMention = (recv: INotifiation): void => {
   else return reply(toot)
 }
 
+const updateEvents: Array<(toot: IStatus) => void> = [
+  after,
+  favUyu,
+  fortune,
+  funny,
+  otoshidama,
+  sm9,
+  wipeTL
+]
+
 const updateListener = new Listener()
-updateListener.addEventListener('update', after)
-updateListener.addEventListener('update', favUyu)
-updateListener.addEventListener('update', fortune)
-updateListener.addEventListener('update', funny)
-updateListener.addEventListener('update', otoshidama)
-updateListener.addEventListener('update', sm9)
-updateListener.addEventListener('update', wipeTL)
+for (const updateEvent of updateEvents) {
+  updateListener.addEventListener('update', updateEvent)
+}
 
 const ltl = new Stream(hostName, bearerToken)
 ltl.local()
