@@ -1,3 +1,4 @@
+import { FriendsNicoAPI } from './api/instance/friends.nico'
 import { randomContent } from './botcontents'
 import { Auth } from './conf'
 import { evalCalc } from './evalcalc'
@@ -278,7 +279,26 @@ const onMention = (recv: INotifiation): void => {
   else if (rePattern.morning.test(content)) reply(toot, randomContent.morning())
   else if (rePattern.evening.test(content)) reply(toot, randomContent.evening())
   else if (rePattern.night.test(content)) reply(toot, randomContent.night())
-  else return reply(toot)
+
+  if (tootParser.screenName(recv.account) === target) {
+    const enqRe = /^(?:@12222222[^a-zA-Z0-9_]+)?(?:\n)*(?:enquete|あんけ(?:ーと)?|アンケ(?:ート)?)[:：]/i
+    if (enqRe.test(content)) return enquete(content)
+  }
+
+  return reply(toot)
+}
+
+const nicofreAPI = new FriendsNicoAPI(hostName, bearerToken)
+nicofreAPI.visibility = 'public'
+const enquete = (status: string): void => {
+  const questionPart = /(.+)[?？](.+)[:：](.+)/.exec(status)
+  if (questionPart === null) return
+  const sendEnquete = {
+    enquete_items: questionPart.slice(2, 4),
+    isEnquete: true,
+    status: questionPart[1]
+  }
+  nicofreAPI.takeInstantEnquete(sendEnquete)
 }
 
 const updateEvents: Array<(toot: IStatus) => void> = [
