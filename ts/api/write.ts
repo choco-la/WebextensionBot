@@ -1,25 +1,6 @@
 import { isVisibility } from '../typeguards'
-import { IArgumentToot } from '../types/apitype'
+import { IArgumentToot, IFullfilledXHR, ISendToot } from '../types/apitype'
 import { Visibility } from '../types/deftype'
-
-interface ISendToot {
-  in_reply_to_id: string | null,
-  media_ids: number[],
-  sensitive: boolean,
-  spoiler_text: string,
-  status: string
-  visibility: Visibility
-}
-
-interface IXHRResponce {
-  text: string
-}
-
-interface IFullfilledXHR extends XMLHttpRequest {
-  response: IXHRResponce
-  status: number
-  statusText: string
-}
 
 export class WriteAPI {
   protected bearerToken: string
