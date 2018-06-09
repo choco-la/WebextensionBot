@@ -44,8 +44,7 @@ const getParsedToot = (toot: IStatus): IParsedToot => ({
 })
 
 const after = (toot: IParsedToot): void => {
-  const content = tootParser.tootContent(toot.content)
-  const match = rePattern.after.exec(content)
+  const match = rePattern.after.exec(toot.content)
   if (!match) return
   const sendData: IArgumentToot = {
     status: `${match[1]}おつ(๑>◡<๑)`,
@@ -55,10 +54,9 @@ const after = (toot: IParsedToot): void => {
 }
 
 const calc = (toot: IParsedToot): void => {
-  const content = tootParser.tootContent(toot.content)
   const onInvalid = 'わかんないよぉ〜(｡>﹏<｡)'
   const over = '大きすぎる(∩´﹏`∩)💦'
-  const input = /(?:calc|計算|けいさん)[:：](?:\n)*(.+)/i.exec(content)
+  const input = /(?:calc|計算|けいさん)[:：](?:\n)*(.+)/i.exec(toot.content)
   if (!input) return
 
   const expression = input[1].trim()
