@@ -14,6 +14,13 @@ import { IArgumentToot } from './types/apitype'
 import { INotifiation, IStatus } from './types/deftype'
 import { Coordinate, Mark } from './types/oxgametype'
 
+interface IParsedToot {
+  account: string
+  content: IStatus['content']
+  id: IStatus['id']
+  visibility: IStatus['visibility']
+}
+
 // const hostName: string = 'friends.nico'
 const hostName: string = Auth.hostName
 // const bearerToken: string = 'ACCESS_TOKEN'
@@ -29,7 +36,14 @@ API.setRateLimit(1, 12)
 API.setCoolTime(90000)
 API.write.visibility = 'public'
 
-const after = (toot: IStatus): void => {
+const getParsedToot = (toot: IStatus): IParsedToot => ({
+  account: tootParser.screenName(toot.account),
+  content: tootParser.tootContent(toot.content),
+  id: toot.id,
+  visibility: toot.visibility
+})
+
+const after = (toot: IParsedToot): void => {
   const content = tootParser.tootContent(toot.content)
   const match = rePattern.after.exec(content)
   if (!match) return
@@ -40,16 +54,12 @@ const after = (toot: IStatus): void => {
   setTimeout(() => API.write.toot(sendData), 6000)
 }
 
-const calc = (toot: IStatus): void => {
+const calc = (toot: IParsedToot): void => {
   const content = tootParser.tootContent(toot.content)
   const onInvalid = 'わかんないよぉ〜(｡>﹏<｡)'
   const over = '大きすぎる(∩´﹏`∩)💦'
   const input = /(?:calc|計算|けいさん)[:：](?:\n)*(.+)/i.exec(content)
   if (!input) return
-
-  const url: URL = new URL(toot.account.url)
-  const host: string = url.hostname
-  const userName: string = toot.account.username
 
   const expression = input[1].trim()
   const result = evalCalc(expression)
@@ -58,50 +68,45 @@ const calc = (toot: IStatus): void => {
     status: '',
     visibility: toot.visibility
   }
+
   if (isNaN(result)) {
-    sendData.status = `@${userName}@${host} ${onInvalid}`
+    sendData.status = `@${toot.account} ${onInvalid}`
   } else if (result.toString().length > 300) {
-    sendData.status = `@${userName}@${host} ${over}`
+    sendData.status = `@@${toot.account} ${over}`
   } else {
-    sendData.status = `@${userName}@${host} ん〜。。。\n${result}かな〜？(๑>◡<๑)`
+    sendData.status = `@${toot.account} ん〜。。。\n${result}かな〜？(๑>◡<๑)`
   }
   setTimeout(() => API.write.toot(sendData), 3000)
 }
 
-const fortune = (toot: IStatus, ismention?: boolean): void => {
-  const content = tootParser.tootContent(toot.content)
+const fortune = (toot: IParsedToot, ismention?: boolean): void => {
   if (!ismention) {
-    if (/@12222222[^a-zA-Z0-9_]/.test(content)) return
-    if (!rePattern.fortune.test(content)) return
+    if (/@12222222[^a-zA-Z0-9_]/.test(toot.content)) return
+    if (!rePattern.fortune.test(toot.content)) return
   }
-  const url: URL = new URL(toot.account.url)
-  const host: string = url.hostname
-  const userName: string = toot.account.username
   const sendData: IArgumentToot = {
     in_reply_to_id: toot.id,
     status: '',
     visibility: toot.visibility
   }
-  if (/(?:10|１０|十)(?:回|枚|個|連|かい|まい|こ|れん)/.test(content)) {
+  if (/(?:10|１０|十)(?:回|枚|個|連|かい|まい|こ|れん)/.test(toot.content)) {
     // Draw 10 times.
     let msg = `おみくじぽん♪`
     for (let i = 0; i < 10; i++) {
       if (i % 4 === 0) msg += `\n${randomContent.fortune()}`
       else msg += ` ${randomContent.fortune()}`
     }
-    sendData.status = `@${userName}@${host} ${msg}`
+    sendData.status = `@${toot.account} ${msg}`
   } else {
     const msg = `おみくじぽん♪\n${randomContent.fortune()}で〜す◝(⑅•ᴗ•⑅)◜..°♡`
-    sendData.status = `@${userName}@${host} ${msg}`
+    sendData.status = `@${toot.account} ${msg}`
   }
   setTimeout(() => API.write.toot(sendData), 3000)
 }
 
-const funny = (toot: IStatus): void => {
-  const screenName = tootParser.screenName(toot.account)
-  const content = tootParser.tootContent(toot.content)
-  if (screenName !== target) return
-  if (!/[wWｗＷ]$/.test(content)) return
+const funny = (toot: IParsedToot): void => {
+  if (toot.account !== target) return
+  if (!/[wWｗＷ]$/.test(toot.content)) return
   const sendData: IArgumentToot = {
     in_reply_to_id: toot.id,
     status: `@12@friends.nico ${randomContent.funny()}`,
@@ -110,41 +115,33 @@ const funny = (toot: IStatus): void => {
   setTimeout(() => API.write.toot(sendData), 3000)
 }
 
-const otoshidama = (toot: IStatus, ismention?: boolean): void => {
-  const content = tootParser.tootContent(toot.content)
+const otoshidama = (toot: IParsedToot, ismention?: boolean): void => {
   if (!ismention) {
-    if (/@12222222[^a-zA-Z0-9_]/.test(content)) return
-    if (!rePattern.otoshidama.test(content)) return
+    if (/@12222222[^a-zA-Z0-9_]/.test(toot.content)) return
+    if (!rePattern.otoshidama.test(toot.content)) return
   }
-  const url: URL = new URL(toot.account.url)
-  const host: string = url.hostname
-  const userName: string = toot.account.username
   const msg = `お年玉どうぞっ(๑•̀ㅁ•́๑)✧\nっ[${randomContent.otoshidama()}]`
   const sendData: IArgumentToot = {
     in_reply_to_id: toot.id,
-    status: `@${userName}@${host} ${msg}`,
+    status: `@${toot.account} ${msg}`,
     visibility: toot.visibility
   }
   setTimeout(() => API.write.toot(sendData), 3000)
 }
 
-const reply = (toot: IStatus, text?: string): void => {
-  const url: URL = new URL(toot.account.url)
-  const host: string = url.hostname
-  const userName: string = toot.account.username
+const reply = (toot: IParsedToot, text?: string): void => {
   const msg: string = text ? text : randomContent.reply()
   setTimeout(() => API.write.favourite(toot.id), 2000)
   const sendData: IArgumentToot = {
     in_reply_to_id: toot.id,
-    status: `@${userName}@${host} ${msg}`,
+    status: `@${toot.account} ${msg}`,
     visibility: toot.visibility
   }
   setTimeout(() => API.write.toot(sendData), 3000)
 }
 
-const sm9 = (toot: IStatus): void => {
-  const content = tootParser.tootContent(toot.content)
-  if (!/sm9(?:[^0-9]|$)/.test(content)) return
+const sm9 = (toot: IParsedToot): void => {
+  if (!/sm9(?:[^0-9]|$)/.test(toot.content)) return
   const sendData: IArgumentToot = {
     status: randomContent.sm9(),
     visibility: toot.visibility
@@ -152,15 +149,13 @@ const sm9 = (toot: IStatus): void => {
   setTimeout(() => API.write.toot(sendData), 6000)
 }
 
-const favUyu = (toot: IStatus): void => {
-  const content = tootParser.tootContent(toot.content)
-  if (!/[ぅう][ゅゆ]/.test(content)) return
+const favUyu = (toot: IParsedToot): void => {
+  if (!/[ぅう][ゅゆ]/.test(toot.content)) return
   setTimeout(() => API.write.favourite(toot.id), 2000)
 }
 
-const wipeTL = (toot: IStatus): void => {
-  const content = tootParser.tootContent(toot.content)
-  if (!sholdWipeTL(content)) return
+const wipeTL = (toot: IParsedToot): void => {
+  if (!sholdWipeTL(toot.content)) return
   const sendData: IArgumentToot = {
     status: 'ふきふき',
     visibility: toot.visibility
@@ -168,29 +163,24 @@ const wipeTL = (toot: IStatus): void => {
   setTimeout(() => API.write.toot(sendData), 6000)
 }
 
-const playOXGame = (toot: IStatus, oxCoordinate: Coordinate | null, mark: Mark, ismention?: boolean): void => {
-  const url: URL = new URL(toot.account.url)
-  const host: string = url.hostname
-  const userName: string = toot.account.username
-  const nameKey = `${userName}@${host}`
-
+const playOXGame = (toot: IParsedToot, oxCoordinate: Coordinate | null, mark: Mark, ismention?: boolean): void => {
   // Setup
-  if (!oxGameStates[nameKey]) {
+  if (!oxGameStates[toot.account]) {
     const newGame = new OXGame(mark)
-    oxGameStates[nameKey] = newGame
+    oxGameStates[toot.account] = newGame
   }
 
-  const state = oxGameStates[nameKey]
+  const state = oxGameStates[toot.account]
   let result = null
   if (oxCoordinate) result = state.move(oxCoordinate)
   else result = state.initMove()
   const nowState = state.stateView()
   if (result === '◯' || result === '✕' || result === 'draw') {
-    delete oxGameStates[nameKey]
+    delete oxGameStates[toot.account]
   } else if (result === 'invalid') {
     const invalid = 'そこゎ置けないょ(∩´﹏`∩)💦'
     const sendDataOnInvalid: IArgumentToot = {
-      status: `@${userName}@${host} ${invalid}`,
+      status: `@${toot.account} ${invalid}`,
       visibility: toot.visibility
     }
     if (ismention) sendDataOnInvalid.in_reply_to_id = toot.id
@@ -221,26 +211,21 @@ const playOXGame = (toot: IStatus, oxCoordinate: Coordinate | null, mark: Mark, 
   const msg = `${prefixMsg}\n${nowState}`
   const sendData: IArgumentToot = {
     spoiler_text: `あなた: ${playerMark} ぅゅ: ${botMark}`,
-    status: `@${userName}@${host} ${msg}`,
+    status: `@${toot.account} ${msg}`,
     visibility: toot.visibility
   }
   if (ismention) sendData.in_reply_to_id = toot.id
   setTimeout(() => API.write.toot(sendData), 3000)
 }
 
-const resetOXGame = (toot: IStatus, oxCoordinate: Coordinate | null, mark: Mark, ismention?: boolean): void => {
-  const url: URL = new URL(toot.account.url)
-  const host: string = url.hostname
-  const userName: string = toot.account.username
-  const nameKey = `${userName}@${host}`
-
+const resetOXGame = (toot: IParsedToot, oxCoordinate: Coordinate | null, mark: Mark, ismention?: boolean): void => {
   const newGame = new OXGame(mark)
-  oxGameStates[nameKey] = newGame
+  oxGameStates[toot.account] = newGame
 
   playOXGame(toot, oxCoordinate, mark, ismention)
 }
 
-const close = (toot: IStatus): void => {
+const close = (toot: IParsedToot): void => {
   reply(toot, '終わります(๑•᎑•๑)♬*')
   ltl.close()
   notification.close()
@@ -262,30 +247,32 @@ const onFollow = (recv: INotifiation): void => {
 
 const onMention = (recv: INotifiation): void => {
   const toot = recv.status
-  const content = tootParser.tootContent(toot.content)
   const admin = /^(?:12|friends_nico|mei23|sisyo)$/
-  if (admin.test(toot.account.username) && rePattern.close.test(content)) close(toot)
 
-  const oxCoordinate = findCoordinate(content)
+  const tootForReply = getParsedToot(toot)
 
-  if (rePattern.kiss.test(content)) return reply(toot, randomContent.kiss())
-  else if (rePattern.otoshidama.test(content)) return otoshidama(toot, true)
-  else if (rePattern.fortune.test(content)) return fortune(toot, true)
-  else if (/(?:calc|計算|けいさん)[:：](.+)/i.test(content)) return calc(toot)
-  else if (/ポプテピ|ぽぷてぴ/.test(content)) return reply(toot, randomContent.popteamepic())
-  else if (rePattern.oxgame.test(content)) playOXGame(toot, null, '✕', true)
-  else if (oxCoordinate) return playOXGame(toot, oxCoordinate, '◯', true)
-  else if (rePattern.resetgame.test(content)) resetOXGame(toot, null, '✕', true)
-  else if (rePattern.morning.test(content)) reply(toot, randomContent.morning())
-  else if (rePattern.evening.test(content)) reply(toot, randomContent.evening())
-  else if (rePattern.night.test(content)) reply(toot, randomContent.night())
+  if (admin.test(toot.account.username) && rePattern.close.test(tootForReply.content)) close(tootForReply)
+
+  const oxCoordinate = findCoordinate(tootForReply.content)
+
+  if (rePattern.kiss.test(tootForReply.content)) return reply(tootForReply, randomContent.kiss())
+  else if (rePattern.otoshidama.test(tootForReply.content)) return otoshidama(tootForReply, true)
+  else if (rePattern.fortune.test(tootForReply.content)) return fortune(tootForReply, true)
+  else if (/(?:calc|計算|けいさん)[:：](.+)/i.test(tootForReply.content)) return calc(tootForReply)
+  else if (/ポプテピ|ぽぷてぴ/.test(tootForReply.content)) return reply(tootForReply, randomContent.popteamepic())
+  else if (rePattern.oxgame.test(tootForReply.content)) playOXGame(tootForReply, null, '✕', true)
+  else if (oxCoordinate) return playOXGame(tootForReply, oxCoordinate, '◯', true)
+  else if (rePattern.resetgame.test(tootForReply.content)) resetOXGame(tootForReply, null, '✕', true)
+  else if (rePattern.morning.test(tootForReply.content)) reply(tootForReply, randomContent.morning())
+  else if (rePattern.evening.test(tootForReply.content)) reply(tootForReply, randomContent.evening())
+  else if (rePattern.night.test(tootForReply.content)) reply(tootForReply, randomContent.night())
 
   if (tootParser.screenName(recv.account) === target) {
     const enqRe = /^(?:@12222222[^a-zA-Z0-9_]+)?(?:\n)*(?:enquete|あんけ(?:ーと)?|アンケ(?:ート)?)[:：]/i
-    if (enqRe.test(content)) return enquete(content)
+    if (enqRe.test(tootForReply.content)) return enquete(tootForReply.content)
   }
 
-  return reply(toot)
+  return reply(tootForReply)
 }
 
 const nicofreAPI = new FriendsNicoAPI(hostName, bearerToken)
@@ -301,7 +288,7 @@ const enquete = (status: string): void => {
   nicofreAPI.takeInstantEnquete(sendEnquete)
 }
 
-const updateEvents: Array<(toot: IStatus) => void> = [
+const updateEvents: Array<(toot: IParsedToot) => void> = [
   after,
   favUyu,
   fortune,
@@ -311,13 +298,18 @@ const updateEvents: Array<(toot: IStatus) => void> = [
   wipeTL
 ]
 
+const onUpdate = (toot: IStatus) => {
+  const tootForReply = getParsedToot(toot)
+  for (const updateEvent of updateEvents) {
+    updateEvent(tootForReply)
+  }
+}
+
 const homeUpdateListener = new Listener()
 homeUpdateListener.addEventListener('update', (toot: IStatus): void => {
   // Exclude local user's public toots.
   if (tootParser.hostName(toot.url) === hostName && toot.visibility === 'public') return
-  for (const updateEvent of updateEvents) {
-    updateEvent(toot)
-  }
+  onUpdate(toot)
 })
 
 const home = new Stream(hostName, bearerToken)
@@ -327,9 +319,7 @@ home.addListener('close', () => console.log('closed home'))
 home.listener = homeUpdateListener
 
 const localUpdateListener = new Listener()
-for (const updateEvent of updateEvents) {
-  localUpdateListener.addEventListener('update', updateEvent)
-}
+localUpdateListener.addEventListener('update', onUpdate)
 
 const ltl = new Stream(hostName, bearerToken)
 ltl.local()
