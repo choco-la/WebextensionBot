@@ -276,8 +276,9 @@ const onMention = (recv: INotifiation): void => {
   else if (rePattern.night.test(tootForReply.content)) reply(tootForReply, randomContent.night())
 
   if (tootParser.screenName(recv.account) === target) {
-    const enqRe = /^(?:@12222222[^a-zA-Z0-9_]+)?(?:\n)*(?:enquete|あんけ(?:ーと)?|アンケ(?:ート)?)[:：]/i
-    if (enqRe.test(tootForReply.content)) return enquete(tootForReply.content)
+    const pattern = String.raw`^(?:@${bot.username}[^a-zA-Z0-9_]+)?(?:\n)*(?:enquete|あんけ(?:ーと)?|アンケ(?:ート)?)[:：]`
+    const re = new RegExp(pattern, 'i')
+    if (re.test(tootForReply.content)) return enquete(tootForReply.content)
   }
 
   return reply(tootForReply)
