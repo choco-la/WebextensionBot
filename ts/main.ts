@@ -14,6 +14,12 @@ import { IArgumentToot } from './types/apitype'
 import { INotifiation, IStatus } from './types/deftype'
 import { Coordinate, Mark } from './types/oxgametype'
 
+const bot = {
+  // username@example.com
+  ID: '',
+  username: ''
+}
+
 interface IParsedToot {
   account: string
   content: IStatus['content']
@@ -79,7 +85,9 @@ const calc = (toot: IParsedToot): void => {
 
 const fortune = (toot: IParsedToot, ismention?: boolean): void => {
   if (!ismention) {
-    if (/@12222222[^a-zA-Z0-9_]/.test(toot.content)) return
+    const pattern = String.raw`@${bot.username}[^a-zA-Z0-9_]`
+    const re = new RegExp(pattern)
+    if (re.test(toot.content)) return
     if (!rePattern.fortune.test(toot.content)) return
   }
   const sendData: IArgumentToot = {
@@ -115,7 +123,9 @@ const funny = (toot: IParsedToot): void => {
 
 const otoshidama = (toot: IParsedToot, ismention?: boolean): void => {
   if (!ismention) {
-    if (/@12222222[^a-zA-Z0-9_]/.test(toot.content)) return
+    const pattern = String.raw`@${bot.username}[^a-zA-Z0-9_]`
+    const re = new RegExp(pattern)
+    if (re.test(toot.content)) return
     if (!rePattern.otoshidama.test(toot.content)) return
   }
   const msg = `お年玉どうぞっ(๑•̀ㅁ•́๑)✧\nっ[${randomContent.otoshidama()}]`
@@ -338,10 +348,12 @@ notification.listener = notifictionListener
 // Ignore self.
 API.read.verifyCredentials()
 .then((account) => {
-  const me = tootParser.screenName(account)
-  homeUpdateListener.mute('screenname', me)
-  localUpdateListener.mute('screenname', me)
-  notifictionListener.mute('screenname', me)
+  bot.ID = tootParser.screenName(account)
+  bot.username = account.username
+
+  homeUpdateListener.mute('screenname', bot.ID)
+  localUpdateListener.mute('screenname', bot.ID)
+  notifictionListener.mute('screenname', bot.ID)
 })
 
 homeUpdateListener.mute('application', 'mastbot')
