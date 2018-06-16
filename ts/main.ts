@@ -1,6 +1,6 @@
 import { FriendsNicoAPI } from './api/instance/friends.nico'
 import { randomContent } from './botcontents'
-import { Auth } from './conf'
+import { Auth, Configure } from './conf'
 import { evalCalc } from './evalcalc'
 import { MastodonAPI } from './limitapi'
 import { Listener } from './listener'
@@ -264,11 +264,10 @@ const onFollow = (recv: INotifiation): void => {
 
 const onMention = (recv: INotifiation): void => {
   const toot = recv.status
-  const admin = ['12@friends.nico', 'friends_nico@friends.nico']
 
   const tootForReply = getParsedToot(toot)
 
-  if (admin.indexOf(toot.account.username) > -1 && rePattern.close.test(tootForReply.content)) close(tootForReply)
+  if (Configure.admin.indexOf(toot.account.username) > -1 && rePattern.close.test(tootForReply.content)) close(tootForReply)
 
   const oxCoordinate = findCoordinate(tootForReply.content)
 
