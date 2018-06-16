@@ -264,11 +264,11 @@ const onFollow = (recv: INotifiation): void => {
 
 const onMention = (recv: INotifiation): void => {
   const toot = recv.status
-  const admin = /^(?:12|friends_nico|mei23|sisyo)$/
+  const admin = ['12@friends.nico', 'friends_nico@friends.nico']
 
   const tootForReply = getParsedToot(toot)
 
-  if (admin.test(toot.account.username) && rePattern.close.test(tootForReply.content)) close(tootForReply)
+  if (admin.indexOf(toot.account.username) > -1 && rePattern.close.test(tootForReply.content)) close(tootForReply)
 
   const oxCoordinate = findCoordinate(tootForReply.content)
 
