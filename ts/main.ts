@@ -239,6 +239,15 @@ const close = (toot: IParsedToot): void => {
   notification.close()
 }
 
+const mokyu = (toot: IParsedToot): void => {
+  if (!/\(\*[´]ω[｀`]\*\)/.test(toot.content)) return
+  const sendData: IArgumentToot = {
+    status: '(*´ω｀*)ﾓｷｭ',
+    visibility: toot.visibility
+  }
+  setTimeout(() => API.write.toot(sendData), 6000)
+}
+
 const onFollow = (recv: INotifiation): void => {
   const account = recv.account.id
   API.read.relationships([account])
@@ -304,7 +313,8 @@ const updateEvents: Array<(toot: IParsedToot) => void> = [
   funny,
   otoshidama,
   sm9,
-  wipeTL
+  wipeTL,
+  mokyu
 ]
 
 const onUpdate = (toot: IStatus) => {
