@@ -266,27 +266,28 @@ const onMention = (recv: INotifiation): void => {
   const toot = recv.status
 
   const tootForReply = getParsedToot(toot)
+  const content = tootForReply.content
 
-  if (Configure.admin.indexOf(toot.account.username) > -1 && rePattern.close.test(tootForReply.content)) close(tootForReply)
+  if (Configure.admin.indexOf(toot.account.username) > -1 && rePattern.close.test(content)) close(tootForReply)
 
-  const oxCoordinate = findCoordinate(tootForReply.content)
+  const oxCoordinate = findCoordinate(content)
 
-  if (rePattern.kiss.test(tootForReply.content)) return reply(tootForReply, randomContent.kiss())
-  else if (rePattern.otoshidama.test(tootForReply.content)) return otoshidama(tootForReply, true)
-  else if (rePattern.fortune.test(tootForReply.content)) return fortune(tootForReply, true)
-  else if (/(?:calc|計算|けいさん)[:：](.+)/i.test(tootForReply.content)) return calc(tootForReply)
-  else if (/ポプテピ|ぽぷてぴ/.test(tootForReply.content)) return reply(tootForReply, randomContent.popteamepic())
-  else if (rePattern.oxgame.test(tootForReply.content)) playOXGame(tootForReply, null, '✕', true)
+  if (rePattern.kiss.test(content)) return reply(tootForReply, randomContent.kiss())
+  else if (rePattern.otoshidama.test(content)) return otoshidama(tootForReply, true)
+  else if (rePattern.fortune.test(content)) return fortune(tootForReply, true)
+  else if (/(?:calc|計算|けいさん)[:：](.+)/i.test(content)) return calc(tootForReply)
+  else if (/ポプテピ|ぽぷてぴ/.test(content)) return reply(tootForReply, randomContent.popteamepic())
+  else if (rePattern.oxgame.test(content)) playOXGame(tootForReply, null, '✕', true)
   else if (oxCoordinate) return playOXGame(tootForReply, oxCoordinate, '◯', true)
-  else if (rePattern.resetgame.test(tootForReply.content)) resetOXGame(tootForReply, null, '✕', true)
-  else if (rePattern.morning.test(tootForReply.content)) reply(tootForReply, randomContent.morning())
-  else if (rePattern.evening.test(tootForReply.content)) reply(tootForReply, randomContent.evening())
-  else if (rePattern.night.test(tootForReply.content)) reply(tootForReply, randomContent.night())
+  else if (rePattern.resetgame.test(content)) resetOXGame(tootForReply, null, '✕', true)
+  else if (rePattern.morning.test(content)) reply(tootForReply, randomContent.morning())
+  else if (rePattern.evening.test(content)) reply(tootForReply, randomContent.evening())
+  else if (rePattern.night.test(content)) reply(tootForReply, randomContent.night())
 
   if (tootParser.screenName(recv.account) === target) {
     const pattern = String.raw`^(?:@${bot.username}[^a-zA-Z0-9_]+)?(?:\n)*(?:enquete|あんけ(?:ーと)?|アンケ(?:ート)?)[:：]`
     const re = new RegExp(pattern, 'i')
-    if (re.test(tootForReply.content)) return enquete(tootForReply.content)
+    if (re.test(content)) return enquete(content)
   }
 
   return reply(tootForReply)
