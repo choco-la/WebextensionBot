@@ -32,8 +32,6 @@ const hostName: string = Auth.hostName
 // const bearerToken: string = 'ACCESS_TOKEN'
 const bearerToken: string = Auth.bearerToken.trim()
 
-const target = '12@friends.nico'
-
 // OXGame states.
 const oxGameStates: {[key: string]: OXGame} = {}
 
@@ -111,7 +109,7 @@ const fortune = (toot: IParsedToot, ismention?: boolean): void => {
 }
 
 const funny = (toot: IParsedToot): void => {
-  if (toot.account !== target) return
+  if (toot.account !== Configure.owner) return
   if (!/[wWｗＷ]$/.test(toot.content)) return
   const sendData: IArgumentToot = {
     in_reply_to_id: toot.id,
@@ -268,7 +266,7 @@ const onMention = (recv: INotifiation): void => {
   const tootForReply = getParsedToot(toot)
   const content = tootForReply.content
 
-  if (Configure.admin.indexOf(toot.account.username) > -1 && rePattern.close.test(content)) close(tootForReply)
+  if (Configure.admin.indexOf(tootForReply.account) > -1 && rePattern.close.test(content)) close(tootForReply)
 
   const oxCoordinate = findCoordinate(content)
 
@@ -284,7 +282,7 @@ const onMention = (recv: INotifiation): void => {
   else if (rePattern.evening.test(content)) reply(tootForReply, randomContent.evening())
   else if (rePattern.night.test(content)) reply(tootForReply, randomContent.night())
 
-  if (tootParser.screenName(recv.account) === target) {
+  if (tootParser.screenName(recv.account) === Configure.owner) {
     const pattern = String.raw`^(?:@${bot.username}[^a-zA-Z0-9_]+)?(?:\n)*(?:enquete|あんけ(?:ーと)?|アンケ(?:ート)?)[:：]`
     const re = new RegExp(pattern, 'i')
     if (re.test(content)) return enquete(content)
@@ -375,3 +373,5 @@ const joinedFilterWords = filterWords.join('|')
 homeUpdateListener.mute('content', joinedFilterWords)
 localUpdateListener.mute('content', joinedFilterWords)
 notifictionListener.mute('content', joinedFilterWords)
+
+Configure.admin.push(Configure.owner)
