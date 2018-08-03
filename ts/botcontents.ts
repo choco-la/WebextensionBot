@@ -124,17 +124,8 @@ const randomArray = <T>(contents: T[]): T => {
 
 const characterSlot = (text: string): string => {
   const chars = text.split('')
-  const charSet = new Set(chars)
-  const charArray = setToArray(charSet)
+  const charArray = chars.filter((char, index) => chars.indexOf(char) === index)
   return slotValues(charArray, text.length)
-}
-
-const setToArray = <T>(set: Set<T>): T[] => {
-  const arr = []
-  for (const value of set.values()) {
-    arr.push(value)
-  }
-  return arr
 }
 
 const slotValues = (array: string[], length: number = array.length): string => {
