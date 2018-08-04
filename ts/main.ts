@@ -265,7 +265,10 @@ const onMention = (recv: INotifiation): void => {
   const tootForReply = getParsedToot(toot)
   const content = tootForReply.content
 
-  if (Configure.admin.indexOf(tootForReply.account) > -1 && rePattern.close.test(content)) close(tootForReply)
+  if (Configure.admin.indexOf(tootForReply.account) > -1 && rePattern.close.test(content)) {
+    close(tootForReply)
+    return
+  }
 
   const oxCoordinate = findCoordinate(content)
 
