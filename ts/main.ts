@@ -233,8 +233,7 @@ const resetOXGame = (toot: IParsedToot, oxCoordinate: Coordinate | null, mark: M
 
 const close = (toot: IParsedToot): void => {
   reply(toot, '終わります(๑•᎑•๑)♬*')
-  ltl.close()
-  notification.close()
+  streams.map((stream) => stream.close())
 }
 
 const mokyu = (toot: IParsedToot): void => {
@@ -354,24 +353,30 @@ notification.addListener('open', () => console.log('opened notification'))
 notification.addListener('close', () => console.log('closed notification'))
 notification.listener = notifictionListener
 
+const streams = [
+  home,
+  ltl,
+  notification
+]
+
+const listeners = [
+  localUpdateListener,
+  homeUpdateListener,
+  notifictionListener
+]
+
 // Ignore self.
 API.read.verifyCredentials()
 .then((account) => {
   bot.ID = tootParser.screenName(account)
   bot.username = account.username
 
-  homeUpdateListener.mute('screenname', bot.ID)
-  localUpdateListener.mute('screenname', bot.ID)
-  notifictionListener.mute('screenname', bot.ID)
+  listeners.map((listener) => listener.mute('screenname', bot.ID))
 })
 
-homeUpdateListener.mute('application', 'mastbot')
-localUpdateListener.mute('application', 'mastbot')
-notifictionListener.mute('application', 'mastbot')
+listeners.map((listener) => listener.mute('application', 'mastbot'))
 
 const joinedFilterWords = filterWords.join('|')
-homeUpdateListener.mute('content', joinedFilterWords)
-localUpdateListener.mute('content', joinedFilterWords)
-notifictionListener.mute('content', joinedFilterWords)
+listeners.map((listener) => listener.mute('content', joinedFilterWords))
 
 Configure.admin.push(Configure.owner)
