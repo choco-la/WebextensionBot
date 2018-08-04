@@ -1,4 +1,4 @@
-import { IArgumentToot, IFullfilledXHR, ISendToot } from '../../../types/apitype'
+import { IArgumentToot, ISendToot } from '../../../types/apitype'
 import { WriteAPI } from '../../write'
 interface IArgumentTootWithToot extends IArgumentToot {
   enquete_items: string[],
@@ -38,29 +38,8 @@ export class FriendsNicoAPI extends WriteAPI {
     .catch((resp) => console.error(`${resp.status}: ${resp.statusText}`))
   }
 
-  private enquete = (data: ISendTootWithEnquete): Promise<IFullfilledXHR> => {
-    return new Promise((resolve: (resp: IFullfilledXHR) => void,
-                        reject: (err: IFullfilledXHR) => void) => {
-      const xhr = new XMLHttpRequest()
-      xhr.open('POST', `https://${this.hostName}/api/v1/statuses`)
-      xhr.setRequestHeader('Authorization', `Bearer ${this.bearerToken}`)
-      xhr.setRequestHeader('Content-Type', 'application/json; charset=utf-8')
-      xhr.timeout = 3000
-      xhr.responseType = 'json'
-      xhr.withCredentials = true
-
-      xhr.onloadend = () => {
-        if (xhr.status >= 200 && xhr.status < 300) {
-          resolve(xhr)
-        } else {
-          reject(xhr)
-        }
-      }
-      xhr.onerror = () => {
-        reject(xhr)
-      }
-
-      xhr.send(JSON.stringify(data))
-    })
+  private enquete = (data: ISendTootWithEnquete) => {
+    const url = `https://${this.hostName}/api/v1/statuses`
+    return this.post(url, JSON.stringify(data))
   }
 }

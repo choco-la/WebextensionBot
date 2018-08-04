@@ -1,15 +1,18 @@
+import { getSender, ISender } from '../request'
 import { isVisibility } from '../typeguards'
-import { IArgumentToot, IFullfilledXHR, ISendToot } from '../types/apitype'
+import { IArgumentToot, ISendToot } from '../types/apitype'
 import { Visibility } from '../types/deftype'
 
 export class WriteAPI {
   protected bearerToken: string
   protected hostName: string
   protected _visibility: Visibility = 'direct'
+  protected post: ISender
 
   constructor (host: string, token: string) {
     this.bearerToken = token
     this.hostName = host
+    this.post = getSender(this.bearerToken)
   }
 
   public set visibility (value: Visibility) {
@@ -44,54 +47,13 @@ export class WriteAPI {
     .catch((resp) => console.error(`${resp.status}: ${resp.statusText}`))
   }
 
-  public favourite = (id: string): Promise<IFullfilledXHR> => {
-    return new Promise((resolve: (resp: IFullfilledXHR) => void,
-                        reject: (err: IFullfilledXHR) => void) => {
-      const xhr = new XMLHttpRequest()
-      xhr.open('POST', `https://${this.hostName}/api/v1/statuses/${id}/favourite`)
-      xhr.setRequestHeader('Authorization', `Bearer ${this.bearerToken}`)
-      xhr.timeout = 3000
-      xhr.responseType = 'json'
-      xhr.withCredentials = true
-
-      xhr.onloadend = () => {
-        if (xhr.status >= 200 && xhr.status < 300) {
-          resolve(xhr)
-        } else {
-          reject(xhr)
-        }
-      }
-      xhr.onerror = () => {
-        reject(xhr)
-      }
-
-      xhr.send()
-    })
+  public favourite = (id: string) => {
+    const url = `https://${this.hostName}/api/v1/statuses/${id}/favourite`
+    return this.post(url, null)
   }
 
-  protected sendToot = (data: ISendToot): Promise<IFullfilledXHR> => {
-    return new Promise((resolve: (resp: IFullfilledXHR) => void,
-                        reject: (err: IFullfilledXHR) => void) => {
-      const xhr = new XMLHttpRequest()
-      xhr.open('POST', `https://${this.hostName}/api/v1/statuses`)
-      xhr.setRequestHeader('Authorization', `Bearer ${this.bearerToken}`)
-      xhr.setRequestHeader('Content-Type', 'application/json; charset=utf-8')
-      xhr.timeout = 3000
-      xhr.responseType = 'json'
-      xhr.withCredentials = true
-
-      xhr.onloadend = () => {
-        if (xhr.status >= 200 && xhr.status < 300) {
-          resolve(xhr)
-        } else {
-          reject(xhr)
-        }
-      }
-      xhr.onerror = () => {
-        reject(xhr)
-      }
-
-      xhr.send(JSON.stringify(data))
-    })
+  protected sendToot = (data: ISendToot) => {
+    const url = `https://${this.hostName}/api/v1/statuses`
+    return this.post(url, JSON.stringify(data))
   }
 }
