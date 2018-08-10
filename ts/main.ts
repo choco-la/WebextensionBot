@@ -279,10 +279,10 @@ const onMention = (recv: INotifiation): void => {
   else if (/ポプテピ|ぽぷてぴ/.test(content)) return reply(tootForReply, randomContent.popteamepic())
   else if (rePattern.oxgame.test(content)) playOXGame(tootForReply, null, '✕', true)
   else if (oxCoordinate) return playOXGame(tootForReply, oxCoordinate, '◯', true)
-  else if (rePattern.resetgame.test(content)) resetOXGame(tootForReply, null, '✕', true)
-  else if (rePattern.morning.test(content)) reply(tootForReply, randomContent.morning())
-  else if (rePattern.evening.test(content)) reply(tootForReply, randomContent.evening())
-  else if (rePattern.night.test(content)) reply(tootForReply, randomContent.night())
+  else if (rePattern.resetgame.test(content)) return resetOXGame(tootForReply, null, '✕', true)
+  else if (rePattern.morning.test(content)) return reply(tootForReply, randomContent.morning())
+  else if (rePattern.evening.test(content)) return reply(tootForReply, randomContent.evening())
+  else if (rePattern.night.test(content)) return reply(tootForReply, randomContent.night())
 
   if (tootParser.screenName(recv.account) === Configure.owner) {
     const pattern = String.raw`^(?:@${bot.username}[^a-zA-Z0-9_]+)?(?:\n)*(?:enquete|あんけ(?:ーと)?|アンケ(?:ート)?)[:：]`
