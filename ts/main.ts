@@ -277,7 +277,7 @@ const onMention = (recv: INotifiation): void => {
   else if (rePattern.fortune.test(content)) return fortune(tootForReply, true)
   else if (/(?:calc|計算|けいさん)[:：](.+)/i.test(content)) return calc(tootForReply)
   else if (/ポプテピ|ぽぷてぴ/.test(content)) return reply(tootForReply, randomContent.popteamepic())
-  else if (rePattern.oxgame.test(content)) return playOXGame(tootForReply, null, '✕', true)
+  else if (rePattern.oxgame.test(content)) return resetOXGame(tootForReply, null, '✕', true)
   else if (oxCoordinate) return playOXGame(tootForReply, oxCoordinate, '◯', true)
   else if (rePattern.resetgame.test(content)) return resetOXGame(tootForReply, null, '✕', true)
   else if (rePattern.morning.test(content)) return reply(tootForReply, randomContent.morning())
