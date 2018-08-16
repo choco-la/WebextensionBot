@@ -49,6 +49,7 @@ describe('rePattern', () => {
       assert.isFalse(rePattern.after.test('学校帰りに'))
       assert.isFalse(rePattern.after.test('学校終わってない'))
       assert.isFalse(rePattern.after.test('仕事終わらん'))
+      assert.isFalse(rePattern.after.test('学校終わりまでに'))
     })
     it('Close', () => {
       assert.isFalse(rePattern.close.test('終了のお知らせ'))
