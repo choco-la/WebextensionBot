@@ -1,4 +1,4 @@
-import { Delete, INotifiation, IStatus, IWSEvent, NotifyEvent } from './types/deftype'
+import { Delete, INotifiation, IStatus, IWSEvent, NotifyEvent } from '../../..//types/deftype'
 
 export class BasicListener {
   protected updateListeners: Array<(toot: IStatus) => void> = []

@@ -12,7 +12,7 @@ mv ts/conf-sample.ts ts/conf.ts
 sed -i 's/ACCESS_TOKEN/XXXXXXXX/' ./ts/conf.ts
 
 # ミュートしたい正規表現リスト
-mv ts/secret-sample.ts ts/secret.ts
+mv ts/filter/secret-sample.ts ts/filter/secret.ts
 
 npm run build
 ```

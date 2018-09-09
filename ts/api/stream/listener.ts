@@ -1,8 +1,8 @@
-import { BasicListener } from './basiclistener'
-import { RegexFilter } from './regexfilter'
-import { tootParser } from './tootparser'
-import { INotifiation, IStatus } from './types/deftype'
-import { WordFilter } from './wordfilter'
+import { RegexFilter } from '../../filter/regexfilter'
+import { WordFilter } from '../../filter/wordfilter'
+import { tootParser } from '../../tootparser'
+import { INotifiation, IStatus } from '../../types/deftype'
+import { BasicListener } from './__base__/basiclistener'
 
 type FliterType = 'application' | 'screenname' | 'content'
 

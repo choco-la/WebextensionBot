@@ -1,5 +1,5 @@
 import { assert } from 'chai'
-import { rePattern, sholdWipeTL } from '../ts/repattern'
+import { rePattern, sholdWipeTL } from '../ts/filter/repattern'
 
 describe('rePattern', () => {
   describe('Assert true', () => {

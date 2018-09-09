@@ -1,6 +1,6 @@
 js/
 node_modules/
 ts/conf.ts
-ts/secret.ts
+ts/filter/secret.ts
 webext/addon.xpi
 webext/botstreaming.js
