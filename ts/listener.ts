@@ -10,12 +10,14 @@ export class Listener extends BasicListener {
   private applicationFilter: WordFilter
   private screenNameFilter: WordFilter
   private contentFilter: RegexFilter
+  private botFilter: ((account: IStatus['account']) => boolean) | null
 
   constructor () {
     super()
     this.applicationFilter = new WordFilter()
     this.screenNameFilter = new WordFilter()
     this.contentFilter = new RegexFilter()
+    this.botFilter = null
   }
 
   public mute = (type: FliterType, word: string): void => {
@@ -40,6 +42,7 @@ export class Listener extends BasicListener {
     if (this.applicationFilter.test(application)) return console.debug(`muted: ${application}`)
     if (this.screenNameFilter.test(screenName)) return console.debug(`muted: ${screenName}`)
     if (this.contentFilter.test(removeAvoidFilterChar(content))) return console.debug(`muted: ${content}`)
+    if (this.botFilter && this.botFilter(payload.account)) return console.debug(`muted: ${screenName}`)
 
     for (const listener of this.updateListeners) {
       listener(payload)
@@ -60,8 +63,14 @@ export class Listener extends BasicListener {
       listener(notification)
     }
   }
+
+  public filterBot = (arg: boolean): void => {
+    this.botFilter = arg ? isBot : null
+  }
 }
 
 const removeAvoidFilterChar = (text: string): string => {
   return text.replace(/[\u180e\u200b\ufefe]/g, '')
 }
+
+const isBot = (account: IStatus['account']): boolean => Boolean(account.bot)

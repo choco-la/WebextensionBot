@@ -1,5 +1,6 @@
 export interface IAccount {
   acct: string
+  bot: boolean | undefined
   display_name: string
   followers_count: number
   following_count: number
