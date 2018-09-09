@@ -10,12 +10,14 @@ export class Listener extends BasicListener {
   private applicationFilter: WordFilter
   private screenNameFilter: WordFilter
   private contentFilter: RegexFilter
+  private botFilter: ((account: IStatus['account']) => boolean) | null
 
   constructor () {
     super()
     this.applicationFilter = new WordFilter()
     this.screenNameFilter = new WordFilter()
     this.contentFilter = new RegexFilter()
+    this.botFilter = null
   }
 
   public mute = (type: FliterType, word: string): void => {
@@ -60,8 +62,14 @@ export class Listener extends BasicListener {
       listener(notification)
     }
   }
+
+  public filterBot = (arg: boolean): void => {
+    this.botFilter = arg ? isBot : null
+  }
 }
 
 const removeAvoidFilterChar = (text: string): string => {
   return text.replace(/[\u180e\u200b\ufefe]/g, '')
 }
+
+const isBot = (account: IStatus['account']): boolean => Boolean(account.bot)
