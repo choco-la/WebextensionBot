@@ -42,6 +42,7 @@ export class Listener extends BasicListener {
     if (this.applicationFilter.test(application)) return console.debug(`muted: ${application}`)
     if (this.screenNameFilter.test(screenName)) return console.debug(`muted: ${screenName}`)
     if (this.contentFilter.test(removeAvoidFilterChar(content))) return console.debug(`muted: ${content}`)
+    if (this.botFilter && this.botFilter(payload.account)) return console.debug(`muted: ${screenName}`)
 
     for (const listener of this.updateListeners) {
       listener(payload)

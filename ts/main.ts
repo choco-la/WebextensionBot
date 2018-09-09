@@ -381,5 +381,6 @@ listeners.map((listener) => listener.mute('application', 'mastbot'))
 
 const joinedFilterWords = filterWords.join('|')
 listeners.map((listener) => listener.mute('content', joinedFilterWords))
+listeners.map((listener) => listener.filterBot(true))
 
 Configure.admin.push(Configure.owner)
