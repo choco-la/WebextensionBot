@@ -3,6 +3,7 @@ export const tootSampleNico = {
     acct: 'example_display_name0',
     avatar: 'https://example.com/accounts/avatars/original/icon0.png',
     avatar_static: 'https://example.com/accounts/avatars/original/icon0.png',
+    bot: false,
     created_at: '2020-01-01T00:00:00.000Z',
     display_name: 'ACCOUNT_NAME',
     followers_count: 100,
