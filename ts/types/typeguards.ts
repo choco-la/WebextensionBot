@@ -1,4 +1,4 @@
-import { Delete, INotifiation, IStatus, Visibility } from './types/deftype'
+import { Delete, INotifiation, IStatus, Visibility } from './deftype'
 
 export const isDelete = (recv: any): recv is Delete => {
   return recv !== null && recv !== undefined && typeof(recv) === 'number'

@@ -1,6 +1,6 @@
 import { assert } from 'chai'
-import { RegexFilter } from '../ts/regexfilter'
-import { WordFilter } from '../ts/wordfilter'
+import { RegexFilter } from '../ts/filter/regexfilter'
+import { WordFilter } from '../ts/filter/wordfilter'
 
 const muteApplications = [
   'mastbot',

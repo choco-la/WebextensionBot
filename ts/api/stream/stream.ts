@@ -1,6 +1,6 @@
-import { EventEmitter } from './eventemitter'
-import { isNofification } from './typeguards'
-import { IStreamListener } from './types//deftype'
+import { IStreamListener } from '../../types//deftype'
+import { isNofification } from '../../types/typeguards'
+import { EventEmitter } from './__base__/eventemitter'
 
 export class Stream extends EventEmitter {
   private streamURL: string

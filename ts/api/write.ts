@@ -1,7 +1,7 @@
 import { getSender, ISender } from '../request'
-import { isVisibility } from '../typeguards'
 import { IArgumentToot, ISendToot } from '../types/apitype'
 import { Visibility } from '../types/deftype'
+import { isVisibility } from '../types/typeguards'
 
 export class WriteAPI {
   protected bearerToken: string
