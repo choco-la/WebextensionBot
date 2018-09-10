@@ -17,13 +17,3 @@ export interface ISendToot {
   status: string
   visibility: Visibility
 }
-
-interface IXHRResponce {
-  text: string
-}
-
-export interface IFullfilledXHR extends XMLHttpRequest {
-  response: IXHRResponce
-  status: number
-  statusText: string
-}

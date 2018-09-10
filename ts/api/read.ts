@@ -12,14 +12,16 @@ export class ReadAPI {
     this.get = getFetcher(this.bearerToken)
   }
 
-  public relationships = <T extends IRelationship[]>(idarray: string[]): Promise<T> => {
+  public relationships = async (idarray: string[]): Promise<IRelationship[]> => {
     const query: string = `id[]=${idarray.join('&id[]=')}`
     const url = `https://${this.hostName}/api/v1/accounts/relationships?${query}`
-    return this.get(url)
+    const response = await this.get(url)
+    return response.json()
   }
 
-  public verifyCredentials = <T extends IAccount>(): Promise<T> => {
+  public verifyCredentials = async (): Promise<IAccount> => {
     const url = `https://${this.hostName}/api/v1/accounts/verify_credentials`
-    return this.get(url)
+    const response = await this.get(url)
+    return response.json()
   }
 }
