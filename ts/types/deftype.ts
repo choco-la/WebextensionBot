@@ -18,7 +18,7 @@ export interface IMedia {
   text_url: string | null
 }
 
-export interface INotifiation {
+export interface INotification {
   account: IAccount
   created_at: string
   id: string
@@ -59,11 +59,11 @@ export type Delete = number
 
 export interface IStreamListener {
   onDelete: (recv: Delete) => void
-  onFavourite: (notification: INotifiation) => void
-  onFollow: (notification: INotifiation) => void
-  onMention: (notification: INotifiation) => void
-  onNotification: (recv: INotifiation) => void
-  onReblog: (notification: INotifiation) => void
+  onFavourite: (notification: INotification) => void
+  onFollow: (notification: INotification) => void
+  onMention: (notification: INotification) => void
+  onNotification: (recv: INotification) => void
+  onReblog: (notification: INotification) => void
   onUpdate: (recv: IStatus) => void
 }
 
@@ -75,10 +75,10 @@ export interface IWSEvent {
   close: MessageEvent
   update: IStatus
   delete: Delete
-  notification: INotifiation
+  notification: INotification
 
-  reblog: INotifiation
-  mention: INotifiation
-  favourite: INotifiation
-  follow: INotifiation
+  reblog: INotification
+  mention: INotification
+  favourite: INotification
+  follow: INotification
 }

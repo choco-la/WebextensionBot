@@ -11,7 +11,7 @@ import { OXGame } from './oxgame/gamestate'
 import { findCoordinate } from './oxgame/input'
 import { tootParser } from './tootparser'
 import { IArgumentToot } from './types/apitype'
-import { INotifiation, IStatus } from './types/deftype'
+import { INotification, IStatus } from './types/deftype'
 import { Coordinate, Mark } from './types/oxgametype'
 
 const bot = {
@@ -245,7 +245,7 @@ const mokyu = (toot: IParsedToot): void => {
   setTimeout(() => API.write.toot(sendData), 6000)
 }
 
-const onFollow = (recv: INotifiation): void => {
+const onFollow = (recv: INotification): void => {
   const account = recv.account.id
   API.read.relationships([account])
   .then((relationships) => {
@@ -259,7 +259,7 @@ const onFollow = (recv: INotifiation): void => {
   .catch((err) => console.error(err))
 }
 
-const onMention = (recv: INotifiation): void => {
+const onMention = (recv: INotification): void => {
   const toot = recv.status
 
   const tootForReply = getParsedToot(toot)

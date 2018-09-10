@@ -1,14 +1,14 @@
-import { Delete, INotifiation, IStatus, IWSEvent, NotifyEvent } from '../../..//types/deftype'
+import { Delete, INotification, IStatus, IWSEvent, NotifyEvent } from '../../..//types/deftype'
 
 export class BasicListener {
   protected updateListeners: Array<(toot: IStatus) => void> = []
-  protected notificationListeners: Array<(toot: INotifiation) => void> = []
+  protected notificationListeners: Array<(toot: INotification) => void> = []
   protected deleteListeners: Array<(toot: Delete) => void> = []
 
-  protected favouriteListeners: Array<(toot: INotifiation) => void> = []
-  protected followListeners: Array<(toot: INotifiation) => void> = []
-  protected mentionListeners: Array<(toot: INotifiation) => void> = []
-  protected reblogListeners: Array<(toot: INotifiation) => void> = []
+  protected favouriteListeners: Array<(toot: INotification) => void> = []
+  protected followListeners: Array<(toot: INotification) => void> = []
+  protected mentionListeners: Array<(toot: INotification) => void> = []
+  protected reblogListeners: Array<(toot: INotification) => void> = []
 
   public addEventListener = <K extends keyof IWSEvent>(type: K | NotifyEvent, func: (e: IWSEvent[K]) => void): void => {
     switch (type) {
@@ -42,7 +42,7 @@ export class BasicListener {
     }
   }
 
-  public onNotification = (notification: INotifiation): void => {
+  public onNotification = (notification: INotification): void => {
     for (const listener of this.notificationListeners) {
       listener(notification)
     }
@@ -54,25 +54,25 @@ export class BasicListener {
     }
   }
 
-  public onFavourite = (notification: INotifiation): void => {
+  public onFavourite = (notification: INotification): void => {
     for (const listener of this.favouriteListeners) {
       listener(notification)
     }
   }
 
-  public onFollow = (notification: INotifiation): void => {
+  public onFollow = (notification: INotification): void => {
     for (const listener of this.followListeners) {
       listener(notification)
     }
   }
 
-  public onMention = (notification: INotifiation): void => {
+  public onMention = (notification: INotification): void => {
     for (const listener of this.mentionListeners) {
       listener(notification)
     }
   }
 
-  public onReblog = (notification: INotifiation): void => {
+  public onReblog = (notification: INotification): void => {
     for (const listener of this.reblogListeners) {
       listener(notification)
     }

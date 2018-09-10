@@ -1,7 +1,7 @@
 import { RegexFilter } from '../../filter/regexfilter'
 import { WordFilter } from '../../filter/wordfilter'
 import { tootParser } from '../../tootparser'
-import { INotifiation, IStatus } from '../../types/deftype'
+import { INotification, IStatus } from '../../types/deftype'
 import { BasicListener } from './__base__/basiclistener'
 
 type FliterType = 'application' | 'screenname' | 'content'
@@ -49,7 +49,7 @@ export class Listener extends BasicListener {
     }
   }
 
-  public onMention = (notification: INotifiation): void => {
+  public onMention = (notification: INotification): void => {
     const payload = notification.status
     const screenName: string = tootParser.screenName(payload.account)
     const content: string = tootParser.tootContent(payload.content)
