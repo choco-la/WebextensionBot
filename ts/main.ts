@@ -1,4 +1,3 @@
-import { FriendsNicoAPI } from './api/instance/friends.nico'
 import { Listener } from './api/stream/listener'
 import { Stream } from './api/stream/stream'
 import { randomContent } from './botcontents'
@@ -293,8 +292,6 @@ const onMention = (recv: INotification): void => {
   return reply(tootForReply)
 }
 
-const nicofreAPI = new FriendsNicoAPI(hostName, bearerToken)
-nicofreAPI.visibility = 'public'
 const enquete = (status: string): void => {
   const questionPart = /(.+)[?？](.+)[:：](.+)/.exec(status)
   if (questionPart === null) return
@@ -303,7 +300,7 @@ const enquete = (status: string): void => {
     isEnquete: true,
     status: questionPart[1]
   }
-  nicofreAPI.takeInstantEnquete(sendEnquete)
+  API.write.takeInstantEnquete(sendEnquete)
 }
 
 const updateEvents: Array<(toot: IParsedToot) => void> = [
