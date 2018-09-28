@@ -47,6 +47,14 @@ export class Stream extends EventEmitter {
     this.ws.addEventListener('message', this.emitUpdate)
   }
 
+  public federated = (): void => {
+    const streamQuery = `?access_token=${this.bearerToken}&stream=public`
+    const webSocketURL = `wss://${this.streamURL}${streamQuery}`
+    this.setUpWebSocket(webSocketURL)
+
+    this.ws.addEventListener('message', this.emitUpdate)
+  }
+
   public notification = (): void => {
     const streamQuery = `?access_token=${this.bearerToken}&stream=user`
     const webSocketURL = `wss://${this.streamURL}${streamQuery}`
