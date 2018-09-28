@@ -1,4 +1,4 @@
-import { IStreamListener } from '../../types//deftype'
+import { IStreamListener, StreamingType } from '../../types/deftype'
 import { isNofification } from '../../types/typeguards'
 import { EventEmitter } from './__base__/eventemitter'
 
@@ -6,12 +6,42 @@ export class Stream extends EventEmitter {
   private streamURL: string
   private bearerToken: string
   private ws: WebSocket
-  private _listener: IStreamListener
+  private _listener?: IStreamListener
 
-  constructor (host: string, token: string) {
+  constructor (host: string, token: string, streamType: StreamingType) {
     super()
     this.streamURL = `${host}/api/v1/streaming/`
     this.bearerToken = token
+
+    const url = (() => {
+      switch (streamType) {
+        case 'home': {
+          return `wss://${this.streamURL}?access_token=${this.bearerToken}&stream=user`
+        }
+        case 'local': {
+          return `wss://${this.streamURL}?access_token=${this.bearerToken}&stream=public:local`
+        }
+        case 'federated': {
+          return `wss://${this.streamURL}?access_token=${this.bearerToken}&stream=public`
+        }
+        case 'notification': {
+          return `wss://${this.streamURL}?access_token=${this.bearerToken}&stream=user`
+        }
+        default: {
+          const check: never = streamType
+          throw new Error(check)
+        }
+      }
+    })()
+    this.ws = new WebSocket(url)
+    this.ws.addEventListener('open', (_: Event) => this.emit('open'))
+    this.ws.addEventListener('close', (_: Event) => this.emit('close'))
+
+    if (streamType === 'notification') {
+      this.ws.addEventListener('message', this.emitNotification)
+    } else {
+      this.ws.addEventListener('message', this.emitUpdate)
+    }
   }
 
   public set listener (listener: IStreamListener) {
@@ -29,44 +59,6 @@ export class Stream extends EventEmitter {
 
   public close = (): void => {
     this.ws.close()
-  }
-
-  public local = (): void => {
-    const streamQuery = `?access_token=${this.bearerToken}&stream=public:local`
-    const webSocketURL = `wss://${this.streamURL}${streamQuery}`
-    this.setUpWebSocket(webSocketURL)
-
-    this.ws.addEventListener('message', this.emitUpdate)
-  }
-
-  public home = (): void => {
-    const streamQuery = `?access_token=${this.bearerToken}&stream=user`
-    const webSocketURL = `wss://${this.streamURL}${streamQuery}`
-    this.setUpWebSocket(webSocketURL)
-
-    this.ws.addEventListener('message', this.emitUpdate)
-  }
-
-  public federated = (): void => {
-    const streamQuery = `?access_token=${this.bearerToken}&stream=public`
-    const webSocketURL = `wss://${this.streamURL}${streamQuery}`
-    this.setUpWebSocket(webSocketURL)
-
-    this.ws.addEventListener('message', this.emitUpdate)
-  }
-
-  public notification = (): void => {
-    const streamQuery = `?access_token=${this.bearerToken}&stream=user`
-    const webSocketURL = `wss://${this.streamURL}${streamQuery}`
-    this.setUpWebSocket(webSocketURL)
-
-    this.ws.addEventListener('message', this.emitNotification)
-  }
-
-  private setUpWebSocket = (url: string): void => {
-    this.ws = new WebSocket(url)
-    this.ws.addEventListener('open', (_: Event) => this.emit('open'))
-    this.ws.addEventListener('close', (_: Event) => this.emit('close'))
   }
 
   private emitNotification = (msg: MessageEvent): void => {

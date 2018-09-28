@@ -69,6 +69,9 @@ export interface IStreamListener {
 
 export type NotifyEvent = 'favourite' | 'follow' | 'mention' | 'reblog'
 export type Visibility = 'public' | 'unlisted' | 'private' | 'direct'
+type Timeline = 'home' | 'local' | 'federated'
+type Notification = 'notification'
+export type StreamingType = Timeline | Notification
 
 export interface IWSEvent {
   open: MessageEvent

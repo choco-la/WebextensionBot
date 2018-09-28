@@ -328,8 +328,7 @@ homeUpdateListener.addEventListener('update', (toot: IStatus): void => {
   onUpdate(toot)
 })
 
-const home = new Stream(hostName, bearerToken)
-home.home()
+const home = new Stream(hostName, bearerToken, 'home')
 home.addListener('open', () => console.log('opened home'))
 home.addListener('close', () => console.log('closed home'))
 home.listener = homeUpdateListener
@@ -337,8 +336,7 @@ home.listener = homeUpdateListener
 const localUpdateListener = new Listener()
 localUpdateListener.addEventListener('update', onUpdate)
 
-const ltl = new Stream(hostName, bearerToken)
-ltl.local()
+const ltl = new Stream(hostName, bearerToken, 'local')
 ltl.addListener('open', () => console.log('opened ltl'))
 ltl.addListener('close', () => console.log('closed ltl'))
 ltl.listener = localUpdateListener
@@ -347,8 +345,7 @@ const notifictionListener = new Listener()
 notifictionListener.addEventListener('mention', onMention)
 notifictionListener.addEventListener('follow', onFollow)
 
-const notification = new Stream(hostName, bearerToken)
-notification.notification()
+const notification = new Stream(hostName, bearerToken, 'notification')
 notification.addListener('open', () => console.log('opened notification'))
 notification.addListener('close', () => console.log('closed notification'))
 notification.listener = notifictionListener
