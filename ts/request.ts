@@ -1,11 +1,6 @@
 export type ISender = (url: string, data: string | null) => Promise<Response>
 export type IFetcher = (url: string) => Promise<Response>
 
-interface IContent {
-  fetch: (req: Request) => Promise<Response>
-}
-declare var content: IContent
-
 const post = (url: string, token: string, data: string | null): Promise<Response> => {
   const HTTPHeaders = new Headers()
   HTTPHeaders.append('Content-Type', 'application/json; charset=utf-8')
@@ -16,7 +11,7 @@ const post = (url: string, token: string, data: string | null): Promise<Response
     method: 'POST'
   }
   const request = new Request(url, conf)
-  return content.fetch(request)
+  return window.top.fetch(request)
 }
 
 const get = async (url: string, token: string): Promise<Response> => {
@@ -27,7 +22,7 @@ const get = async (url: string, token: string): Promise<Response> => {
     method: 'GET'
   }
   const request = new Request(url, conf)
-  const response = await content.fetch(request)
+  const response = await window.top.fetch(request)
   if (!response.ok) throw new Error(response.statusText)
   if (response.status < 200 || response.status >= 300) {
     const error = new Error(response.statusText)
