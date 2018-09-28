@@ -51,7 +51,7 @@ export interface IStatus {
   spoiler_text: string
   tags: Array<{name: string, url: string}>
   uri: string
-  url: string
+  url: string | null
   visibility: Visibility
 }
 

@@ -12,9 +12,12 @@ const getTootContent = (rawdom: string): string => {
   return textContent ? textContent : ''
 }
 
-const getHostName = (url: string): string => {
+const getHostName = (url: string | null): string => {
+  if (!url) {
+    return window.location.hostname
+  }
   const parsedURL = URL.parse(url)
-  return parsedURL.hostname ? parsedURL.hostname : ''
+  return parsedURL.hostname || window.location.hostname
 }
 
 const getScreenName = (account: IAccount): string => {
