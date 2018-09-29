@@ -2,10 +2,11 @@ import { Listener } from './api/stream/listener'
 import { Stream } from './api/stream/stream'
 import { API } from './bot/api'
 import { playOXGame, resetOXGame } from './bot/oxgame'
+import { publicActions } from './bot/public'
 import { randomContent } from './botcontents'
 import { Auth, Configure } from './conf'
 import { evalCalc } from './evalcalc'
-import { rePattern, sholdWipeTL } from './filter/repattern'
+import { rePattern } from './filter/repattern'
 import { filterWords } from './filter/secret'
 import { findCoordinate } from './oxgame/input'
 import { tootParser } from './tootparser'
@@ -24,16 +25,6 @@ const getParsedToot = (toot: IStatus): IParsedToot => ({
   id: toot.id,
   visibility: toot.visibility
 })
-
-const after = (toot: IParsedToot): void => {
-  const match = rePattern.after.exec(toot.content)
-  if (!match) return
-  const sendData: IArgumentToot = {
-    status: `${match[1]}おつ(๑>◡<๑)`,
-    visibility: toot.visibility
-  }
-  setTimeout(() => API.write.toot(sendData), 6000)
-}
 
 const calc = (toot: IParsedToot): void => {
   const onInvalid = 'わかんないよぉ〜(｡>﹏<｡)'
@@ -124,41 +115,9 @@ const reply = (toot: IParsedToot, text?: string): void => {
   setTimeout(() => API.write.toot(sendData), 3000)
 }
 
-const sm9 = (toot: IParsedToot): void => {
-  if (!/sm9(?:[^0-9]|$)/.test(toot.content)) return
-  const sendData: IArgumentToot = {
-    status: randomContent.sm9(),
-    visibility: toot.visibility
-  }
-  setTimeout(() => API.write.toot(sendData), 6000)
-}
-
-const favUyu = (toot: IParsedToot): void => {
-  if (!/[ぅう][ゅゆ]/.test(toot.content)) return
-  setTimeout(() => API.write.favourite(toot.id), 2000)
-}
-
-const wipeTL = (toot: IParsedToot): void => {
-  if (!sholdWipeTL(toot.content)) return
-  const sendData: IArgumentToot = {
-    status: 'ふきふき',
-    visibility: toot.visibility
-  }
-  setTimeout(() => API.write.toot(sendData), 6000)
-}
-
 const close = (toot: IParsedToot): void => {
   reply(toot, '終わります(๑•᎑•๑)♬*')
   streams.map((stream) => stream.close())
-}
-
-const mokyu = (toot: IParsedToot): void => {
-  if (!/\(\*[´]ω[｀`]\*\)/.test(toot.content)) return
-  const sendData: IArgumentToot = {
-    status: '(*´ω｀*)ﾓｷｭ',
-    visibility: toot.visibility
-  }
-  setTimeout(() => API.write.toot(sendData), 6000)
 }
 
 const onFollow = (recv: INotification): void => {
@@ -221,15 +180,10 @@ const enquete = (status: string): void => {
 }
 
 const updateEvents: Array<(toot: IParsedToot) => void> = [
-  after,
-  favUyu,
   fortune,
   funny,
-  otoshidama,
-  sm9,
-  wipeTL,
-  mokyu
-]
+  otoshidama
+].concat(publicActions)
 
 const onUpdate = (toot: IStatus) => {
   const tootForReply = getParsedToot(toot)
