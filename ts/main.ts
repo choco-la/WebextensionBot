@@ -10,20 +10,13 @@ import { OXGame } from './oxgame/gamestate'
 import { findCoordinate } from './oxgame/input'
 import { tootParser } from './tootparser'
 import { IArgumentToot } from './types/apitype'
-import { INotification, IStatus } from './types/deftype'
+import { INotification, IParsedToot, IStatus } from './types/deftype'
 import { Coordinate, Mark } from './types/oxgametype'
 
 const bot = {
   // username@example.com
   ID: '',
   username: ''
-}
-
-interface IParsedToot {
-  account: string
-  content: IStatus['content']
-  id: IStatus['id']
-  visibility: IStatus['visibility']
 }
 
 // OXGame states.
