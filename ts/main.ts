@@ -26,15 +26,10 @@ interface IParsedToot {
   visibility: IStatus['visibility']
 }
 
-// const hostName: string = 'friends.nico'
-const hostName: string = Auth.hostName
-// const bearerToken: string = 'ACCESS_TOKEN'
-const bearerToken: string = Auth.bearerToken.trim()
-
 // OXGame states.
 const oxGameStates: {[key: string]: OXGame} = {}
 
-const API = new MastodonAPI(hostName, bearerToken)
+const API = new MastodonAPI(Auth.hostName, Auth.bearerToken)
 API.setRateLimit(1, 12)
 API.setCoolTime(90000)
 API.write.visibility = 'public'
@@ -324,11 +319,11 @@ const onUpdate = (toot: IStatus) => {
 const homeUpdateListener = new Listener()
 homeUpdateListener.addEventListener('update', (toot: IStatus): void => {
   // Exclude local user's public toots.
-  if (tootParser.hostName(toot.url) === hostName && toot.visibility === 'public') return
+  if (tootParser.hostName(toot.url) === Auth.hostName && toot.visibility === 'public') return
   onUpdate(toot)
 })
 
-const home = new Stream(hostName, bearerToken, 'home')
+const home = new Stream(Auth.hostName, Auth.bearerToken, 'home')
 home.addListener('open', () => console.log('opened home'))
 home.addListener('close', () => console.log('closed home'))
 home.listener = homeUpdateListener
@@ -336,7 +331,7 @@ home.listener = homeUpdateListener
 const localUpdateListener = new Listener()
 localUpdateListener.addEventListener('update', onUpdate)
 
-const ltl = new Stream(hostName, bearerToken, 'local')
+const ltl = new Stream(Auth.hostName, Auth.bearerToken, 'local')
 ltl.addListener('open', () => console.log('opened ltl'))
 ltl.addListener('close', () => console.log('closed ltl'))
 ltl.listener = localUpdateListener
@@ -345,7 +340,7 @@ const notifictionListener = new Listener()
 notifictionListener.addEventListener('mention', onMention)
 notifictionListener.addEventListener('follow', onFollow)
 
-const notification = new Stream(hostName, bearerToken, 'notification')
+const notification = new Stream(Auth.hostName, Auth.bearerToken, 'notification')
 notification.addListener('open', () => console.log('opened notification'))
 notification.addListener('close', () => console.log('closed notification'))
 notification.listener = notifictionListener
