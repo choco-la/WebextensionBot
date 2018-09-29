@@ -1,6 +1,6 @@
 import * as URL from 'url'
 import { DOMParser } from 'xmldom'
-import { IAccount } from './types/deftype'
+import { IAccount, IParsedToot, IStatus } from './types/deftype'
 
 const getTootContent = (rawdom: string): string => {
   const dom = rawdom.replace(/<br(?: \/)?>/g, '\n')
@@ -31,3 +31,10 @@ export const tootParser = {
   screenName: getScreenName,
   tootContent: getTootContent
 }
+
+export const getParsedToot = (toot: IStatus): IParsedToot => ({
+  account: tootParser.screenName(toot.account),
+  content: tootParser.tootContent(toot.content),
+  id: toot.id,
+  visibility: toot.visibility
+})

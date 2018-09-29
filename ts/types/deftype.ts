@@ -85,3 +85,10 @@ export interface IWSEvent {
   favourite: INotification
   follow: INotification
 }
+
+export interface IParsedToot {
+  account: string
+  content: IStatus['content']
+  id: IStatus['id']
+  visibility: IStatus['visibility']
+}
