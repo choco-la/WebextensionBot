@@ -1,11 +1,11 @@
 import { Listener } from './api/stream/listener'
 import { Stream } from './api/stream/stream'
+import { API } from './bot/api'
 import { randomContent } from './botcontents'
 import { Auth, Configure } from './conf'
 import { evalCalc } from './evalcalc'
 import { rePattern, sholdWipeTL } from './filter/repattern'
 import { filterWords } from './filter/secret'
-import { MastodonAPI } from './limitapi'
 import { OXGame } from './oxgame/gamestate'
 import { findCoordinate } from './oxgame/input'
 import { tootParser } from './tootparser'
@@ -28,11 +28,6 @@ interface IParsedToot {
 
 // OXGame states.
 const oxGameStates: {[key: string]: OXGame} = {}
-
-const API = new MastodonAPI(Auth.hostName, Auth.bearerToken)
-API.setRateLimit(1, 12)
-API.setCoolTime(90000)
-API.write.visibility = 'public'
 
 const getParsedToot = (toot: IStatus): IParsedToot => ({
   account: tootParser.screenName(toot.account),
