@@ -1,12 +1,14 @@
 import { API } from '../api'
+import { parseForEnquete } from './parseenquete'
 
 export const enquete = (status: string): void => {
-  const questionPart = /(.+)[?？](.+)[:：](.+)/.exec(status)
-  if (questionPart === null) return
+  const parsed = parseForEnquete(status)
+  if (!parsed) return
+  const [ question, enqueteItems ] = parsed
   const sendEnquete = {
-    enquete_items: questionPart.slice(2, 4),
+    enquete_items: enqueteItems,
     isEnquete: true,
-    status: questionPart[1]
+    status: question
   }
   API.write.takeInstantEnquete(sendEnquete)
 }
