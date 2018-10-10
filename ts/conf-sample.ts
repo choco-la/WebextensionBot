@@ -23,3 +23,7 @@ export const Configure = {
   admin: ['friends_nico@friends.nico'],
   owner: getPageUser()
 }
+
+export const whilelists = {
+  notBot: []
+}

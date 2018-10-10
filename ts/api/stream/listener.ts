@@ -1,3 +1,4 @@
+import { botFilter } from '../../filter/botfilter'
 import { RegexFilter } from '../../filter/regexfilter'
 import { WordFilter } from '../../filter/wordfilter'
 import { tootParser } from '../../tootparser'
@@ -10,7 +11,7 @@ export class Listener extends BasicListener {
   private applicationFilter: WordFilter
   private screenNameFilter: WordFilter
   private contentFilter: RegexFilter
-  private botFilter: ((account: IStatus['account']) => boolean) | null
+  private botFilter: ((account: IStatus['account'], name: string) => boolean) | null
 
   constructor () {
     super()
@@ -42,7 +43,7 @@ export class Listener extends BasicListener {
     if (this.applicationFilter.test(application)) return console.debug(`muted: ${application}`)
     if (this.screenNameFilter.test(screenName)) return console.debug(`muted: ${screenName}`)
     if (this.contentFilter.test(removeAvoidFilterChar(content))) return console.debug(`muted: ${content}`)
-    if (this.botFilter && this.botFilter(payload.account)) return console.debug(`muted: ${screenName}`)
+    if (this.botFilter && this.botFilter(payload.account, screenName)) return console.debug(`muted: ${screenName}`)
 
     for (const listener of this.updateListeners) {
       listener(payload)
@@ -65,12 +66,10 @@ export class Listener extends BasicListener {
   }
 
   public filterBot = (arg: boolean): void => {
-    this.botFilter = arg ? isBot : null
+    this.botFilter = arg ? botFilter : null
   }
 }
 
 const removeAvoidFilterChar = (text: string): string => {
   return text.replace(/[\u180e\u200b\ufefe]/g, '')
 }
-
-const isBot = (account: IStatus['account']): boolean => Boolean(account.bot)
