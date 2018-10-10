@@ -1,3 +1,4 @@
+import { addon } from '../../addons/index'
 import { randomContent } from '../../botcontents'
 import { rePattern, sholdWipeTL } from '../../filter/repattern'
 import { IArgumentToot } from '../../types/apitype'
@@ -51,5 +52,6 @@ export const publicActions = [
   sm9,
   favUyu,
   wipeTL,
-  mokyu
+  mokyu,
+  ...addon.publicActions
 ]
