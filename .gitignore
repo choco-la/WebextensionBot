@@ -4,3 +4,5 @@ ts/conf.ts
 ts/filter/secret.ts
 webext/addon.xpi
 webext/botstreaming.js
+ts/addons/*
+!ts/addons/index-sample.ts
