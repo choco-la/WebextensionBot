@@ -14,6 +14,9 @@ sed -i 's/ACCESS_TOKEN/XXXXXXXX/' ./ts/conf.ts
 # ミュートしたい正規表現リスト
 mv ts/filter/secret-sample.ts ts/filter/secret.ts
 
+# addonの読み込み
+mv ts/addons/index-sample.ts ts/addons/index.ts
+
 npm run build
 ```
 

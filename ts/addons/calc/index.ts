@@ -1,7 +1,7 @@
-import { evalCalc } from '../../evalcalc'
+import { API } from '../../bot/api'
 import { IArgumentToot } from '../../types/apitype'
 import { IParsedToot } from '../../types/deftype'
-import { API } from '../api'
+import { evalCalc } from './evalcalc'
 
 export const calc = (toot: IParsedToot): void => {
   const onInvalid = 'わかんないよぉ〜(｡>﹏<｡)'

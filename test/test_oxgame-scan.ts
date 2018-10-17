@@ -1,6 +1,6 @@
 import { assert } from 'chai'
-import { TEST } from '../ts/oxgame/scan'
-import { IStateCount, State } from '../ts/types/oxgametype'
+import { IStateCount, State } from '../ts/addons/oxgame/oxgametype'
+import { TEST } from '../ts/addons/oxgame/scan'
 
 const reachState1: State = [
   ['◯', '＿', '＿'],

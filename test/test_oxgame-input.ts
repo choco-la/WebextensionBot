@@ -1,5 +1,5 @@
 import { assert } from 'chai'
-import { findCoordinate } from '../ts/oxgame/input'
+import { findCoordinate } from '../ts/addons/oxgame/input'
 
 describe('findCoordinate', () => {
   it('Acceptable', () => {

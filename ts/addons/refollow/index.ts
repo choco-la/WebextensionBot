@@ -1,5 +1,5 @@
+import { API } from '../../bot/api'
 import { INotification } from '../../types/deftype'
-import { API } from '../api'
 
 export const refollow = (recv: INotification) => {
   const account = recv.account.id

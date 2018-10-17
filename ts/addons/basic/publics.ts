@@ -1,9 +1,11 @@
-import { addon } from '../../addons/index'
-import { randomContent } from '../../botcontents'
+import { API } from '../../bot/api'
+import { randomContent } from '../../bot/botcontents'
 import { rePattern, sholdWipeTL } from '../../filter/repattern'
 import { IArgumentToot } from '../../types/apitype'
 import { IParsedToot } from '../../types/deftype'
-import { API } from '../api'
+import { fortune } from '../fortune'
+import { otoshidama } from '../otoshidama'
+import { funny } from '../praise'
 
 const after = (toot: IParsedToot): void => {
   const match = rePattern.after.exec(toot.content)
@@ -47,11 +49,13 @@ const mokyu = (toot: IParsedToot): void => {
   setTimeout(() => API.write.toot(sendData), 6000)
 }
 
-export const publicActions = [
+export const basicPublicActions = [
   after,
-  sm9,
   favUyu,
-  wipeTL,
+  fortune,
+  funny,
   mokyu,
-  ...addon.publicActions
+  otoshidama,
+  sm9,
+  wipeTL
 ]
