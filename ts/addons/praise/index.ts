@@ -9,7 +9,7 @@ export const funny = (toot: IParsedToot): void => {
   if (!/[wWｗＷ]$/.test(toot.content)) return
   const sendData: IArgumentToot = {
     in_reply_to_id: toot.id,
-    status: `${Configure.owner} ${randomContent.funny()}`,
+    status: `@${Configure.owner} ${randomContent.funny()}`,
     visibility: toot.visibility
   }
   setTimeout(() => API.write.toot(sendData), 3000)
