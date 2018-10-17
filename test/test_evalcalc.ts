@@ -1,5 +1,5 @@
 import { assert } from 'chai'
-import { evalCalc } from '../ts/evalcalc'
+import { evalCalc } from '../ts/addons/calc/evalcalc'
 
 describe('evalCalc', () => {
   it('Simple calculate', () => {

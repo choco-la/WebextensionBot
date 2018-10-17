@@ -1,5 +1,5 @@
 import { assert } from 'chai'
-import { parseForEnquete } from '../ts/bot/enquete/parseenquete'
+import { parseForEnquete } from '../ts/addons/enquete/parseenquete'
 
 describe('parseEnquete', () => {
   it('Assert true', () => {
