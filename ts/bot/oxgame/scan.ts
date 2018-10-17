@@ -1,4 +1,4 @@
-import { Coordinate, Counts, IStateCount, Mark, State } from '../types/oxgametype'
+import { Coordinate, Counts, IStateCount, Mark, State } from './oxgametype'
 
 const countUpState = (state: State): IStateCount => {
   const countsTemplete: Counts = [

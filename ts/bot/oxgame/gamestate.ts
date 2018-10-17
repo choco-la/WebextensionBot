@@ -1,4 +1,4 @@
-import { Coordinate, Mark, State } from '../types/oxgametype'
+import { Coordinate, Mark, State } from './oxgametype'
 import { calcNextMove, isEmptyCoorinate, isFilledState, isWin } from './scan'
 
 type Result = Mark | 'draw' | 'invalid' | null

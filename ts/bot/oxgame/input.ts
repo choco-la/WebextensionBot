@@ -1,4 +1,4 @@
-import { Coordinate } from '../types/oxgametype'
+import { Coordinate } from './oxgametype'
 
 const replaceRowDict: {[key: string]: number} = {
   a: 0, b: 1, c: 2,
