@@ -1,13 +1,13 @@
-import { randomContent } from '../botcontents'
 import { Configure } from '../conf'
 import { rePattern } from '../filter/repattern'
-import { findCoordinate } from '../oxgame/input'
 import { getParsedToot, tootParser } from '../tootparser'
 import { IArgumentToot } from '../types/apitype'
 import { INotification, IParsedToot } from '../types/deftype'
 import { actions } from './action'
 import { API } from './api'
+import { randomContent } from './botcontents'
 import { streams } from './listener'
+import { findCoordinate } from './oxgame/input'
 import { bot } from './state'
 
 const reply = (toot: IParsedToot, text?: string): void => {
