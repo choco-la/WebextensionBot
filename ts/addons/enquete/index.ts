@@ -1,4 +1,4 @@
-import { API } from '../api'
+import { API } from '../..//bot/api'
 import { parseForEnquete } from './parseenquete'
 
 export const enquete = (status: string): void => {

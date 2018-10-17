@@ -1,9 +1,9 @@
-import { randomContent } from '../../botcontents'
+import { API } from '../../bot/api'
+import { randomContent } from '../../bot/botcontents'
+import { bot } from '../../bot/state'
 import { rePattern } from '../../filter/repattern'
 import { IArgumentToot } from '../../types/apitype'
 import { IParsedToot } from '../../types/deftype'
-import { API } from '../api'
-import { bot } from '../state'
 
 export const otoshidama = (toot: IParsedToot, ismention?: boolean): void => {
   if (!ismention) {

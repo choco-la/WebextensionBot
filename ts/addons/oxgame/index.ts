@@ -1,9 +1,9 @@
-import { randomContent } from '../../botcontents'
-import { OXGame } from '../../oxgame/gamestate'
+import { API } from '../../bot/api'
+import { randomContent } from '../../bot/botcontents'
 import { IArgumentToot } from '../../types/apitype'
 import { IParsedToot } from '../../types/deftype'
-import { Coordinate, Mark } from '../../types/oxgametype'
-import { API } from '../api'
+import { OXGame } from './gamestate'
+import { Coordinate, Mark } from './oxgametype'
 
 // OXGame states.
 const oxGameStates: {[key: string]: OXGame} = {}
