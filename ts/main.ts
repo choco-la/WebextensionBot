@@ -1,28 +1,28 @@
-import { actions } from './bot/action'
+import { addon } from './addons'
 import { homeUpdateListener, localUpdateListener, notifictionListener } from './bot/listener'
-import { reaction } from './bot/mention'
 import { Auth, Configure } from './conf'
 import { getParsedToot, tootParser } from './tootparser'
-import { INotification, IParsedToot, IStatus } from './types/deftype'
+import { INotification, IStatus } from './types/deftype'
 
 const onFollow = (recv: INotification): void => {
-  actions.refollow(recv)
+  for (const followAction of addon.followActions) {
+    followAction(recv)
+  }
 }
 
 const onMention = (recv: INotification): void => {
-  reaction(recv)
+  const toot = getParsedToot(recv.status)
+  for (const replyAction of addon.replyActions) {
+    if (!replyAction.case(toot)) continue
+    replyAction.reaction(toot)
+    if (!replyAction.isContinue) return
+  }
 }
-
-const updateEvents: Array<(toot: IParsedToot) => void> = [
-  actions.fortune,
-  actions.funny,
-  actions.otoshidama
-].concat(actions.publicActions)
 
 const onUpdate = (toot: IStatus) => {
   const tootForReply = getParsedToot(toot)
-  for (const updateEvent of updateEvents) {
-    updateEvent(tootForReply)
+  for (const publicAction of addon.publicActions) {
+    publicAction(tootForReply)
   }
 }
 
