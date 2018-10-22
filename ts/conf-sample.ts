@@ -24,6 +24,6 @@ export const Configure = {
   owner: getPageUser()
 }
 
-export const whilelists = {
+export const whitelists = {
   notBot: []
 }
