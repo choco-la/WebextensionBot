@@ -54,6 +54,20 @@ const greetingPatterns: {[key: string]: string} = {
   night: String.raw`こんばん[はわゎ]|コンバン[ハワヮ]`
 }
 
+const firstPersons = [
+  '私', 'ワタシ', 'わたし',
+  'あたし', 'アタシ',
+  'うち', 'ウチ',
+  '俺', 'オレ', 'おれ',
+  '僕', 'ボク', 'ぼく',
+  'ワイ', 'わい',
+  '[うぅ][ゆゅ]',
+  'ワシ', 'わし',
+  '朕, 小生'
+]
+
+const tellcount = String.raw`[!！](?:${firstPersons.join('|')})の(?:とぅーと|トゥート|toot|投稿)(?:カウント|数|count)`
+
 // Used for matching.
 export const rePattern: { [key: string]: RegExp } = {
   after: new RegExp(afterRe, 'iu'),
@@ -66,7 +80,8 @@ export const rePattern: { [key: string]: RegExp } = {
   night: new RegExp(greetingPatterns.night, 'iu'),
   otoshidama: new RegExp(otoshidamaRe, 'iu'),
   oxgame: new RegExp(oxgame, 'iu'),
-  resetgame: new RegExp(resetGame, 'iu')
+  resetgame: new RegExp(resetGame, 'iu'),
+  tellcount: new RegExp(tellcount, 'iu')
 }
 
 export const sholdWipeTL = (text: string): boolean => {

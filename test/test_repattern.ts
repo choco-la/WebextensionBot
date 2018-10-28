@@ -40,6 +40,9 @@ describe('rePattern', () => {
         assert.isTrue(rePattern.night.test('こんばんわ'))
       })
     })
+    it('TellCount', () => {
+      assert.isTrue(rePattern.tellcount.test('！ぅゅのトゥート数'))
+    })
   })
 
   describe('Assert false', () => {
@@ -79,6 +82,9 @@ describe('rePattern', () => {
       })
       it('Night', () => {
         assert.isFalse(rePattern.night.test('今晩は焼き肉'))
+      })
+      it('TellCount', () => {
+        assert.isFalse(rePattern.tellcount.test('ぅゅのトゥート数'))
       })
     })
   })
