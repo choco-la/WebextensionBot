@@ -2,6 +2,7 @@ import { IAddon } from './addontypes'
 import { basicPublicActions } from './basic/publics'
 import { basicReactions } from './basic/reactions'
 import { refollow } from './refollow'
+import { sympathize } from './sympathize'
 
 export const addon: IAddon = {
   followActions: [
@@ -9,7 +10,8 @@ export const addon: IAddon = {
   ],
   notificationAction: [],
   publicActions: [
-    ...basicPublicActions
+    ...basicPublicActions,
+    sympathize
   ],
   replyActions: [
     ...basicReactions

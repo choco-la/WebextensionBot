@@ -117,6 +117,12 @@ const greeting: {[key: string]: string[]} = {
   night: ['こんばんは(*ｐω-)｡O゜', 'こんばんは(๑•̀ㅂ•́)و✧']
 }
 
+const sympathize = [
+  'ひょろたんの言うとおり(๑>◡<๑)',
+  'うんうんそうだね(ㅅ´ ˘ `)♡',
+  'そうだー！(๑•̀ㅂ•́)و✧'
+]
+
 const randomArray = <T>(contents: T[]): T => {
   const index = Math.floor(Math.random() * contents.length)
   return contents[index]
@@ -155,5 +161,6 @@ export const randomContent: { [key: string]: () => string } = {
   popteamepic: () => characterSlot('ポプテピピック'),
   reply: () => randomArray(replyDefault),
   sm9: () => randomArray(sm9),
+  sympathize: () => randomArray(sympathize),
   understand: () => randomArray(understand)
 }
