@@ -13,6 +13,7 @@ import { calc } from '../calc'
 import { enquete } from '../enquete'
 import { playOXGame, resetOXGame } from '../oxgame'
 import { findCoordinate } from '../oxgame/input'
+import { tellCount } from '../tellcount'
 
 const reply = (toot: IParsedToot, text?: string): void => {
   const msg: string = text ? text : randomContent.reply()
@@ -91,6 +92,10 @@ export const basicReactions: IReaction[] = [
       return re.test(toot.content)
     },
     reaction: (toot) => enquete(toot.content)
+  },
+  {
+    case: (toot) => rePattern.tellcount.test(toot.content),
+    reaction: (toot) => tellCount(toot)
   },
   {
     case: (_) => true,

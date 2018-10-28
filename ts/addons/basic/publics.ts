@@ -6,6 +6,7 @@ import { IParsedToot } from '../../types/deftype'
 import { fortune } from '../fortune'
 import { otoshidama } from '../otoshidama'
 import { funny } from '../praise'
+import { tellCount } from '../tellcount'
 
 const after = (toot: IParsedToot): void => {
   const match = rePattern.after.exec(toot.content)
@@ -57,5 +58,6 @@ export const basicPublicActions = [
   mokyu,
   otoshidama,
   sm9,
-  wipeTL
+  wipeTL,
+  (toot: IParsedToot) => (rePattern.tellcount.test(toot.content)) && tellCount(toot)
 ]
