@@ -1,5 +1,5 @@
 import { randomContent } from '../../bot/botcontents'
-import { NoLimitAPI } from '../../bot/nolimitapi'
+import { LowLimitAPI } from '../../bot/lowlimitapi'
 import { Configure } from '../../conf'
 import { IArgumentToot } from '../../types/apitype'
 import { IParsedToot } from '../../types/deftype'
@@ -11,5 +11,5 @@ export const sympathize = (toot: IParsedToot): void => {
     status: `${randomContent.sympathize()}`,
     visibility: toot.visibility
   }
-  setTimeout(() => NoLimitAPI.write.toot(sendData), 3000)
+  setTimeout(() => LowLimitAPI.write.toot(sendData), 3000)
 }
