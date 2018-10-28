@@ -91,4 +91,5 @@ export interface IParsedToot {
   content: IStatus['content']
   id: IStatus['id']
   visibility: IStatus['visibility']
+  status: IStatus
 }

@@ -36,5 +36,6 @@ export const getParsedToot = (toot: IStatus): IParsedToot => ({
   account: tootParser.screenName(toot.account),
   content: tootParser.tootContent(toot.content),
   id: toot.id,
+  status: toot,
   visibility: toot.visibility
 })
