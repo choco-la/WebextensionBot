@@ -1,7 +1,8 @@
 import { Auth } from '../conf'
-import { MastodonAPI } from '../limitapi'
+import { APIRateLimit, MastodonAPI } from '../limitapi'
 
-export const API = new MastodonAPI(Auth.hostName, Auth.bearerToken)
+const rateLimit = APIRateLimit()
+export const API = new MastodonAPI(Auth.hostName, Auth.bearerToken, rateLimit)
 API.setRateLimit(1, 12)
 API.setCoolTime(90000)
 API.write.visibility = 'public'

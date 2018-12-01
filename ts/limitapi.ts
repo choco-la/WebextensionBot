@@ -10,19 +10,21 @@ interface IRateLimit {
   remainingReply: number
 }
 
-const APIRateLimit: IRateLimit = {
-  // Wait ${coolTime} seconds per toot.
-  coolTime: 20000,
-  isCoolTime: false,
-  // Ratelimit per 1min.
-  rateLimitPublic: 2,
-  rateLimitReply: 30,
-  remainingPublic: 0,
-  remainingReply: 0
+export const APIRateLimit: () => IRateLimit = () => {
+  return {
+    // Wait ${coolTime} seconds per toot.
+    coolTime: 20000,
+    isCoolTime: false,
+    // Ratelimit per 1min.
+    rateLimitPublic: 2,
+    rateLimitReply: 30,
+    remainingPublic: 0,
+    remainingReply: 0
+  }
 }
 
 export class MastodonAPI extends _MastodonAPI {
-  private limit = APIRateLimit
+  private limit: IRateLimit
   // Timer of setInterval() that resets ratelimit.
   private resetPublicRateLimitID: NodeJS.Timer
   private resetReplyRateLimitID: NodeJS.Timer
@@ -31,11 +33,12 @@ export class MastodonAPI extends _MastodonAPI {
 
   private superToot: (toot: IArgumentToot) => void
 
-  constructor (host: string, token: string) {
+  constructor (host: string, token: string, limit: IRateLimit) {
     super(host, token)
 
     this.superToot = this.write.toot
     this.write.toot = this.toot
+    this.limit = limit
   }
 
   public set rateLimitPublic (value: number) {
@@ -59,7 +62,7 @@ export class MastodonAPI extends _MastodonAPI {
   }
 
   public setRateLimit = (pubvalue?: number, repvalue?: number): void => {
-    if (!this.limit) this.limit = APIRateLimit
+    if (!this.limit) this.limit = APIRateLimit()
 
     if (pubvalue) this.rateLimitPublic = pubvalue
     this.limit.remainingPublic = this.rateLimitPublic

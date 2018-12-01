@@ -1,6 +1,7 @@
 import { Auth } from '../conf'
-import { MastodonAPI } from '../limitapi'
+import { APIRateLimit, MastodonAPI } from '../limitapi'
 
-export const LowLimitAPI = new MastodonAPI(Auth.hostName, Auth.bearerToken)
+const rateLimit = APIRateLimit()
+export const LowLimitAPI = new MastodonAPI(Auth.hostName, Auth.bearerToken, rateLimit)
 LowLimitAPI.setRateLimit(60, 60)
 LowLimitAPI.setCoolTime(3000)
