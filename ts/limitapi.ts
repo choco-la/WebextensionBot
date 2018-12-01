@@ -1,7 +1,16 @@
 import { MastodonAPI as _MastodonAPI } from './api'
 import { IArgumentToot } from './types/apitype'
 
-const APIRateLimit = {
+interface IRateLimit {
+  coolTime: number
+  isCoolTime: boolean
+  rateLimitPublic: number
+  rateLimitReply: number
+  remainingPublic: number
+  remainingReply: number
+}
+
+const APIRateLimit: IRateLimit = {
   // Wait ${coolTime} seconds per toot.
   coolTime: 20000,
   isCoolTime: false,
