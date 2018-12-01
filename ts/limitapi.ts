@@ -26,10 +26,10 @@ export const APIRateLimit: () => IRateLimit = () => {
 export class MastodonAPI extends _MastodonAPI {
   private limit: IRateLimit
   // Timer of setInterval() that resets ratelimit.
-  private resetPublicRateLimitID: NodeJS.Timer
-  private resetReplyRateLimitID: NodeJS.Timer
+  private resetPublicRateLimitID?: NodeJS.Timer
+  private resetReplyRateLimitID?: NodeJS.Timer
   // Timer of setInterval() that resets cooltime.
-  private resetCoolTimeID: NodeJS.Timer
+  private resetCoolTimeID?: NodeJS.Timer
 
   private superToot: (toot: IArgumentToot) => void
 
