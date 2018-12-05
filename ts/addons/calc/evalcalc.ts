@@ -46,8 +46,7 @@ const getValidExpression = (input: string): string | null => {
 const evaluateAsCalculation = (expression: string): number => {
   let result: number
   try {
-    // tslint:disable-next-line: no-eval
-    result = Number(eval(expression))
+    result = Number(evaluateExpression(expression))
   } catch (_) {
     return NaN
   }
@@ -58,3 +57,5 @@ const evaluateAsCalculation = (expression: string): number => {
   if (decFraction && decFraction.length > 3) return Number(result.toFixed(3))
   else return result
 }
+
+const evaluateExpression = (expression: string) => new Function(`return ${expression}`)()
