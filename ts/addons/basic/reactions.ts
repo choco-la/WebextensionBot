@@ -4,13 +4,11 @@ import { otoshidama } from '../../addons/otoshidama'
 import { API } from '../../bot/api'
 import { randomContent } from '../../bot/botcontents'
 import { streams } from '../../bot/listener'
-import { bot } from '../../bot/state'
 import { Configure } from '../../conf'
 import { rePattern } from '../../filter/repattern'
 import { IArgumentToot } from '../../types/apitype'
 import { IParsedToot } from '../../types/deftype'
 import { calc } from '../calc'
-import { enquete } from '../enquete'
 import { playOXGame, resetOXGame } from '../oxgame'
 import { findCoordinate } from '../oxgame/input'
 import { tellCount } from '../tellcount'
@@ -83,15 +81,6 @@ export const basicReactions: IReaction[] = [
   {
     case: (toot) => rePattern.night.test(toot.content),
     reaction: (toot) => reply(toot, randomContent.night())
-  },
-  {
-    case: (toot) => {
-      if (toot.account !== Configure.owner) return false
-      const pattern = String.raw`^(?:@${bot.username}[^a-zA-Z0-9_]+)?(?:\n)*(?:enquete|あんけ(?:ーと)?|アンケ(?:ート)?)[:：]`
-      const re = new RegExp(pattern, 'i')
-      return re.test(toot.content)
-    },
-    reaction: (toot) => enquete(toot.content)
   },
   {
     case: (toot) => rePattern.tellcount.test(toot.content),
