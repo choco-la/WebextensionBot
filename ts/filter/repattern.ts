@@ -63,7 +63,7 @@ const firstPersons = [
   'ワイ', 'わい',
   '[うぅ][ゆゅ]',
   'ワシ', 'わし',
-  '朕, 小生'
+  '朕', '小生'
 ]
 
 const tellcount = String.raw`[!！](?:${firstPersons.join('|')})の(?:とぅーと|トゥート|toot|投稿)(?:カウント|数|count)`
