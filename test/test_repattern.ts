@@ -42,6 +42,7 @@ describe('rePattern', () => {
     })
     it('TellCount', () => {
       assert.isTrue(rePattern.tellcount.test('！ぅゅのトゥート数'))
+      assert.isTrue(rePattern.tellcount.test('！小生のトゥート数'))
     })
   })
 
