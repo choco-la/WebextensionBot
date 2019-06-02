@@ -1,5 +1,5 @@
 import { FollowAPI } from './follow'
-import { FriendsNicoAPI as WriteAPI } from './instance/friends.nico'
+import { WriteAPI } from './write'
 import { ReadAPI } from './read'
 
 export class MastodonAPI {
